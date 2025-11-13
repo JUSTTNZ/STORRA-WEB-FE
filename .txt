@@ -1,0 +1,4 @@
+bg-grey-light: #F4F5F8
+text-color-grey: #7D7F85
+button-bg-blue: #2D5BFF 
+border: #ECEDF0

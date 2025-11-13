@@ -1,6 +1,3 @@
-
-cool
-
 storra-web/
 ├── public/
 │   ├── images/
@@ -10,7 +7,7 @@ storra-web/
 │   │   │   ├── slide2.svg
 │   │   │   └── slide3.svg
 │   │   └── splash/
-│   │       └── splash-bg.svg
+│   │       └── splash-bg.svg 
 │   └── vite.svg
 ├── src/
 │   ├── assets/
