@@ -1,10 +1,26 @@
 import React from "react";
 
-const AppButton = ({title, icon=false}) => {
+const AppButton = ({
+  title,
+  icon = false,
+  iconSrc = "",
+  iconClass = "",
+  rounded = "rounded-full", 
+  className = "",
+}) => {
   return (
-    <button className="flex items-center gap-2 bg-[#2D5BFF] max-w-fit rounded-full text-[12px] text-white px-8 py-2">
+    <button
+      className={`flex items-center gap-2 bg-[#2D5BFF] max-w-fit ${rounded} ${className}`}
+    >
       <span>{title}</span>
-      {icon && (<img src="/src/assets/images/single-course-page-img/Arrow-Icons.png" alt="" />)}
+
+      {icon && (
+        <img
+          src={iconSrc}
+          alt=""
+          className={`object-contain ${iconClass}`}
+        />
+      )}
     </button>
   );
 };

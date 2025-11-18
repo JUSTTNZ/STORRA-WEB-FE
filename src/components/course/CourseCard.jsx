@@ -22,7 +22,7 @@ const CourseCard = ({ item, index, btn = false }) => {
       </div>
 
       {btn ? (
-        (<AppButton title="Start Quiz"/>)
+        (<AppButton title="Start Quiz" className={`text-white px-8 py-2`}/>)
       ) : (
         <div className="w-full bg-gray-200 rounded-full h-1.5 mt-1">
           <div

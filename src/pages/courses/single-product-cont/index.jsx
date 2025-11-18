@@ -150,7 +150,7 @@ const SingleProductCont = () => {
             <button className="border-[1px] border-[#7D7F85] rounded-full  px-8 py-2">
               Cancel
             </button>
-            <AppButton title="Next Lesson" icon />
+            <AppButton title="Next Lesson" className={`text-white px-8 py-2`} icon iconSrc="/src/assets/images/single-course-page-img/Arrow-Icons.png" />
           </div>
         </div>
 
