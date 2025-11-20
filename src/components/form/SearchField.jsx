@@ -1,8 +1,8 @@
 import React from "react";
 
-const SearchField = ({ placeholder }) => {
+const SearchField = ({ placeholder, parent=false }) => {
   return (
-    <div className="flex items-center gap-1 bg-[#F4F5F8] rounded-full w-[330px] h-[48px] px-4">
+    <div className={`flex items-center gap-1 ${parent ? "bg-white" : "bg-[#F4F5F8]"} rounded-full w-[330px] h-[48px] px-4`}>
       <img
         src="/src/assets/images/courses-img/search.png"
         alt=""
