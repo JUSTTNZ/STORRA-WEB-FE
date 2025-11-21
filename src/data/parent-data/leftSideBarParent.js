@@ -7,7 +7,7 @@ export const leftSideBarParentData = [
   {
     image: "course.png",
     title: "Wallet",
-     url: "/wallet"
+     url: "/wallet-management"
   },
   {
     image: "quiz.png",

@@ -7,10 +7,11 @@ const AppButton = ({
   iconClass = "",
   rounded = "rounded-full", 
   className = "",
+  full
 }) => {
   return (
     <button
-      className={`flex items-center gap-2 bg-[#2D5BFF] max-w-fit ${rounded} ${className}`}
+      className={`flex items-center gap-2 bg-[#2D5BFF] ${full ? "w-full" : "max-w-fit"} ${rounded} ${className}`}
     >
       <span>{title}</span>
 

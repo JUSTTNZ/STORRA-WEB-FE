@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { courseCardData, courseCompletedData } from "../../data/course";
+import { courseCardData, courseCompletedData } from "../../data/student-data/course";
 import CourseCard from "../../components/course/CourseCard";
 
 const CoursePage = () => {

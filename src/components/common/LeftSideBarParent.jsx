@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { leftSideBarParentData } from "../../data/leftSideBarParent";
+import { leftSideBarParentData } from "../../data/parent-data/leftSideBarParent";
 
 const LeftSideBarParent = () => {
   return (

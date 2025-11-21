@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { subjectContentData } from "../../../data/singlePageData";
+import { subjectContentData } from "../../../data/student-data/singlePageData";
 
 const SingleProductPage = () => {
   const [activetab, setactiveTab] = useState("about");
@@ -42,7 +42,9 @@ const SingleProductPage = () => {
                 alt=""
                 className="w-4 lg:w-6"
               />
-              <span className="text-[10px] lg:text-[14px]">Last updated July, 2025</span>
+              <span className="text-[10px] lg:text-[14px]">
+                Last updated July, 2025
+              </span>
             </div>
           </div>
 

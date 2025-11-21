@@ -7,7 +7,7 @@ import {
   students,
   studentStat,
   subjectFocus,
-} from "../../data/dashboardParent";
+} from "../../data/parent-data/dashboardParent";
 import { Link } from "react-router-dom";
 
 const DashboardPage = () => {
@@ -112,7 +112,9 @@ const DashboardPage = () => {
           </div>
 
           <div className="bg-white p-4 h-full">
-            <h1 className="font-bold text-black text-[20px] mb-4">Notifications</h1>
+            <h1 className="font-bold text-black text-[20px] mb-4">
+              Notifications
+            </h1>
 
             <div className="bg-[#F4F5F8] text-[16px] flex gap-14 p-1 mb-4">
               {notifications.map((item) => (

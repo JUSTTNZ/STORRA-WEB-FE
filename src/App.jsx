@@ -8,6 +8,7 @@ import SingleProductCont from "./pages/courses/single-product-cont";
 import TransactionPage from "./pages/wallet";
 import DashboardPage from "./pages/parent-dashborad";
 import MainLayoutParent from "./components/layout/MainLayoutParent";
+import WalletPage from "./pages/parent-dashborad/wallet-management";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
 
           <Route element={<MainLayoutParent />}>
             <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/wallet-management" element={<WalletPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

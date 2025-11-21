@@ -4,7 +4,7 @@ import {
   multiMediaContent,
   subjectContentData,
   textContent,
-} from "../../../data/singlePageData";
+} from "../../../data/student-data/singlePageData";
 import AppButton from "../../../components/form/AppButton";
 
 const SingleProductCont = () => {
@@ -116,7 +116,9 @@ const SingleProductCont = () => {
                       className="w-[32px] lg:w-15"
                     />
                     <div className="flex flex-col">
-                      <h1 className="text-[16px] lg:text-[20px]">{media?.title}</h1>
+                      <h1 className="text-[16px] lg:text-[20px]">
+                        {media?.title}
+                      </h1>
                       <span className="text-[14px]">{media?.duration}</span>
                     </div>
                   </div>
@@ -136,7 +138,9 @@ const SingleProductCont = () => {
                       className="w-[32px] lg:w-15"
                     />
                     <div className="flex flex-col">
-                      <h1 className="text-[16px] lg:text-[20px]">{media?.title}</h1>
+                      <h1 className="text-[16px] lg:text-[20px]">
+                        {media?.title}
+                      </h1>
                       <span className="text-[14px]">{media?.duration}</span>
                     </div>
                   </div>
@@ -150,7 +154,12 @@ const SingleProductCont = () => {
             <button className="border-[1px] border-[#7D7F85] rounded-full  px-8 py-2">
               Cancel
             </button>
-            <AppButton title="Next Lesson" className={`text-white px-8 py-2`} icon iconSrc="/src/assets/images/single-course-page-img/Arrow-Icons.png" />
+            <AppButton
+              title="Next Lesson"
+              className={`text-white px-8 py-2`}
+              icon
+              iconSrc="/src/assets/images/single-course-page-img/Arrow-Icons.png"
+            />
           </div>
         </div>
 

@@ -7,7 +7,7 @@ import {
   transactionRowData,
   transactionTableColumn,
   walletActionPerformed,
-} from "../../data/wallet";
+} from "../../data/student-data/wallet";
 import { Link } from "react-router-dom";
 import { currencyFormatter } from "../../utils/helpers";
 import Table from "../../components/wallet/Table";
