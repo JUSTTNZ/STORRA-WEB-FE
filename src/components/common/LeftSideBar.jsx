@@ -3,6 +3,8 @@ import { leftSideBarData } from "../../data/student-data/leftSideBar";
 import { Link } from "react-router-dom";
 
 const LeftSideBar = () => {
+  const [activetab, setactivetab] = useState("Home");
+
   return (
     <div className="hidden w-[17%]  lg:flex flex-col border-r-[1px] border-[#D1D2D5] gap-5 p-3">
       <div className="w-full flex justify-between items-center">
@@ -23,7 +25,10 @@ const LeftSideBar = () => {
           <Link
             to={item?.url}
             key={index}
-            className="flex gap-4 text-[#5A5F6B] hover:bg-[#2D5BFF] hover:text-white p-3 rounded-md"
+            className={`flex gap-4 text-[#5A5F6B] ${
+              activetab === item?.title ? "bg-[#2D5BFF] text-white" : ""
+            } hover:bg-[#2D5BFF] hover:text-white p-3 rounded-md`}
+            onClick={() => setactivetab(item?.title)}
           >
             <img
               src={`/src/assets/images/courses-img/${item?.image}`}
@@ -32,7 +37,8 @@ const LeftSideBar = () => {
             />
             <span className="text-[16px]">{item?.title}</span>
           </Link>
-        ))}
+        ))
+        }
       </div>
     </div>
   );
