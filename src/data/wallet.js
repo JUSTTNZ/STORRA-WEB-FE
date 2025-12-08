@@ -74,18 +74,20 @@ export const addOnCardData = [
     image: "earn.svg",
     title: "Buy airtime",
     desc: "Top up your phone or send airtime to others",
-    category: "Popular"
+    category: "Popular",
+    url: "/modal",
   },
   {
     image: "earn.svg",
     title: "Pay Bill",
     desc: "Pay your electricity, internet, transport and other bills",
-    category: "Essential"
+    category: "Essential",
+    url: "/paybill",
   },
   {
     image: "earn.svg",
     title: "Referral Program",
     desc: "Invite friends and earn rewards when they join Eduwallet",
-    category: "Earn Money"
+    category: "Earn Money",
   },
 ];

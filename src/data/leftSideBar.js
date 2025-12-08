@@ -9,11 +9,7 @@ export const leftSideBarData = [
     title: "Courses",
     url: "/course",
   },
-  {
-    image: "quiz.png",
-    title: "Modal",
-    url: "/modal",
-  },
+
   {
     image: "wallet.png",
     title: "Wallet",
@@ -24,10 +20,11 @@ export const leftSideBarData = [
     title: "Leaderboard",
     url: "/leaderboard",
   },
+
   {
     image: "spin_thewheel.png",
-    title: "Spin the Wheel",
-    url: "/spin-the-wheel",
+    title: "Spin_the_Wheel",
+    url: "/spin",
   },
   {
     image: "reward.png",

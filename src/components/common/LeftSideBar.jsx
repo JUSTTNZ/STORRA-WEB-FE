@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const LeftSideBar = () => {
   return (
-    <div className="hidden w-[17%]  lg:flex flex-col border-r-[1px] border-[#D1D2D5] gap-5 p-3">
+    <div className="hidden w-[20%]  lg:flex flex-col border-r-[1px] border-[#D1D2D5] gap-5 p-3">
       <div className="w-full flex justify-between items-center">
         <img
           src="/src/assets/images/courses-img/logo.png"

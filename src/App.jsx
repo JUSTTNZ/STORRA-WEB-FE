@@ -15,6 +15,10 @@ import BasicScience from "./components/homecomponents/BasicScience";
 import Crs from "./components/homecomponents/Crs";
 import SocialStudies from "./components/homecomponents/SocialStudies";
 import CivicEducation from "./components/homecomponents/CivicEducation";
+import PayBillPage from "./pages/paybill/PayBillPage";
+import StorraLeaderboard from "./pages/leaderboard/StorraLeaderboard";
+import Setting from "./pages/setting/Setting";
+import Spin from "./pages/spin_the_wheel/Spin";
 
 function App() {
   return (
@@ -49,6 +53,10 @@ function App() {
             {/* Other routes */}
             <Route path="/modal" element={<AirtimeModal />} />
             <Route path="/wallet" element={<TransactionPage />} />
+            <Route path="/paybill" element={<PayBillPage />} />
+            <Route path="/leaderboard" element={<StorraLeaderboard />} />
+            <Route path="/setting" element={<Setting />} />
+            <Route path="/spin" element={<Spin />} />
           </Route>
         </Routes>
       </BrowserRouter>
