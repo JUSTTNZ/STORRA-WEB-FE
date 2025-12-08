@@ -2,46 +2,43 @@ export const leftSideBarData = [
   {
     image: "home.svg",
     title: "Home",
-    url: "/home"
+    url: "subjects",
   },
   {
     image: "course.png",
     title: "Courses",
-     url: "/course"
+    url: "/course",
   },
-  {
-    image: "quiz.png",
-    title: "Quizzes",
-     url: "/quiz"
-  },
+
   {
     image: "wallet.png",
     title: "Wallet",
-     url: "/wallet"
+    url: "/wallet",
   },
   {
     image: "leaderboard.png",
     title: "Leaderboard",
-     url: "/leaderboard"
+    url: "/leaderboard",
   },
+
   {
     image: "spin_thewheel.png",
-    title: "Spin the Wheel",
-     url: "/spin-the-wheel"
+    title: "Spin_the_Wheel",
+    url: "/spin",
   },
   {
     image: "reward.png",
     title: "Reward",
-     url: "/reward"
+    url: "/reward",
   },
   {
     image: "setting.png",
     title: "Setting",
-     url: "/setting"
+    url: "/setting",
   },
   {
     image: "logout.png",
     title: "Logout",
-     url: "/logout"
+    url: "/logout",
   },
 ];
