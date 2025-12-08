@@ -6,3 +6,16 @@
   padding: 0;
   box-sizing: border-box;
 } */
+@layer components {
+  .active:link {
+    background: gray;
+  }
+  .PhoneInputInput:focus {
+    outline: none;
+    color: gray;
+    background: none;
+  }
+  .PhoneInputCountrySelect {
+    border: none;
+  }
+}
