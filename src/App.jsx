@@ -1,6 +1,7 @@
-import { useState } from "react";
 import "./styles/globals.css";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+
+// Student Layout + Pages
 import MainLayout from "./components/layout/MainLayout";
 import CoursePage from "./pages/courses";
 import SingleProductPage from "./pages/courses/single-product-page";
@@ -20,11 +21,24 @@ import StorraLeaderboard from "./pages/leaderboard/StorraLeaderboard";
 import Setting from "./pages/setting/Setting";
 import Spin from "./pages/spin_the_wheel/Spin";
 
+// Parent Layout + Pages
+import DashboardPage from "./pages/parent-dashborad";
+import MainLayoutParent from "./components/layout/MainLayoutParent";
+import EditProfile from "./pages/dashboard/EditProfile";
+import Edit from "./pages/dashboard/Edit";
+import Preferences from "./pages/dashboard/Preferences";
+import Personalization from "./pages/auth/Signup/Personalization";
+import Personalization1 from "./pages/auth/Signup/Personalization1";
+import Personalization2 from "./pages/auth/Signup/Personalization2";
+import Rewards from "./pages/Rewards";
+import Dash from "./pages/dashboard/Dash";
+
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
+          {/* STUDENT SECTION */}
           <Route element={<MainLayout />}>
             {/* Redirect root to subjects */}
             <Route index element={<Navigate to="/subjects/maths" replace />} />
@@ -50,13 +64,29 @@ function App() {
               element={<SingleProductCont />}
             />
 
-            {/* Other routes */}
+            {/* Additional Student Features */}
             <Route path="/modal" element={<AirtimeModal />} />
             <Route path="/wallet" element={<TransactionPage />} />
             <Route path="/paybill" element={<PayBillPage />} />
             <Route path="/leaderboard" element={<StorraLeaderboard />} />
             <Route path="/setting" element={<Setting />} />
             <Route path="/spin" element={<Spin />} />
+            <Route path="/reward" element={<Rewards />} />
+            <Route path="/dash" element={<Dash />} />
+          </Route>
+
+          {/* PARENT SECTION */}
+          <Route element={<MainLayoutParent />}>
+            <Route path="/dashboard" element={<DashboardPage />} />
+
+            <Route path="/settings" element={<EditProfile />}>
+              <Route path="/settings/preference" element={<Preferences />} />
+              <Route path="/settings/edit" element={<Edit />} />
+            </Route>
+
+            <Route path="/personalization" element={<Personalization />} />
+            <Route path="/personalization1" element={<Personalization1 />} />
+            <Route path="/personalization2" element={<Personalization2 />} />
           </Route>
         </Routes>
       </BrowserRouter>

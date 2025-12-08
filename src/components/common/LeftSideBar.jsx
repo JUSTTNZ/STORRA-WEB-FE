@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { leftSideBarData } from "../../data/leftSideBar";
 import { Link } from "react-router-dom";
 
@@ -23,8 +22,7 @@ const LeftSideBar = () => {
           <Link
             to={item?.url}
             key={index}
-            className="flex gap-4 text-[#5A5F6B] hover:bg-[#2D5BFF] hover:text-white p-3 rounded-md"
-          >
+            className="flex gap-4 text-[#5A5F6B] hover:bg-[#2D5BFF] hover:text-white p-3 rounded-md">
             <img
               src={`/src/assets/images/courses-img/${item?.image}`}
               alt=""

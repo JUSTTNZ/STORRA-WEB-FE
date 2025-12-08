@@ -2,3 +2,7 @@ bg-grey-light: #F4F5F8
 text-color-grey: #7D7F85
 button-bg-blue: #2D5BFF 
 border: #ECEDF0
+
+parent-dashboard 
+border: #E0E1E5
+bg: #F4F5F8
