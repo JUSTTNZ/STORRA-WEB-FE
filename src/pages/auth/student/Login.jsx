@@ -1,23 +1,39 @@
+import { AiFillApple } from 'react-icons/ai';
+import { useNavigate } from 'react-router-dom';
 import swipeImg from "../../../assets/images/auth/swipe2.png";
 
 export default function Login() {
+  const navigate = useNavigate();
   return (
-    <div className="min-h-screen bg-[#0f172a] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-white flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-6xl bg-white rounded-xl overflow-hidden shadow-lg">
-
-        {/* IMAGE (md only above form, lg moves to right) */}
-        <div className="block lg:hidden bg-blue-600 p-6">
-          <img
-            src={swipeImg}
-            alt="Learning illustration"
-            className="max-w-sm mx-auto"
-          />
-        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2">
 
-          {/* FORM */}
-          <div className="p-6 sm:p-8 md:p-10">
+          {/* FORM - Full width on mobile/tablet, half on large screens */}
+          <div className="p-6 sm:p-8 md:p-10 lg:p-12">
+
+            {/* IMAGE WITH STEPS - Shows on tablet (md) only, above Student Account */}
+            <div className="hidden md:block lg:hidden bg-blue-600 rounded-xl p-6 mb-8">
+              <div className="flex items-center gap-6">
+                {/* Steps on the left */}
+                <div className="flex-shrink-0 space-y-3">
+                  <Step number="1" text="Create an account type" active />
+                  <Step number="2" text="Provide your details" />
+                  <Step number="3" text="Start learning and earning" />
+                </div>
+
+                {/* Image on the right */}
+                <div className="flex-1 flex items-center justify-center">
+                  <img
+                    src={swipeImg}
+                    alt="Learning illustration"
+                    className="w-full max-w-sm"
+                  />
+                </div>
+              </div>
+            </div>
+
             <h2 className="text-2xl font-semibold mb-6">
               Student Account
             </h2>
@@ -38,12 +54,12 @@ export default function Login() {
                 <span>
                   I hereby agree to the{" "}
                   <span className="text-blue-600 cursor-pointer">
-                    Terms & Conditions
+                    Terms & Conditions.
                   </span>
                 </span>
               </div>
 
-              <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-md font-medium">
+              <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium">
                 Create My Account
               </button>
 
@@ -59,32 +75,37 @@ export default function Login() {
                   label="Google"
                 />
                 <SocialButton
-                  icon="https://www.svgrepo.com/show/303128/apple-logo.svg"
+                  icon={<AiFillApple />}
                   label="Apple"
                 />
               </div>
 
               <p className="text-center text-sm mt-4">
-                Already have an account?{" "}
-                <span className="text-blue-600 cursor-pointer">
-                  Login
+                Don't have an account?{" "}
+                <span
+                  onClick={() => navigate('/auth/student/register')}
+                  className="text-blue-600 cursor-pointer font-medium"
+                >
+                  Register
                 </span>
               </p>
             </div>
           </div>
 
-          {/* IMAGE RIGHT (lg only) */}
-          <div className="hidden lg:flex bg-blue-600 p-8 text-white flex-col justify-between">
-            <img
-              src={swipeImg}
-              alt="Learning illustration"
-              className="max-w-md mx-auto"
-            />
+          {/* IMAGE - Visible only on lg screens and above (right side) */}
+          <div className="hidden lg:flex bg-blue-600 rounded-r-xl p-8 flex-col justify-center items-center">
+            <div className="w-full max-w-md">
+              <img
+                src={swipeImg}
+                alt="Learning illustration"
+                className="w-full h-auto mb-8"
+              />
 
-            <div className="grid grid-cols-3 gap-4 mt-8">
-              <Step number="1" text="Create an account type" active />
-              <Step number="2" text="Provide your details" />
-              <Step number="3" text="Start learning and earning" />
+              <div className="grid grid-cols-3 gap-3">
+                <Step number="1" text="Create an account type" active />
+                <Step number="2" text="Provide your details" />
+                <Step number="3" text="Start learning and earning" />
+              </div>
             </div>
           </div>
 
@@ -99,12 +120,12 @@ export default function Login() {
 function Input({ label, type = "text", placeholder }) {
   return (
     <div>
-      <label className="block text-sm mb-1">{label}</label>
+      <label className="block text-sm font-medium mb-1.5">{label}</label>
       <input
         type={type}
         placeholder={placeholder}
-        className="w-full border border-gray-300 rounded-md px-3 py-2
-                   focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full border border-gray-300 rounded-lg px-4 py-2.5
+                   focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
       />
     </div>
   );
@@ -112,9 +133,13 @@ function Input({ label, type = "text", placeholder }) {
 
 function SocialButton({ icon, label }) {
   return (
-    <button className="flex-1 border border-gray-300 rounded-md py-2 flex items-center justify-center gap-2">
-      <img src={icon} className="w-5" />
-      {label}
+    <button className="flex-1 border border-gray-300 rounded-lg py-2.5 flex items-center justify-center gap-2 hover:bg-gray-50 transition-colors">
+      {typeof icon === 'string' ? (
+        <img src={icon} className="w-5 h-5" alt={label} />
+      ) : (
+        <span className="w-5 h-5 flex items-center justify-center">{icon}</span>
+      )}
+      <span className="font-medium">{label}</span>
     </button>
   );
 }
@@ -122,14 +147,13 @@ function SocialButton({ icon, label }) {
 function Step({ number, text, active }) {
   return (
     <div
-      className={`rounded-lg p-4 text-sm ${
-        active ? "bg-white text-blue-600" : "bg-blue-500 text-white"
-      }`}
+      className={`rounded-lg p-3 text-sm ${active ? "bg-white text-black" : "bg-blue-500/50 text-white"
+        }`}
     >
-      <div className="w-6 h-6 rounded-full bg-yellow-400 text-blue-800 flex items-center justify-center mb-2 font-semibold">
+      <div className="w-7 h-7 rounded-full bg-yellow-400 text-black flex items-center justify-center mb-2 font-bold text-sm">
         {number}
       </div>
-      {text}
+      <p className="text-xs leading-tight">{text}</p>
     </div>
   );
 }
