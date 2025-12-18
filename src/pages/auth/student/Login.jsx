@@ -1,170 +1,135 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  FiArrowLeft,
-  FiMail,
-  FiLock,
-  FiEye,
-  FiEyeOff,
-} from "react-icons/fi";
-import { FcGoogle } from "react-icons/fc";
+import swipeImg from "../../../assets/images/auth/swipe2.png";
 
-export default function StudentLogin() {
-  const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  const updateFormData = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleLogin = async () => {
-    if (!formData.email || !formData.password) {
-      setError("Email and password are required");
-      return;
-    }
-
-    setLoading(true);
-    setError("");
-
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      navigate("/home");
-    } catch {
-      setError("Login failed. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
+export default function Login() {
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 relative">
-      
-      {/* Card */}
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-6 sm:p-8">
-        
-        {/* Header */}
-        <div className="relative flex items-center justify-center mb-8">
-          <button
-            onClick={() => navigate(-1)}
-            className="absolute left-0 p-2 rounded-full hover:bg-gray-100"
-          >
-            <FiArrowLeft size={20} />
-          </button>
-          <h1 className="text-2xl font-semibold text-gray-900">
-            Student Account
-          </h1>
-        </div>
+    <div className="min-h-screen bg-[#0f172a] flex items-center justify-center px-4">
+      <div className="w-full max-w-6xl bg-white rounded-xl overflow-hidden shadow-lg">
 
-        {/* Email */}
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Email
-        </label>
-        <div className="relative mb-4">
-          <FiMail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-          <input
-            type="email"
-            placeholder="Enter your email"
-            className="w-full border border-gray-300 rounded-lg pl-11 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={formData.email}
-            onChange={(e) => updateFormData("email", e.target.value)}
+        {/* IMAGE (md only above form, lg moves to right) */}
+        <div className="block lg:hidden bg-blue-600 p-6">
+          <img
+            src={swipeImg}
+            alt="Learning illustration"
+            className="max-w-sm mx-auto"
           />
         </div>
 
-        {/* Password */}
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Password
-        </label>
-        <div className="relative mb-2">
-          <FiLock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-          <input
-            type={showPassword ? "text" : "password"}
-            placeholder="Enter your password"
-            className="w-full border border-gray-300 rounded-lg pl-11 pr-12 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={formData.password}
-            onChange={(e) => updateFormData("password", e.target.value)}
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-          >
-            {showPassword ? <FiEyeOff /> : <FiEye />}
-          </button>
-        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2">
 
-        {/* Forgot Password */}
-        <div className="flex justify-end mb-6">
-          <button className="text-sm text-blue-600 hover:text-blue-800">
-            Forgot password?
-          </button>
-        </div>
+          {/* FORM */}
+          <div className="p-6 sm:p-8 md:p-10">
+            <h2 className="text-2xl font-semibold mb-6">
+              Student Account
+            </h2>
 
-        {/* Error */}
-        {error && (
-          <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm">
-            {error}
+            <div className="space-y-4">
+              <Input label="Full Name" placeholder="e.g Joe Rayo" />
+              <div>
+                <Input label="Email" placeholder="e.g storra@gmail.com" />
+                <p className="text-sm text-blue-600 mt-1 cursor-pointer">
+                  Use Phone Number Instead
+                </p>
+              </div>
+              <Input label="Password" type="password" placeholder="e.g *****" />
+              <Input label="Confirm Password" type="password" placeholder="e.g *****" />
+
+              <div className="flex items-center gap-2 text-sm">
+                <input type="checkbox" />
+                <span>
+                  I hereby agree to the{" "}
+                  <span className="text-blue-600 cursor-pointer">
+                    Terms & Conditions
+                  </span>
+                </span>
+              </div>
+
+              <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-md font-medium">
+                Create My Account
+              </button>
+
+              <div className="flex items-center gap-3 text-sm text-gray-400 my-4">
+                <div className="flex-1 h-px bg-gray-200" />
+                Or Sign Up with
+                <div className="flex-1 h-px bg-gray-200" />
+              </div>
+
+              <div className="flex gap-3">
+                <SocialButton
+                  icon="https://www.svgrepo.com/show/475656/google-color.svg"
+                  label="Google"
+                />
+                <SocialButton
+                  icon="https://www.svgrepo.com/show/303128/apple-logo.svg"
+                  label="Apple"
+                />
+              </div>
+
+              <p className="text-center text-sm mt-4">
+                Already have an account?{" "}
+                <span className="text-blue-600 cursor-pointer">
+                  Login
+                </span>
+              </p>
+            </div>
           </div>
-        )}
 
-        {/* Login Button */}
-        <button
-          onClick={handleLogin}
-          disabled={loading}
-          className={`w-full py-3 rounded-xl text-white text-lg font-semibold ${
-            loading
-              ? "bg-blue-400 cursor-not-allowed"
-              : "bg-blue-600 hover:bg-blue-700"
-          } transition`}
-        >
-          {loading ? "Logging in..." : "Login"}
-        </button>
+          {/* IMAGE RIGHT (lg only) */}
+          <div className="hidden lg:flex bg-blue-600 p-8 text-white flex-col justify-between">
+            <img
+              src={swipeImg}
+              alt="Learning illustration"
+              className="max-w-md mx-auto"
+            />
 
-        {/* Divider */}
-        <div className="flex items-center my-8">
-          <div className="flex-1 h-px bg-gray-300" />
-          <span className="px-3 text-sm text-gray-500">
-            Or login with
-          </span>
-          <div className="flex-1 h-px bg-gray-300" />
-        </div>
+            <div className="grid grid-cols-3 gap-4 mt-8">
+              <Step number="1" text="Create an account type" active />
+              <Step number="2" text="Provide your details" />
+              <Step number="3" text="Start learning and earning" />
+            </div>
+          </div>
 
-        {/* Google Login */}
-        <button className="w-full flex items-center justify-center border border-gray-300 rounded-lg py-3 hover:bg-gray-50 transition">
-          <FcGoogle size={22} className="mr-3" />
-          <span className="font-medium text-gray-700">
-            Continue with Google
-          </span>
-        </button>
-
-        {/* Signup */}
-        <div className="flex justify-center mt-8 text-sm">
-          <span className="text-gray-600">Don’t have an account?</span>
-          <button
-            onClick={() => navigate("/auth/student/register")}
-            className="ml-1 text-blue-600 font-semibold hover:text-blue-800"
-          >
-            Sign Up
-          </button>
         </div>
       </div>
+    </div>
+  );
+}
 
-      {/* Loading Overlay */}
-      {loading && (
-        <div className="absolute inset-0 bg-black/30 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-xl shadow-lg">
-            <div className="animate-spin h-8 w-8 border-2 border-blue-600 border-t-transparent rounded-full mx-auto" />
-            <p className="mt-3 text-sm text-center text-gray-700">
-              Logging you in...
-            </p>
-          </div>
-        </div>
-      )}
+/* ---------- Reusable Components ---------- */
+
+function Input({ label, type = "text", placeholder }) {
+  return (
+    <div>
+      <label className="block text-sm mb-1">{label}</label>
+      <input
+        type={type}
+        placeholder={placeholder}
+        className="w-full border border-gray-300 rounded-md px-3 py-2
+                   focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+    </div>
+  );
+}
+
+function SocialButton({ icon, label }) {
+  return (
+    <button className="flex-1 border border-gray-300 rounded-md py-2 flex items-center justify-center gap-2">
+      <img src={icon} className="w-5" />
+      {label}
+    </button>
+  );
+}
+
+function Step({ number, text, active }) {
+  return (
+    <div
+      className={`rounded-lg p-4 text-sm ${
+        active ? "bg-white text-blue-600" : "bg-blue-500 text-white"
+      }`}
+    >
+      <div className="w-6 h-6 rounded-full bg-yellow-400 text-blue-800 flex items-center justify-center mb-2 font-semibold">
+        {number}
+      </div>
+      {text}
     </div>
   );
 }
