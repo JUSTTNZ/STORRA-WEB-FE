@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function ParentRegister() {
     const navigate = useNavigate();
@@ -124,7 +125,7 @@ export default function ParentRegister() {
                             onClick={() => setShowPassword(!showPassword)}
                             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
                         >
-                            {showPassword ? "🙈" : "👁️"}
+                            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                         </button>
                     </div>
 
@@ -155,8 +156,8 @@ export default function ParentRegister() {
                         onClick={handleRegister}
                         disabled={!formData.agreeToTerms}
                         className={`w-full py-4 rounded-full mb-4 text-white text-lg font-semibold ${formData.agreeToTerms
-                                ? "bg-blue-500 hover:bg-blue-700"
-                                : "bg-gray-300 cursor-not-allowed"
+                            ? "bg-blue-500 hover:bg-blue-700"
+                            : "bg-gray-300 cursor-not-allowed"
                             } transition-colors`}
                     >
                         Create My Account

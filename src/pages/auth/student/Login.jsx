@@ -1,9 +1,48 @@
+import React, { useState } from 'react';
 import { AiFillApple } from 'react-icons/ai';
+import { Eye, EyeOff } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import swipeImg from "../../../assets/images/auth/swipe2.png";
 
 export default function Login() {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+  const [error, setError] = useState("");
+
+  const handleLogin = async () => {
+    if (!formData.email || !formData.password) {
+      setError('Email and password are required');
+      return;
+    }
+
+    setIsLoading(true);
+    setError("");
+
+    try {
+      // TODO: Implement actual login API call
+      console.log("Login attempt:", formData);
+
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // On success, navigate to dashboard or home
+      navigate("/");
+    } catch {
+      setError("Login failed. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const updateFormData = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
   return (
     <div className="min-h-screen bg-white flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-6xl bg-white rounded-xl overflow-hidden shadow-lg">
@@ -34,41 +73,79 @@ export default function Login() {
               </div>
             </div>
 
-            <h2 className="text-2xl font-semibold mb-6">
-              Student Account
-            </h2>
+            {/* Header */}
+            <div className="relative flex items-center justify-center mb-6">
+              <h2 className="text-2xl font-semibold">
+                Student Login
+              </h2>
+            </div>
 
             <div className="space-y-4">
-              <Input label="Full Name" placeholder="e.g Joe Rayo" />
+              {/* Email */}
+              <Input
+                label="Email"
+                type="email"
+                placeholder="e.g storra@gmail.com"
+                value={formData.email}
+                onChange={(e) => updateFormData('email', e.target.value)}
+              />
+
+              {/* Password */}
               <div>
-                <Input label="Email" placeholder="e.g storra@gmail.com" />
-                <p className="text-sm text-blue-600 mt-1 cursor-pointer">
-                  Use Phone Number Instead
-                </p>
+                <label className="block text-sm font-medium mb-1.5">Password</label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="******"
+                    value={formData.password}
+                    onChange={(e) => updateFormData("password", e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 pr-10
+                               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
+                </div>
               </div>
-              <Input label="Password" type="password" placeholder="e.g *****" />
-              <Input label="Confirm Password" type="password" placeholder="e.g *****" />
 
-              <div className="flex items-center gap-2 text-sm">
-                <input type="checkbox" />
-                <span>
-                  I hereby agree to the{" "}
-                  <span className="text-blue-600 cursor-pointer">
-                    Terms & Conditions.
-                  </span>
-                </span>
-              </div>
+              {/* Error Message */}
+              {error && (
+                <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
+                  {error}
+                </div>
+              )}
 
-              <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium">
-                Create My Account
+              {/* Login Button */}
+              <button
+                onClick={handleLogin}
+                disabled={isLoading}
+                className={`w-full py-3 rounded-lg font-medium text-white ${!isLoading
+                  ? "bg-blue-600 hover:bg-blue-700"
+                  : "bg-gray-300 cursor-not-allowed"
+                  } transition-colors`}
+              >
+                {isLoading ? (
+                  <div className="flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                    Logging In...
+                  </div>
+                ) : (
+                  "Login"
+                )}
               </button>
 
+              {/* Divider */}
               <div className="flex items-center gap-3 text-sm text-gray-400 my-4">
                 <div className="flex-1 h-px bg-gray-200" />
-                Or Sign Up with
+                Or Sign In with
                 <div className="flex-1 h-px bg-gray-200" />
               </div>
 
+              {/* Social Buttons */}
               <div className="flex gap-3">
                 <SocialButton
                   icon="https://www.svgrepo.com/show/475656/google-color.svg"
@@ -80,13 +157,14 @@ export default function Login() {
                 />
               </div>
 
+              {/* Register Link */}
               <p className="text-center text-sm mt-4">
                 Don't have an account?{" "}
                 <span
-                  onClick={() => navigate('/auth/student/register')}
+                  onClick={() => navigate("/auth/student/register")}
                   className="text-blue-600 cursor-pointer font-medium"
                 >
-                  Register
+                  Sign up
                 </span>
               </p>
             </div>

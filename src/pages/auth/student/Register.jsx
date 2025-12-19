@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AiFillApple } from 'react-icons/ai';
+import { Eye, EyeOff } from 'lucide-react';
 import swipeImg from "../../../assets/images/auth/swipe2.png";
 
 export default function StudentRegister() {
@@ -93,12 +94,6 @@ export default function StudentRegister() {
 
                         {/* Header */}
                         <div className="relative flex items-center justify-center mb-6">
-                            <button
-                                onClick={() => navigate("/auth/choose-account")}
-                                className="absolute left-0 p-2 hover:bg-gray-100 rounded-full"
-                            >
-                                ←
-                            </button>
                             <h2 className="text-2xl font-semibold">
                                 Student Account
                             </h2>
@@ -106,16 +101,16 @@ export default function StudentRegister() {
 
                         <div className="space-y-4">
                             {/* Full Name */}
-                            <Input 
-                                label="Full Name" 
+                            <Input
+                                label="Full Name"
                                 placeholder="Billie Dom"
                                 value={formData.fullName}
                                 onChange={(e) => updateFormData('fullName', e.target.value)}
                             />
 
                             {/* Email */}
-                            <Input 
-                                label="Email" 
+                            <Input
+                                label="Email"
                                 type="email"
                                 placeholder="Nz@gmail.com"
                                 value={formData.email}
@@ -123,8 +118,8 @@ export default function StudentRegister() {
                             />
 
                             {/* Phone Number */}
-                            <Input 
-                                label="Phone Number" 
+                            <Input
+                                label="Phone Number"
                                 type="tel"
                                 placeholder="+2347062487335"
                                 value={formData.phoneNumber}
@@ -148,13 +143,13 @@ export default function StudentRegister() {
                                         onClick={() => setShowPassword(!showPassword)}
                                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
                                     >
-                                        {showPassword ? "🙈" : "👁️"}
+                                        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                                     </button>
                                 </div>
                             </div>
 
                             {/* Parent Phone Number */}
-                            <Input 
+                            <Input
                                 label={
                                     <>
                                         Parent Phone Number <span className="text-gray-500">(Optional)</span>
@@ -168,8 +163,8 @@ export default function StudentRegister() {
 
                             {/* Terms & Conditions */}
                             <div className="flex items-center gap-2 text-sm">
-                                <input 
-                                    type="checkbox" 
+                                <input
+                                    type="checkbox"
                                     id="terms"
                                     checked={formData.agreeToTerms}
                                     onChange={(e) => updateFormData('agreeToTerms', e.target.checked)}
@@ -194,11 +189,10 @@ export default function StudentRegister() {
                             <button
                                 onClick={handleRegister}
                                 disabled={!formData.agreeToTerms || isLoading}
-                                className={`w-full py-3 rounded-lg font-medium text-white ${
-                                    formData.agreeToTerms && !isLoading
-                                        ? "bg-blue-600 hover:bg-blue-700"
-                                        : "bg-gray-300 cursor-not-allowed"
-                                } transition-colors`}
+                                className={`w-full py-3 rounded-lg font-medium text-white ${formData.agreeToTerms && !isLoading
+                                    ? "bg-blue-600 hover:bg-blue-700"
+                                    : "bg-gray-300 cursor-not-allowed"
+                                    } transition-colors`}
                             >
                                 {isLoading ? (
                                     <div className="flex items-center justify-center">
@@ -232,11 +226,11 @@ export default function StudentRegister() {
                             {/* Login Link */}
                             <p className="text-center text-sm mt-4">
                                 Already have an account?{" "}
-                                <span 
+                                <span
                                     onClick={() => navigate("/auth/student/login")}
                                     className="text-blue-600 cursor-pointer font-medium"
                                 >
-                                    Login
+                                    Sign in
                                 </span>
                             </p>
                         </div>
@@ -299,9 +293,8 @@ function SocialButton({ icon, label }) {
 function Step({ number, text, active }) {
     return (
         <div
-            className={`rounded-lg p-3 text-sm ${
-                active ? "bg-white text-black" : "bg-blue-500/50 text-white"
-            }`}
+            className={`rounded-lg p-3 text-sm ${active ? "bg-white text-black" : "bg-blue-500/50 text-white"
+                }`}
         >
             <div className="w-7 h-7 rounded-full bg-yellow-400 text-black flex items-center justify-center mb-2 font-bold text-sm">
                 {number}
