@@ -8,6 +8,7 @@ import OnboardingPage from "./pages/OnboardingPage";
 // Auth Components
 import StudentLogin from "./pages/auth/student/Login";
 import StudentRegister from "./pages/auth/student/Register";
+import Personalization from "./pages/personalization/personalization";
 
 function App() {
     return (
@@ -23,6 +24,8 @@ function App() {
 
                 {/* Redirect unknown routes to home */}
                 <Route path="*" element={<Navigate to="/" replace />} />
+
+                <Route path="personalization" element={<Personalization />}/>
             </Routes>
         </BrowserRouter>
     );
