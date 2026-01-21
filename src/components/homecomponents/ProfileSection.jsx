@@ -1,53 +1,64 @@
-import React from "react";
-import StudentAvatar from "../../assets/images/home-img/student.png";
+import { useAuth } from '../../context/AuthContext';
+import { ChevronDown } from 'lucide-react';
 
-function ProgressSection() {
+function ProfileSection() {
+  const { user } = useAuth();
+  const firstName = user?.fullName?.split(' ')[0] || 'Student';
+
   return (
     <>
-      <section className=" sm:flex lg:flex hidden  h-[72px] items-center justify-between w-[100%]  ">
-        {/* Greeting */}
-
-        {/* Subheading */}
+      {/* Desktop Header */}
+      <section className="hidden sm:flex lg:flex h-[72px] items-center justify-between w-full">
         <div>
-          <h2 className="text-[32px] font-[500] text-black">Hello Jemimah,</h2>
-
-          <p className="text-[16px] font-[500] text-grey-500">
-            Here’s your learning journey today
+          <h2 className="text-2xl md:text-3xl font-semibold text-secondary-800">
+            Hello {firstName},
+          </h2>
+          <p className="text-sm md:text-base text-secondary-500">
+            Here's your learning journey today
           </p>
         </div>
-        <div>
-          <p className="text-[16px] font-[500] text-blue-400">
-            Pri 1 {/* <HiChevronDown className="text-gray-500 text-lg " /> */}
-          </p>
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium text-primary-500">
+            {user?.currentClass || 'Primary 1'}
+          </span>
+          <ChevronDown className="w-4 h-4 text-secondary-400" />
         </div>
       </section>
 
-      {/* mobile header */}
-      <div className="flex justify-between h-[45px] items-center w-[100%]  sm:hidden lg:hidden">
-        <div className="flex w-[285px] h-[45px] items-center justify-between">
-          <img
-            className="w-[40px] h-[40px]"
-            src={StudentAvatar}
-            alt="student"
-          />
+      {/* Mobile Header */}
+      <div className="flex justify-between items-center w-full py-3 sm:hidden">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center overflow-hidden">
+            {user?.profilePicture ? (
+              <img
+                src={user.profilePicture}
+                alt={user.fullName}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <span className="text-primary-500 font-semibold">
+                {firstName.charAt(0)}
+              </span>
+            )}
+          </div>
           <div>
-            <h2 className="text-[16px] font-[500] text-black">
-              Hello Jemimah,
+            <h2 className="text-base font-semibold text-secondary-800">
+              Hello {firstName},
             </h2>
-
-            <p className="text-[14px] font-[500] text-grey-500">
-              Here’s your learning journey today
+            <p className="text-xs text-secondary-500">
+              Here's your learning journey today
             </p>
           </div>
         </div>
-        <div>
-          <p className="text-[16px] font-[500] text-blue-400">
-            Pri 1 {/* <HiChevronDown className="text-gray-500 text-lg " /> */}
-          </p>
+        <div className="flex items-center gap-1">
+          <span className="text-xs font-medium text-primary-500">
+            {user?.currentClass || 'Pri 1'}
+          </span>
+          <ChevronDown className="w-4 h-4 text-secondary-400" />
         </div>
       </div>
     </>
   );
 }
 
-export default ProgressSection;
+export default ProfileSection;

@@ -4,11 +4,18 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        grotesk: ["SpaceGrotesk_400Regular", "SpaceGrotesk-Regular"],
-        groteskMedium: ["SpaceGrotesk_500Medium", "SpaceGrotesk-Medium"],
-        groteskBold: ["SpaceGrotesk_700Bold", "SpaceGrotesk-Bold"],
-        groteskLight: ["SpaceGrotesk-Light"],
-        groteskSemiBold: ["SpaceGrotesk-SemiBold"],
+        grotesk: ['"Space Grotesk"', 'sans-serif'],
+        groteskLight: ['"Space Grotesk"', 'sans-serif'],
+        groteskMedium: ['"Space Grotesk"', 'sans-serif'],
+        groteskSemiBold: ['"Space Grotesk"', 'sans-serif'],
+        groteskBold: ['"Space Grotesk"', 'sans-serif'],
+      },
+      fontWeight: {
+        light: '300',
+        normal: '400',
+        medium: '500',
+        semibold: '600',
+        bold: '700',
       },
       colors: {
         primary: {
