@@ -1,9 +1,9 @@
-import axiosInstance from './axiosInstance';
-import { ENDPOINTS } from './endpoints';
+import api from '../api';
+import { ENDPOINTS } from '../endpoints';
 
 export const authApi = {
   async register(userData) {
-    const response = await axiosInstance.post(ENDPOINTS.AUTH.REGISTER, {
+    const response = await api.post(ENDPOINTS.AUTH.REGISTER, {
       fullName: userData.fullName,
       email: userData.email,
       phoneNumber: userData.phoneNumber,
@@ -14,7 +14,7 @@ export const authApi = {
   },
 
   async login(credentials) {
-    const response = await axiosInstance.post(ENDPOINTS.AUTH.LOGIN, {
+    const response = await api.post(ENDPOINTS.AUTH.LOGIN, {
       email: credentials.email,
       password: credentials.password,
     });
@@ -22,23 +22,22 @@ export const authApi = {
   },
 
   async getCurrentUser() {
-    const response = await axiosInstance.get(ENDPOINTS.AUTH.ME);
+    const response = await api.get(ENDPOINTS.AUTH.ME);
     return response.data;
   },
 
   async resetPassword(email) {
-    const response = await axiosInstance.post(ENDPOINTS.AUTH.RESET_PASSWORD, { email });
+    const response = await api.post(ENDPOINTS.AUTH.RESET_PASSWORD, { email });
     return response.data;
   },
 
   async editProfile(profileData) {
-    const response = await axiosInstance.put(ENDPOINTS.AUTH.EDIT_PROFILE, profileData);
+    const response = await api.put(ENDPOINTS.AUTH.EDIT_PROFILE, profileData);
     return response.data;
   },
 
   logout() {
-    // Clear any stored data if needed
-    // This is handled by Redux now
+    // Handled by Redux
   },
 };
 

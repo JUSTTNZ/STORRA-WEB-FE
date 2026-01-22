@@ -60,6 +60,15 @@ const initialState = {
   isAuthenticated: false,
   isLoading: false,
   error: null,
+  // Signup flow data
+  signupData: {
+    accountType: null,
+    fullName: null,
+    email: null,
+    phoneNumber: null,
+    password: null,
+    parentPhoneNumber: null,
+  },
 };
 
 // Slice
@@ -138,6 +147,22 @@ const authSlice = createSlice({
     setToken: (state, action) => {
       state.token = action.payload;
     },
+    setAccountType: (state, action) => {
+      state.signupData.accountType = action.payload;
+    },
+    setSignupData: (state, action) => {
+      state.signupData = { ...state.signupData, ...action.payload };
+    },
+    clearSignupData: (state) => {
+      state.signupData = {
+        accountType: null,
+        fullName: null,
+        email: null,
+        phoneNumber: null,
+        password: null,
+        parentPhoneNumber: null,
+      };
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -211,6 +236,9 @@ export const {
   logout,
   setUser,
   setToken,
+  setAccountType,
+  setSignupData,
+  clearSignupData,
 } = authSlice.actions;
 
 // Selectors
@@ -219,5 +247,7 @@ export const selectUser = (state) => state.auth.user;
 export const selectIsAuthenticated = (state) => state.auth.isAuthenticated;
 export const selectIsLoading = (state) => state.auth.isLoading;
 export const selectAuthError = (state) => state.auth.error;
+export const selectSignupData = (state) => state.auth.signupData;
+export const selectAccountType = (state) => state.auth.signupData.accountType;
 
 export default authSlice.reducer;

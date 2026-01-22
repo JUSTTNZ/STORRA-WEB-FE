@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import { ChevronLeft, ChevronDown, Plus, Headphones, Video, Gamepad2, Pencil, Puzzle, Calculator, BookOpen, Microscope, Palette, Code, MessageSquare, Trophy, Gift, Brain, Gamepad } from 'lucide-react';
 import { onboardingService } from '../../services/onboardingService';
-import { authService } from '../../services/authService';
+import { selectUser } from '../../features/auth/authSlice';
 
 const Personalization = () => {
   const navigate = useNavigate();
+  const user = useSelector(selectUser);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -43,7 +45,6 @@ const Personalization = () => {
     setError('');
 
     try {
-      const user = authService.getStoredUser();
       const userId = user?.id || user?._id;
 
       if (userId) {
