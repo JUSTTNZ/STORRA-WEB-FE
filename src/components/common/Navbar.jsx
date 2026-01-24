@@ -78,9 +78,9 @@ const Navbar = () => {
             >
               {/* Avatar */}
               <div className="w-9 h-9 bg-primary-100 rounded-full flex items-center justify-center overflow-hidden">
-                {user?.profilePicture ? (
+                {user?.avatar ? (
                   <img
-                    src={user.profilePicture}
+                    src={user.avatar}
                     alt={user.fullName}
                     className="w-full h-full object-cover"
                   />

@@ -1,10 +1,10 @@
-import React from "react";
-import RewardsPage from "./RewardsPage";
+
+import SpinPage from "./SpinPage";
 
 function Spin() {
   return (
     <div className="w-full  p-5 overflow-x-hidden text-[#7D7F85]">
-      <RewardsPage />
+      <SpinPage />
     </div>
   );
 }
