@@ -12,7 +12,16 @@ export const authService = {
       parentPhoneNumber: userData.parentPhoneNumber || undefined,
     });
 
-    return response.data;
+    // Backend returns: { statusCode, message, data: { profile, supabaseUser, accessToken } }
+    const apiResponse = response.data;
+    const data = apiResponse.data || apiResponse;
+
+    // Normalize response for AuthContext
+    return {
+      token: data.accessToken,
+      user: data.profile || data.user,
+      supabaseUser: data.supabaseUser,
+    };
   },
 
   // Login user
@@ -22,13 +31,24 @@ export const authService = {
       password: credentials.password,
     });
 
-    return response.data;
+    // Backend returns: { statusCode, message, data: { profile, supabaseUser, accessToken } }
+    const apiResponse = response.data;
+    const data = apiResponse.data || apiResponse;
+
+    // Normalize response for AuthContext
+    return {
+      token: data.accessToken,
+      user: data.profile || data.user,
+      supabaseUser: data.supabaseUser,
+    };
   },
 
   // Get current user
   async getCurrentUser() {
     const response = await api.get(ENDPOINTS.AUTH.ME);
-    return response.data;
+    // Backend returns flattened user object in data
+    const apiResponse = response.data;
+    return apiResponse.data || apiResponse;
   },
 
   // Reset password
@@ -40,7 +60,8 @@ export const authService = {
   // Edit profile
   async editProfile(profileData) {
     const response = await api.put(ENDPOINTS.AUTH.EDIT_PROFILE, profileData);
-    return response.data;
+    const apiResponse = response.data;
+    return apiResponse.data || apiResponse;
   },
 };
 

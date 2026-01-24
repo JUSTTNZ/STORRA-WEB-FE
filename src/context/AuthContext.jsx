@@ -1,4 +1,4 @@
-import React, { createContext, useCallback } from 'react';
+import React, { createContext, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   loginStart,
@@ -9,6 +9,7 @@ import {
   registerFailure,
   logout,
   setToken,
+  fetchCurrentUser, // Add this
 } from '../features/auth/authSlice';
 import authService from '../services/authService';
 
@@ -20,21 +21,37 @@ export const AuthProvider = ({ children }) => {
     (state) => state.auth
   );
 
+  // Add this function to fetch current user
+  const fetchUserProfile = useCallback(async () => {
+    try {
+      const userData = await authService.getCurrentUser();
+      return userData;
+    } catch (err) {
+      console.error('Failed to fetch user profile:', err);
+      throw err;
+    }
+  }, []);
+
   const login = useCallback(
     async (credentials) => {
       dispatch(loginStart());
       try {
+        // 1. Login to get token
         const data = await authService.login(credentials);
+        dispatch(setToken(data.token));
+        
+        // 2. Fetch complete user profile
+        const userProfile = await fetchUserProfile();
+        
+        // 3. Dispatch success with both token and full user data
         dispatch(
           loginSuccess({
             token: data.token,
-            user: data.user,
+            user: userProfile.user || userProfile, // Use full user profile
           })
         );
-        if (data.token) {
-          dispatch(setToken(data.token));
-        }
-        return data;
+        
+        return { token: data.token, user: userProfile };
       } catch (err) {
         const errorMessage =
           err.response?.data?.message || err.message || 'Login failed';
@@ -42,24 +59,29 @@ export const AuthProvider = ({ children }) => {
         throw err;
       }
     },
-    [dispatch]
+    [dispatch, fetchUserProfile]
   );
 
   const register = useCallback(
     async (userData) => {
       dispatch(registerStart());
       try {
+        // 1. Register
         const data = await authService.register(userData);
+        dispatch(setToken(data.token));
+        
+        // 2. Fetch user profile
+        const userProfile = await fetchUserProfile();
+        
+        // 3. Dispatch success
         dispatch(
           registerSuccess({
             token: data.token,
-            user: data.user,
+            user: userProfile.user || userProfile,
           })
         );
-        if (data.token) {
-          dispatch(setToken(data.token));
-        }
-        return data;
+        
+        return { token: data.token, user: userProfile };
       } catch (err) {
         const errorMessage =
           err.response?.data?.message || err.message || 'Registration failed';
@@ -67,8 +89,15 @@ export const AuthProvider = ({ children }) => {
         throw err;
       }
     },
-    [dispatch]
+    [dispatch, fetchUserProfile]
   );
+
+  // Add auto-fetch on mount if token exists
+  useEffect(() => {
+    if (token && !user) {
+      dispatch(fetchCurrentUser());
+    }
+  }, [token, user, dispatch]);
 
   const logoutUser = useCallback(() => {
     dispatch(logout());
@@ -83,6 +112,7 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout: logoutUser,
+    refreshUser: fetchUserProfile, // Expose for manual refresh
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

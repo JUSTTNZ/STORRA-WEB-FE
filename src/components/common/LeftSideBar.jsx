@@ -40,9 +40,9 @@ const LeftSideBar = () => {
       <div className="flex items-center justify-between p-4 border-b border-secondary-100">
         <div className="flex items-center gap-2">
           <div className="w-10 h-10 bg-primary-400 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-xl">S</span>
+            <span className="text-white font-bold text-xl">C</span>
           </div>
-          <span className="font-bold text-xl text-secondary-800">Storra</span>
+          <span className="font-bold text-md text-secondary-800">Classora</span>
         </div>
         {/* Mobile close button */}
         <button
@@ -69,35 +69,14 @@ const LeftSideBar = () => {
             }
           >
             <item.icon className="w-5 h-5" />
-            <span className="font-medium">{item.title}</span>
+            <span className="font-medium text-sm" >{item.title}</span>
           </NavLink>
         ))}
       </nav>
 
       {/* User Profile & Logout */}
       <div className="p-3 border-t border-secondary-100">
-        {/* User Info */}
-        <div className="flex items-center gap-3 px-4 py-3 mb-2">
-          <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
-            {user?.profilePicture ? (
-              <img
-                src={user.profilePicture}
-                alt={user.fullName}
-                className="w-full h-full rounded-full object-cover"
-              />
-            ) : (
-              <span className="text-primary-500 font-semibold">
-                {user?.fullName?.charAt(0) || 'U'}
-              </span>
-            )}
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="font-medium text-secondary-800 truncate">
-              {user?.fullName || 'User'}
-            </p>
-            <p className="text-xs text-secondary-500">Student</p>
-          </div>
-        </div>
+      
 
         {/* Logout Button */}
         <button

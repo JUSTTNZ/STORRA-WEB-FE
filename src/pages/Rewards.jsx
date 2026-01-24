@@ -1,210 +1,392 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Gift, Trophy, Star, TrendingUp, Loader2 } from 'lucide-react';
+import { 
+  Gift, Trophy, Star, TrendingUp, Loader2, AlertCircle, 
+  Coins, Zap, Sparkles, Award, Clock, CheckCircle,
+  Flame, Target, Crown, Shield, Rocket, Gem, Calendar
+} from 'lucide-react';
 import { rewardsService } from '../services/rewardsService';
 import { useToast } from '../components/common/Toast';
+import Confetti from 'react-confetti';
 
 const Rewards = () => {
   const toast = useToast();
-  const [rewards, setRewards] = useState([]);
+  const [rewards, setRewards] = useState({
+    balance: 0,
+    points: 0,
+    diamonds: 0,
+    spinChances: 0,
+    level: 'Bronze',
+    pointsToNextLevel: 0,
+    currentStreak: 1,
+    longestStreak: 1,
+    calendar: [], // This will contain ALL days of the month from getCalendar()
+    achievements: [],
+    dailyRewards: [], // Claimed daily rewards from getRewards()
+    history: [],
+    transactionHistory: []
+  });
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [claimingId, setClaimingId] = useState(null);
-
-  // Mock rewards data (will be replaced with API data)
-  const mockRewards = {
-    balance: 1250,
-    level: 'Silver',
-    pointsToNextLevel: 250,
-    available: [
-      { id: 1, title: '₦500 Airtime', points: 100, category: 'airtime' },
-      { id: 2, title: '₦1000 Data Bundle', points: 200, category: 'data' },
-      { id: 3, title: '₦2000 Shopping Voucher', points: 400, category: 'voucher' },
-    ],
-    achievements: [
-      { id: 1, title: 'Complete 5 Lessons', points: 50, progress: 80 },
-      { id: 2, title: '7-Day Streak', points: 100, progress: 42 },
-      { id: 3, title: 'Quiz Master', points: 75, progress: 100 },
-    ],
-    history: [
-      { id: 1, title: 'Daily Login Bonus', points: 10, date: 'Today' },
-      { id: 2, title: 'Completed Math Quiz', points: 25, date: 'Yesterday' },
-      { id: 3, title: 'Watched Tutorial', points: 15, date: '2 days ago' },
-    ],
-  };
+  const [showConfetti, setShowConfetti] = useState(false);
 
   useEffect(() => {
     fetchRewards();
   }, []);
 
   const fetchRewards = async () => {
+    setIsLoading(true);
+    setError(null);
     try {
-      // const data = await rewardsService.getRewards();
-      // setRewards(data);
-      setRewards(mockRewards);
+      // 1. Fetch user rewards data
+      const rewardsData = await rewardsService.getRewards();
+      console.log('Rewards data:', rewardsData);
+      
+      // 2. Fetch calendar data with ALL days
+      const calendarData = await rewardsService.getCalendar();
+      console.log('Calendar data:', calendarData);
+      
+      setRewards({
+        balance: rewardsData.balance || 0,
+        points: rewardsData.points || 0,
+        diamonds: rewardsData.diamonds || 0,
+        spinChances: rewardsData.spinChances || 0,
+        level: rewardsData.level || 'Bronze',
+        pointsToNextLevel: rewardsData.pointsToNextLevel || 0,
+        currentStreak: rewardsData.currentStreak || 1,
+        longestStreak: rewardsData.longestStreak || 1,
+        calendar: calendarData.calendar || [],
+        achievements: rewardsData.achievements || [],
+        dailyRewards: rewardsData.dailyRewards || [],
+        history: rewardsData.history || [],
+        transactionHistory: rewardsData.transactionHistory || []
+      });
     } catch (error) {
       console.error('Failed to fetch rewards:', error);
+      setError('Failed to load rewards. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleRedeem = async (rewardId) => {
-    setClaimingId(rewardId);
+  const handleClaimDaily = async () => {
+    setClaimingId('today');
     try {
-      // await rewardsService.claimAchievement(rewardId);
-      toast.success('Reward redeemed successfully!');
+      // Call your API to claim today's reward
+      const response = await rewardsService.claimDaily();
+      
+      toast.success(`Daily reward claimed! 🎉`);
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 3000);
+      
+      // Refresh data
       fetchRewards();
     } catch (error) {
-      toast.error('Failed to redeem reward');
+      toast.error(error?.response?.data?.message || 'Failed to claim reward');
     } finally {
       setClaimingId(null);
     }
   };
 
+  // Find today's day in the calendar
+  const getTodayInCalendar = () => {
+    const today = new Date();
+    const todayDay = today.getDate();
+    
+    return rewards.calendar.find(day => day.day === todayDay);
+  };
+
+  const todayData = getTodayInCalendar();
+  const isTodayClaimed = todayData?.claimed || false;
+  const todayRewards = todayData?.rewards || [];
+
+  const levelColors = {
+    'Bronze': 'from-amber-800 to-amber-600',
+    'Silver': 'from-gray-400 to-gray-300',
+    'Gold': 'from-yellow-500 to-yellow-300',
+    'Platinum': 'from-cyan-600 to-cyan-400',
+    'Diamond': 'from-blue-400 to-purple-500'
+  };
+
+  // Calculate total rewards value for a day
+  const calculateDayReward = (rewards) => {
+    if (!rewards || !Array.isArray(rewards)) return 0;
+    
+    return rewards.reduce((total, reward) => {
+      return total + (reward.amount || 0);
+    }, 0);
+  };
+
+  // Get reward icon based on type
+  const getRewardIcon = (type) => {
+    switch (type) {
+      case 'coins':
+        return <Coins className="w-5 h-5 text-yellow-500" />;
+      case 'points':
+        return <Star className="w-5 h-5 text-green-500" />;
+      case 'spin_chance':
+        return <Zap className="w-5 h-5 text-orange-500" />;
+      case 'trial_access':
+        return <Gift className="w-5 h-5 text-purple-500" />;
+      default:
+        return <Gift className="w-5 h-5 text-gray-500" />;
+    }
+  };
+
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
+      <div className="flex items-center justify-center min-h-[400px]">
         <Loader2 className="w-8 h-8 animate-spin text-primary-400" />
       </div>
     );
   }
 
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[400px] text-center p-6">
+        <AlertCircle className="w-12 h-12 text-red-400 mb-4" />
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">Failed to Load</h3>
+        <p className="text-gray-600 mb-4">{error}</p>
+        <button
+          onClick={fetchRewards}
+          className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+        >
+          Try Again
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-6">
-      {/* Balance Card */}
-      <div className="bg-gradient-to-r from-primary-400 to-primary-500 rounded-2xl p-6 text-white">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-primary-100 text-sm mb-1">Your Rewards Balance</p>
-            <h1 className="text-3xl font-bold">{rewards.balance?.toLocaleString()} points</h1>
-            <p className="text-primary-100 text-sm mt-2">
-              Level: {rewards.level} | {rewards.pointsToNextLevel} points to next tier
-            </p>
-          </div>
-          <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
-            <Trophy className="w-8 h-8" />
+    <div className="space-y-8 p-4 sm:p-6">
+      {showConfetti && <Confetti recycle={false} numberOfPieces={200} />}
+      
+      {/* Header Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl p-4 text-white shadow-lg">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-primary-100 text-sm mb-1">Coins</p>
+              <h2 className="text-2xl font-bold">{rewards.balance}</h2>
+            </div>
+            <Coins className="w-10 h-10 opacity-80" />
           </div>
         </div>
 
-        {/* Progress Bar */}
-        <div className="mt-4">
-          <div className="w-full bg-white/20 rounded-full h-2">
-            <div
-              className="bg-white rounded-full h-2 transition-all"
-              style={{ width: `${((1000 - rewards.pointsToNextLevel) / 1000) * 100}%` }}
-            />
+        <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl p-4 text-white shadow-lg">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-emerald-100 text-sm mb-1">Points</p>
+              <h2 className="text-2xl font-bold">{rewards.points}</h2>
+            </div>
+            <Star className="w-10 h-10 opacity-80" />
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-br from-orange-500 to-amber-600 rounded-2xl p-4 text-white shadow-lg">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-amber-100 text-sm mb-1">Spins</p>
+              <h2 className="text-2xl font-bold">{rewards.spinChances}</h2>
+            </div>
+            <Zap className="w-10 h-10 opacity-80" />
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl p-4 text-white shadow-lg">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-purple-100 text-sm mb-1">Streak</p>
+              <h2 className="text-2xl font-bold">{rewards.currentStreak} days</h2>
+            </div>
+            <Flame className="w-10 h-10 opacity-80" />
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Available Rewards */}
-        <div className="bg-white rounded-xl border border-secondary-100 p-5">
-          <h2 className="font-bold text-lg text-secondary-800 mb-4 flex items-center gap-2">
-            <Gift className="w-5 h-5 text-primary-400" />
-            Available Rewards
-          </h2>
-          <div className="space-y-3">
-            {rewards.available?.map((reward) => (
-              <div
-                key={reward.id}
-                className="flex items-center justify-between p-3 border border-secondary-100 rounded-xl hover:border-primary-200 transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
-                    <Gift className="w-5 h-5 text-primary-500" />
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-secondary-800">{reward.title}</h4>
-                    <p className="text-sm text-secondary-500">{reward.points} points</p>
-                  </div>
+      {/* Daily Rewards Section */}
+      <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <Calendar className="w-6 h-6 text-primary-500" />
+            <div>
+              <h2 className="text-xl font-bold text-gray-900">Daily Rewards</h2>
+              <p className="text-sm text-gray-600">Claim your reward for today!</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Flame className="w-5 h-5 text-orange-500" />
+            <span className="text-sm font-medium text-gray-700">
+              Streak: {rewards.currentStreak} days
+            </span>
+            <span className="text-xs text-gray-500">
+              (Best: {rewards.longestStreak})
+            </span>
+          </div>
+        </div>
+
+        {/* Today's Reward Card */}
+        <div className="mb-8">
+          <div className={`rounded-2xl p-6 ${
+            isTodayClaimed 
+              ? 'bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200'
+              : 'bg-gradient-to-br from-primary-50 to-blue-50 border-2 border-primary-200 shadow-lg'
+          }`}>
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-gray-900 mb-4">
+                  Today's Reward • Day {new Date().getDate()}
+                </h3>
+                <div className="flex flex-wrap gap-4">
+                  {todayRewards.length > 0 ? (
+                    todayRewards.map((reward, index) => (
+                      <div key={index} className="flex items-center gap-3 bg-white p-3 rounded-xl shadow-sm">
+                        <div className="w-12 h-12 rounded-full flex items-center justify-center bg-gray-50">
+                          {getRewardIcon(reward.type)}
+                        </div>
+                        <div>
+                          <p className="font-bold text-lg text-gray-900">+{reward.amount}</p>
+                          <p className="text-sm text-gray-500 capitalize">
+                            {reward.type.replace('_', ' ')}
+                          </p>
+                          {reward.description && (
+                            <p className="text-xs text-gray-400 mt-1">{reward.description}</p>
+                          )}
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-gray-500">
+                      No rewards available for today
+                    </div>
+                  )}
                 </div>
-                <button
-                  onClick={() => handleRedeem(reward.id)}
-                  disabled={claimingId === reward.id || rewards.balance < reward.points}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    rewards.balance >= reward.points
-                      ? 'bg-primary-400 text-white hover:bg-primary-500'
-                      : 'bg-secondary-100 text-secondary-400 cursor-not-allowed'
+              </div>
+              
+              <div className="flex-shrink-0">
+                {isTodayClaimed ? (
+                  <div className="flex items-center gap-3 bg-green-100 text-green-800 px-6 py-4 rounded-xl">
+                    <CheckCircle className="w-6 h-6" />
+                    <div>
+                      <p className="font-semibold">Already Claimed</p>
+                      <p className="text-sm">Come back tomorrow!</p>
+                    </div>
+                  </div>
+                ) : (
+                  <button
+                    onClick={handleClaimDaily}
+                    disabled={claimingId === 'today'}
+                    className="px-8 py-4 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-bold rounded-xl hover:from-primary-600 hover:to-primary-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3 shadow-lg"
+                  >
+                    {claimingId === 'today' ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        <span>Claiming...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Gift className="w-6 h-6" />
+                        <div className="text-left">
+                          <div className="text-lg">Claim Now</div>
+                          <div className="text-sm opacity-90">Get your daily reward</div>
+                        </div>
+                      </>
+                    )}
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Calendar Grid */}
+        <div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">This Month's Calendar</h3>
+          <div className="grid grid-cols-7 gap-2">
+            {rewards.calendar.map((dayData) => {
+              const today = new Date();
+              const isToday = dayData.day === today.getDate();
+              const isPast = dayData.day < today.getDate();
+              const isClaimed = dayData.claimed;
+              const totalValue = calculateDayReward(dayData.rewards);
+              
+              return (
+                <div
+                  key={dayData.day}
+                  className={`relative rounded-xl p-3 flex flex-col items-center justify-center min-h-[90px] transition-all duration-200 ${
+                    isClaimed
+                      ? 'bg-gradient-to-br from-green-100 to-green-50 border-2 border-green-200'
+                      : isToday
+                      ? 'bg-gradient-to-br from-primary-100 to-blue-100 border-2 border-primary-400 shadow-lg'
+                      : isPast
+                      ? 'bg-gray-100 border border-gray-200'
+                      : 'bg-gray-50 border border-gray-200'
                   }`}
                 >
-                  {claimingId === reward.id ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                  <div className="text-base font-bold text-gray-900 mb-2">
+                    {dayData.day}
+                  </div>
+                  
+                  <div className="flex items-center gap-1 mb-2">
+                    <Coins className="w-4 h-4 text-yellow-500" />
+                    <span className="text-sm font-semibold text-gray-900">
+                      +{totalValue}
+                    </span>
+                  </div>
+                  
+                  {isClaimed ? (
+                    <CheckCircle className="w-5 h-5 text-green-500" />
+                  ) : isToday ? (
+                    <div className="flex items-center gap-1">
+                      <Sparkles className="w-4 h-4 text-primary-500" />
+                      <span className="text-xs text-primary-600 font-medium">Today</span>
+                    </div>
+                  ) : isPast ? (
+                    <Clock className="w-4 h-4 text-gray-400" />
                   ) : (
-                    'Redeem'
+                    <div className="w-5 h-5"></div>
                   )}
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Achievements */}
-        <div className="bg-white rounded-xl border border-secondary-100 p-5">
-          <h2 className="font-bold text-lg text-secondary-800 mb-4 flex items-center gap-2">
-            <Star className="w-5 h-5 text-attention-200" />
-            Achievements
-          </h2>
-          <div className="space-y-4">
-            {rewards.achievements?.map((achievement) => (
-              <div key={achievement.id} className="p-3 border border-secondary-100 rounded-xl">
-                <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-medium text-secondary-800">{achievement.title}</h4>
-                  <span className="text-sm text-primary-500 font-medium">+{achievement.points} pts</span>
+                  
+                  {isToday && !isClaimed && (
+                    <div className="absolute -top-2 -right-2 w-6 h-6 bg-primary-500 rounded-full flex items-center justify-center animate-pulse">
+                      <Sparkles className="w-3 h-3 text-white" />
+                    </div>
+                  )}
                 </div>
-                <div className="w-full bg-secondary-100 rounded-full h-2">
-                  <div
-                    className={`h-2 rounded-full transition-all ${
-                      achievement.progress === 100 ? 'bg-success-200' : 'bg-primary-400'
-                    }`}
-                    style={{ width: `${achievement.progress}%` }}
-                  />
-                </div>
-                <p className="text-xs text-secondary-500 mt-1">{achievement.progress}% complete</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Recent Activity */}
-        <div className="bg-white rounded-xl border border-secondary-100 p-5">
-          <h2 className="font-bold text-lg text-secondary-800 mb-4 flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 text-success-200" />
-            Recent Activity
-          </h2>
-          <div className="space-y-3">
-            {rewards.history?.map((item) => (
-              <div
-                key={item.id}
-                className="flex items-center justify-between p-3 border border-secondary-100 rounded-xl"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-success-50 rounded-full flex items-center justify-center">
-                    <Gift className="w-5 h-5 text-success-200" />
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-secondary-800">{item.title}</h4>
-                    <p className="text-xs text-secondary-500">{item.date}</p>
-                  </div>
-                </div>
-                <span className="text-success-200 font-medium">+{item.points}</span>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
 
-      {/* Footer Links */}
-      <div className="flex items-center justify-center gap-6 pt-4 text-sm">
-        <Link to="/help" className="text-secondary-500 hover:text-primary-500 transition-colors">
-          Help Center
-        </Link>
-        <Link to="/terms" className="text-secondary-500 hover:text-primary-500 transition-colors">
-          Terms & Conditions
-        </Link>
-        <Link to="/privacy" className="text-secondary-500 hover:text-primary-500 transition-colors">
-          Privacy Policy
-        </Link>
+      {/* Level Progress */}
+      <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <Trophy className="w-6 h-6 text-yellow-500" />
+            <div>
+              <h2 className="text-xl font-bold text-gray-900">Your Level</h2>
+              <p className="text-sm text-gray-600">
+                {rewards.level} • {rewards.pointsToNextLevel} points to next level
+              </p>
+            </div>
+          </div>
+          <Crown className="w-8 h-8 text-yellow-500" />
+        </div>
+
+        <div className="space-y-4">
+          <div className="h-4 bg-gray-200 rounded-full overflow-hidden">
+            <div
+              className={`h-full bg-gradient-to-r ${levelColors[rewards.level] || 'from-gray-500 to-gray-400'} transition-all duration-500`}
+              style={{ width: `${(rewards.points / (rewards.points + rewards.pointsToNextLevel)) * 100}%` }}
+            />
+          </div>
+          
+          <div className="flex justify-between text-sm text-gray-600">
+            <span>Level {rewards.level}</span>
+            <span>{rewards.points} / {rewards.points + rewards.pointsToNextLevel} points</span>
+          </div>
+        </div>
       </div>
     </div>
   );

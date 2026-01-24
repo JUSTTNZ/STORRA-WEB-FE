@@ -5,6 +5,7 @@ import WelcomeSection from '../../components/homecomponents/WelcomeSection';
 import ProgressSection from '../../components/homecomponents/ProgressSection';
 import { BookOpen, Calculator, Microscope, Globe, Palette, Music, Loader2 } from 'lucide-react';
 import { courseService } from '../../services/courseService';
+import { useAuth } from '../../context/AuthContext';
 
 // Subject card data with icons
 const subjectIcons = {
@@ -29,33 +30,29 @@ function HomeLayout() {
   const navigate = useNavigate();
   const [subjects, setSubjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  // Mock subjects data
-  const mockSubjects = [
-    { id: 1, name: 'Mathematics', lessonsCount: 24, progress: 65 },
-    { id: 2, name: 'English', lessonsCount: 32, progress: 45 },
-    { id: 3, name: 'Science', lessonsCount: 28, progress: 30 },
-    { id: 4, name: 'Social Studies', lessonsCount: 20, progress: 80 },
-    { id: 5, name: 'Art', lessonsCount: 16, progress: 50 },
-    { id: 6, name: 'Music', lessonsCount: 12, progress: 20 },
-  ];
-
+  const [error, setError] = useState(null);
+  const {user,  } = useAuth();
   useEffect(() => {
     fetchSubjects();
   }, []);
 
-  const fetchSubjects = async () => {
+const fetchSubjects = async () => {
+    setIsLoading(true);
+    setError(null);
     try {
-      // const data = await courseService.getCourses();
-      // setSubjects(data);
-      setSubjects(mockSubjects);
+      const response = await courseService.getCourses();
+      const coursesData = response?.data || response || [];
+      setSubjects(coursesData);
     } catch (error) {
-      console.error('Failed to fetch subjects:', error);
-      setSubjects(mockSubjects);
+      console.error('Failed to fetch courses:', error);
+      setError('Failed to load courses. Please try again.');
+      setSubjects([]);
     } finally {
       setIsLoading(false);
     }
   };
+// console.log("USER DATA:", user);
+// console.log("FETCHED SUBJECTS:", subjects);
 
   return (
     <div className="w-full">
@@ -86,6 +83,21 @@ function HomeLayout() {
           <div className="flex items-center justify-center h-40">
             <Loader2 className="w-8 h-8 animate-spin text-primary-400" />
           </div>
+        ) : error ? (
+          <div className="flex flex-col items-center justify-center h-40 text-center">
+            <p className="text-error-200 mb-2">{error}</p>
+            <button
+              onClick={fetchSubjects}
+              className="text-sm text-primary-500 hover:text-primary-600 font-medium"
+            >
+              Try again
+            </button>
+          </div>
+        ) : subjects.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-40 text-center">
+            <BookOpen className="w-12 h-12 text-secondary-300 mb-2" />
+            <p className="text-secondary-500">No subjects available yet.</p>
+          </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
             {subjects.map((subject) => {
@@ -94,33 +106,37 @@ function HomeLayout() {
 
               return (
                 <div
-                  key={subject.id}
-                  onClick={() => navigate(`/courses`)}
+                  key={subject.id || subject._id}
+                  onClick={() => navigate(`/courses/${subject.id || subject._id}`)}
                   className="bg-white rounded-xl border border-secondary-100 p-4 cursor-pointer hover:border-primary-200 hover:shadow-md transition-all group"
                 >
                   {/* Icon */}
-                  <div className={`w-12 h-12 rounded-xl ${colorClass} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
-                    <Icon className="w-6 h-6" />
-                  </div>
+                <div className={`w-12 h-12 rounded-xl ${colorClass} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform overflow-hidden`}>
+  <img 
+    src={subject.image} 
+    alt={subject.name || "Subject icon"}
+    className="w-full h-full object-cover"
+  />
+</div>
 
                   {/* Subject Name */}
                   <h3 className="font-semibold text-secondary-800 text-sm mb-1">
-                    {subject.name}
+                    {subject.name || subject.title}
                   </h3>
 
                   {/* Lessons Count */}
                   <p className="text-xs text-secondary-500 mb-3">
-                    {subject.lessonsCount} lessons
+                    {subject.totalLessons || subject.lessons_count || subject.topicsCount || 0} lessons
                   </p>
 
                   {/* Progress Bar */}
                   <div className="w-full bg-secondary-100 rounded-full h-1.5">
                     <div
                       className="bg-primary-400 h-1.5 rounded-full transition-all"
-                      style={{ width: `${subject.progress}%` }}
+                      style={{ width: `${subject.progress || 0}%` }}
                     />
                   </div>
-                  <p className="text-xs text-secondary-400 mt-1">{subject.progress}%</p>
+                  <p className="text-xs text-secondary-400 mt-1">{subject.progress || 0}%</p>
                 </div>
               );
             })}

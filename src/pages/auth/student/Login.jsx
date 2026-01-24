@@ -27,13 +27,15 @@ export default function Login() {
     setIsLoading(true);
     setError('');
 
-    try {
-      await login({
+  try {
+      const response = await login({
         email: formData.email,
         password: formData.password,
       });
+      console.log('Login response:', response);
       navigate('/home');
     } catch (err) {
+      console.error('Login error:', err);
       setError(err.response?.data?.message || err.message || 'Login failed. Please try again.');
     } finally {
       setIsLoading(false);

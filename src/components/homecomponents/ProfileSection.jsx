@@ -3,7 +3,7 @@ import { ChevronDown } from 'lucide-react';
 
 function ProfileSection() {
   const { user } = useAuth();
-  const firstName = user?.fullName?.split(' ')[0] || 'Student';
+  const firstName = user?.fullname;
 
   return (
     <>
@@ -19,7 +19,7 @@ function ProfileSection() {
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium text-primary-500">
-            {user?.currentClass || 'Primary 1'}
+            {user?.currentClassId || 'Primary 1'}
           </span>
           <ChevronDown className="w-4 h-4 text-secondary-400" />
         </div>
@@ -29,10 +29,11 @@ function ProfileSection() {
       <div className="flex justify-between items-center w-full py-3 sm:hidden">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center overflow-hidden">
-            {user?.profilePicture ? (
+            {user?.profilePictureUrl
+ ? (
               <img
-                src={user.profilePicture}
-                alt={user.fullName}
+                src={user.profilePictureUrl}
+                alt={user.fullname}
                 className="w-full h-full object-cover"
               />
             ) : (
@@ -52,7 +53,7 @@ function ProfileSection() {
         </div>
         <div className="flex items-center gap-1">
           <span className="text-xs font-medium text-primary-500">
-            {user?.currentClass || 'Pri 1'}
+            {user?.currentClassId || 'Pri 1'}
           </span>
           <ChevronDown className="w-4 h-4 text-secondary-400" />
         </div>

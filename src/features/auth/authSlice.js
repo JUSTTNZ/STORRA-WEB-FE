@@ -81,6 +81,12 @@ const authSlice = createSlice({
       state.token = null;
       state.isAuthenticated = false;
       state.error = null;
+      // Clear localStorage
+      try {
+        localStorage.removeItem('auth');
+      } catch (err) {
+        console.error('Failed to clear auth from localStorage:', err);
+      }
     },
     clearError: (state) => {
       state.error = null;
@@ -140,6 +146,12 @@ const authSlice = createSlice({
       state.token = null;
       state.isAuthenticated = false;
       state.error = null;
+      // Clear localStorage
+      try {
+        localStorage.removeItem('auth');
+      } catch (err) {
+        console.error('Failed to clear auth from localStorage:', err);
+      }
     },
     setUser: (state, action) => {
       state.user = action.payload;

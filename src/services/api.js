@@ -28,17 +28,44 @@ api.interceptors.request.use(
   }
 );
 
+// Track if we're already handling a 401 to prevent multiple redirects
+let isRedirecting = false;
+
 // Response interceptor - handle errors globally
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response) {
-      const { status, data } = error.response;
+      const { status, data, config } = error.response;
+
+      // Debug logging
+      console.log(`[API Error] ${status} on ${config.url}:`, data);
 
       if (status === 401) {
-        // Unauthorized - clear Redux auth state and redirect
-        store.dispatch(clearAuth());
-        window.location.href = '/auth/student/login';
+        // Only clear auth for specific auth endpoints (login, me, etc.)
+        // Don't clear for other endpoints - let them handle their own errors
+        const authEndpoints = ['/student/me', '/student/loginuser', '/student/registeruser'];
+        const isAuthEndpoint = authEndpoints.some(ep => config.url?.includes(ep));
+
+        // Check if this is definitely a token expiry/invalid issue
+        const errorMessage = (data?.message || data?.error || '').toLowerCase();
+        const isTokenIssue = errorMessage.includes('token') ||
+                            errorMessage.includes('jwt') ||
+                            errorMessage.includes('expired') ||
+                            errorMessage.includes('invalid signature');
+
+        console.log(`[API 401] isAuthEndpoint: ${isAuthEndpoint}, isTokenIssue: ${isTokenIssue}, message: ${errorMessage}`);
+
+        // Only redirect if it's an auth endpoint AND a clear token issue
+        if (isAuthEndpoint && isTokenIssue && !isRedirecting) {
+          isRedirecting = true;
+          console.warn('Session expired or invalid token. Redirecting to login...');
+          store.dispatch(clearAuth());
+          setTimeout(() => {
+            isRedirecting = false;
+            window.location.replace('/auth/student/login');
+          }, 100);
+        }
       }
 
       const message = data?.message || data?.error || 'An error occurred';

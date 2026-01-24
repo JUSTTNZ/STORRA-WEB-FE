@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Gift,
   LogIn,
@@ -9,32 +9,112 @@ import {
   Award,
   RefreshCw,
   Heart,
+  Loader2,
 } from "lucide-react";
+import { spinService } from "../../services/spinService";
+import { useToast } from "../../components/common/Toast";
 
 export default function RewardPage() {
+  const toast = useToast();
   const [isSpinning, setIsSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
-
-  const segments = [
+  const [segments, setSegments] = useState([
     { text: "Jackpot\nEntry", color: "#FF4D82", angle: 0 },
-    { text: "500\nBonus\nPoints\n(Gold)", color: "#FFB84D", angle: 45 },
-    { text: "$10\nSHIB\nCrypto", color: "#A855F7", angle: 90 },
-    { text: "10%\nDiscount\nVoucher", color: "#5DD4E8", angle: 135 },
-    { text: "Double\nNext\nDeposit", color: "#FF8C42", angle: 180 },
-    { text: "$4.10\nCrypto\nCash", color: "#3B9CFF", angle: 225 },
+    { text: "500\nBonus\nPoints", color: "#FFB84D", angle: 45 },
+    { text: "$10\nCrypto", color: "#A855F7", angle: 90 },
+    { text: "10%\nDiscount", color: "#5DD4E8", angle: 135 },
+    { text: "Double\nDeposit", color: "#FF8C42", angle: 180 },
+    { text: "$4.10\nCash", color: "#3B9CFF", angle: 225 },
     { text: "Mystery\nBox", color: "#FF5555", angle: 270 },
-    { text: "1%\nAir\ndrop", color: "#8B92A0", angle: 315 },
-  ];
+    { text: "1%\nAirdrop", color: "#8B92A0", angle: 315 },
+  ]);
+  const [spinResult, setSpinResult] = useState(null);
+  const [isLoadingPreview, setIsLoadingPreview] = useState(true);
+  const [nextSpinTime, setNextSpinTime] = useState(null);
+  const [canSpin, setCanSpin] = useState(true);
 
-  const handleSpin = () => {
-    if (isSpinning) return;
+  useEffect(() => {
+    fetchWheelPreview();
+  }, []);
+
+  const fetchWheelPreview = async () => {
+    try {
+      const response = await spinService.getWheelPreview();
+      const data = response?.data || response;
+
+      if (data?.segments && Array.isArray(data.segments)) {
+        const formattedSegments = data.segments.map((seg, index) => ({
+          text: seg.text || seg.label || seg.name || `Prize ${index + 1}`,
+          color: seg.color || getDefaultColor(index),
+          angle: index * (360 / data.segments.length),
+          value: seg.value || seg.points || 0,
+        }));
+        setSegments(formattedSegments);
+      }
+
+      if (data?.nextSpinTime) {
+        setNextSpinTime(new Date(data.nextSpinTime));
+        setCanSpin(new Date() >= new Date(data.nextSpinTime));
+      }
+
+      if (data?.canSpin !== undefined) {
+        setCanSpin(data.canSpin);
+      }
+    } catch (error) {
+      console.error("Failed to fetch wheel preview:", error);
+    } finally {
+      setIsLoadingPreview(false);
+    }
+  };
+
+  const getDefaultColor = (index) => {
+    const colors = ["#FF4D82", "#FFB84D", "#A855F7", "#5DD4E8", "#FF8C42", "#3B9CFF", "#FF5555", "#8B92A0"];
+    return colors[index % colors.length];
+  };
+
+  const handleSpin = async () => {
+    if (isSpinning || !canSpin) return;
+
     setIsSpinning(true);
-    const spins = 5 + Math.random() * 3;
-    const extraDegrees = Math.random() * 360;
-    const totalRotation = rotation + 360 * spins + extraDegrees;
-    setRotation(totalRotation);
+    setSpinResult(null);
 
-    setTimeout(() => setIsSpinning(false), 5000);
+    try {
+      const response = await spinService.spinWheel();
+      const data = response?.data || response;
+
+      // Calculate rotation to land on the winning segment
+      const winningIndex = data?.segmentIndex || data?.winningIndex || Math.floor(Math.random() * segments.length);
+      const segmentAngle = 360 / segments.length;
+      const targetAngle = winningIndex * segmentAngle;
+
+      // Calculate total rotation (multiple spins + target)
+      const spins = 5 + Math.random() * 3;
+      const totalRotation = rotation + 360 * spins + (360 - targetAngle);
+      setRotation(totalRotation);
+
+      // Show result after animation
+      setTimeout(() => {
+        setIsSpinning(false);
+        setSpinResult(data);
+
+        if (data?.prize || data?.reward) {
+          toast.success(`Congratulations! You won: ${data.prize || data.reward}`);
+        }
+
+        // Update next spin time if provided
+        if (data?.nextSpinTime) {
+          setNextSpinTime(new Date(data.nextSpinTime));
+          setCanSpin(false);
+        }
+
+        // Refresh wheel preview
+        fetchWheelPreview();
+      }, 5000);
+    } catch (error) {
+      console.error("Spin failed:", error);
+      toast.error(error?.response?.data?.message || "Failed to spin. Please try again.");
+      setIsSpinning(false);
+    }
   };
 
   return (
@@ -240,28 +320,36 @@ export default function RewardPage() {
                 {/* Spin Button Text */}
                 <button
                   onClick={handleSpin}
-                  disabled={isSpinning}
+                  disabled={isSpinning || !canSpin}
                   className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 lg:w-36 lg:h-36 flex flex-col items-center justify-center cursor-pointer hover:scale-105 transition-transform disabled:opacity-70 disabled:cursor-not-allowed"
                   style={{ zIndex: 10 }}
                 >
-                  <span
-                    className="text-white font-black text-xl lg:text-3xl tracking-wider"
-                    style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.3)" }}
-                  >
-                    SPIN!
-                  </span>
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    className="mt-1 text-white animate-bounce lg:w-8 lg:h-8"
-                  >
-                    <path
-                      fill="currentColor"
-                      d="M12 4L10.6 5.4L16.2 11H4V13H16.2L10.6 18.6L12 20L20 12L12 4Z"
-                      transform="rotate(90 12 12)"
-                    />
-                  </svg>
+                  {isSpinning ? (
+                    <Loader2 className="w-8 h-8 lg:w-12 lg:h-12 text-white animate-spin" />
+                  ) : (
+                    <>
+                      <span
+                        className="text-white font-black text-xl lg:text-3xl tracking-wider"
+                        style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.3)" }}
+                      >
+                        {canSpin ? "SPIN!" : "WAIT"}
+                      </span>
+                      {canSpin && (
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          className="mt-1 text-white animate-bounce lg:w-8 lg:h-8"
+                        >
+                          <path
+                            fill="currentColor"
+                            d="M12 4L10.6 5.4L16.2 11H4V13H16.2L10.6 18.6L12 20L20 12L12 4Z"
+                            transform="rotate(90 12 12)"
+                          />
+                        </svg>
+                      )}
+                    </>
+                  )}
                 </button>
               </div>
             </div>

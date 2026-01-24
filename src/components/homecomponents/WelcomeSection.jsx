@@ -17,7 +17,7 @@ function WelcomeSection() {
           <p className="text-xs sm:text-sm text-primary-100">
             You've earned 500 points this week!
           </p>
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold">
+          <p className="text-base text-black sm:text-lg md:text-xl lg:text-2xl font-bold">
             Ready to unlock your{' '}
             <span className="sm:inline">next reward?</span>
           </p>

@@ -39,7 +39,7 @@ function App() {
               {/* PUBLIC ROUTES */}
               <Route path="/" element={<LogoPage />} />
               <Route path="/onboarding" element={<OnboardingPage />} />
-                <Route path="/hom" element={<HomeLayout />} />
+
               {/* AUTH ROUTES */}
               <Route path="/auth/student/login" element={<StudentLogin />} />
               <Route path="/auth/student/register" element={<StudentRegister />} />
@@ -91,7 +91,7 @@ function App() {
               </Route>
 
               {/* Redirect unknown routes */}
-              <Route path="*" element={<Navigate to="/" replace />} />
+              {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
             </Routes>
           </BrowserRouter>
         </ToastProvider>
