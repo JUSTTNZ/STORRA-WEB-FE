@@ -3,6 +3,20 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        grotesk: ['"Space Grotesk"', 'sans-serif'],
+        groteskLight: ['"Space Grotesk"', 'sans-serif'],
+        groteskMedium: ['"Space Grotesk"', 'sans-serif'],
+        groteskSemiBold: ['"Space Grotesk"', 'sans-serif'],
+        groteskBold: ['"Space Grotesk"', 'sans-serif'],
+      },
+      fontWeight: {
+        light: '300',
+        normal: '400',
+        medium: '500',
+        semibold: '600',
+        bold: '700',
+      },
       colors: {
         primary: {
           0: "#EAF0FF",

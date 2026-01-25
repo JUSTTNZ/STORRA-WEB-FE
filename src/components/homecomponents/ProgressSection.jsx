@@ -1,105 +1,147 @@
-import React, { useEffect, useState } from "react";
-import progressBar from "../../assets/images/home-img/progressBar.png";
-import completedBar from "../../assets/images/home-img/completedBar.png";
-import libraryBar from "../../assets/images/home-img/libraryBar.png";
-import leftArrow from "../../assets/images/home-img/leftArrow.png";
+import { useNavigate } from 'react-router-dom';
+import { Play, CheckCircle, BookMarked, ArrowRight, Bookmark, Heart, Loader2 } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 function ProgressSection() {
-  // 💙 state to control animated progress
-  const [progress, setProgress] = useState(0);
+  const navigate = useNavigate();
+  const { user, isLoading: authLoading } = useAuth();
 
-  useEffect(() => {
-    const target = 45; // target progress percent
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev < target) return prev + 1;
-        clearInterval(interval);
-        return target;
-      });
-    }, 25); // speed of animation (lower = faster)
-  }, []);
+  // Calculate stats from user data
+  const calculateStats = () => {
+    if (!user) {
+      return {
+        inProgress: null,
+        completedCount: 0,
+        bookmarksCount: 0,
+        favoritesCount: 0,
+      };
+    }
+
+    // Count completed courses (progress >= 100%)
+    const completedCourses = user.coursesProgress?.filter(course =>
+      course.overallProgress >= 100
+    ) || [];
+
+    // Find current course (course with highest progress but less than 100%)
+    const inProgressCourse = user.coursesProgress?.reduce((current, course) => {
+      if (course.overallProgress < 100 && course.overallProgress > 0) {
+        if (!current || course.overallProgress > current.overallProgress) {
+          return course;
+        }
+      }
+      return current;
+    }, null);
+
+    // You might need to adjust these based on your data structure
+    const bookmarksCount = user.bookmarks?.length || 0;
+    const favoritesCount = user.favorites?.length || 0;
+
+    return {
+      inProgress: inProgressCourse,
+      completedCount: completedCourses.length,
+      bookmarksCount,
+      favoritesCount,
+    };
+  };
+
+  const stats = calculateStats();
+  const progress = user?.overallProgressPercent || 0;
+
+  // Loading state
+  if (authLoading) {
+    return (
+      <section className="py-6 w-full">
+        <h2 className="font-bold text-[var(--secondary-800)] dark:text-[var(--text)] mb-6 text-xl md:text-2xl">
+          Your Progress
+        </h2>
+        <div className="flex items-center justify-center h-40">
+          <Loader2 className="w-6 h-6 animate-spin text-[var(--primary-400)]" />
+        </div>
+      </section>
+    );
+  }
 
   return (
-    <section className=" p-6 w-full mt-4">
+    <section className="py-6 w-full">
       {/* Title */}
-
-      <h2 className=" font-bold text-gray-800 mb-6 text-[20px] md:text-[24px]">
+      <h2 className="font-bold text-[var(--secondary-800)] dark:text-[var(--text)] mb-6 text-xl md:text-2xl">
         Your Progress
       </h2>
 
       {/* Grid */}
-      <div className="grid grid-cols-2  md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* 1️⃣ In Progress */}
-        <div className="md:col-span-2 col-span-2 lg:col-span-1 border-gray-200 bg-gray-50 rounded-xl border py-5 px-2  flex flex-col gap-4 ">
-          <div className="flex justify-between flex-row items-end  ">
-            <div className="leading-3  border-red-400">
-              <img className="" src={progressBar} alt="progressbar" />
-              <h3 className="text-[#131313] font-semibold text-lg mt-2  item-[16px]">
-                In Progress
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 md:gap-6">
+        {/* In Progress Card */}
+        <div className="card-shimmer md:col-span-2 lg:col-span-1 bg-white dark:bg-[var(--card-background)] rounded-xl border border-[var(--secondary-100)] dark:border-[var(--border-color)] p-5 flex flex-col gap-4">
+          <div className="flex justify-between items-start">
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 bg-[var(--primary-100)] dark:bg-[var(--primary-800)] rounded-lg flex items-center justify-center">
+                <Play className="w-5 h-5 text-[var(--primary-500)] dark:text-[var(--primary-200)]" fill="currentColor" />
+              </div>
+              <div>
+                <h3 className="text-[var(--secondary-800)] dark:text-[var(--text)] font-semibold text-base">
+                  In Progress
+                </h3>
+                <p className="text-[var(--secondary-500)] dark:text-[var(--text-muted)] text-sm mt-0.5">
+                  {stats.inProgress ?
+                    `${stats.inProgress.courseName || 'Course'} - ${stats.inProgress.progressPercent || 0}%` :
+                    'No course in progress'
+                  }
+                </p>
+              </div>
+            </div>
+            {stats.inProgress && (
+              <button
+                onClick={() => navigate(`/courses/${stats.inProgress.courseId || stats.inProgress._id}`)}
+                className="flex items-center gap-1 px-3 py-1.5 bg-[var(--primary-400)] dark:bg-[var(--primary)] text-white text-xs font-medium rounded-full hover:bg-[var(--primary-500)] dark:hover:bg-[var(--primary-hover)] transition-colors"
+              >
+                Resume
+                <ArrowRight className="w-3 h-3" />
+              </button>
+            )}
+          </div>
+
+          {/* Progress Bar */}
+          <div>
+            <div className="flex justify-end mb-1">
+              <span className="text-xs text-[var(--secondary-500)] dark:text-[var(--text-muted)]">{progress}%</span>
+            </div>
+            <div className="w-full bg-[var(--secondary-100)] dark:bg-[var(--secondary-700)] rounded-full h-2 overflow-hidden">
+              <div
+                className="bg-[var(--primary-400)] dark:bg-[var(--primary)] h-2 rounded-full transition-all duration-300 ease-out"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Completed Card */}
+        <div className="card-shimmer bg-white dark:bg-[var(--card-background)] rounded-xl border border-[var(--secondary-100)] dark:border-[var(--border-color)] p-5 flex flex-col justify-between">
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 bg-[var(--success-50)] dark:bg-[rgba(40,180,17,0.15)] rounded-lg flex items-center justify-center">
+              <CheckCircle className="w-5 h-5 text-[var(--success-200)] dark:text-[var(--success-color)]" />
+            </div>
+            <div>
+              <h3 className="text-[var(--secondary-800)] dark:text-[var(--text)] font-semibold text-base">
+                Completed
               </h3>
-              <p className="text-gray-500 text-sm">
-                Nigeria People and Culture
+              <p className="text-[var(--secondary-500)] dark:text-[var(--text-muted)] text-sm mt-0.5">
+                You've completed <span className="font-medium text-[var(--secondary-700)] dark:text-[var(--text)]">
+                  {stats.completedCount} {stats.completedCount === 1 ? 'course' : 'courses'}
+                </span>
               </p>
             </div>
-
-            <button className="rounded-[100px] w-[122px] flex justify-center items-center font-[400] bg-blue-400 h-[22px] text-[12px] whitespace-nowrap  ">
-              Resume Lesson
-            </button>
           </div>
-
-          <span className="text-[10px] flex  justify-end ">{progress}%</span>
-          {/* Animated Progress Bar */}
-          <div className="w-full bg-gray-200  rounded-full overflow-hidden">
-            <div
-              className="bg-blue-500 h-2 rounded-full transition-all duration-300 ease-out"
-              style={{ width: `${progress}%` }}
-            ></div>
-          </div>
-        </div>
-        {/* responsive grid */}
-
-        {/* 2️⃣ Completed */}
-        <div className="bg-gray-50 rounded-xl py-5 px-2 border border-gray-200 col-span-1 md:col-span-1   flex flex-col justify-between">
-          <div>
-            <img src={completedBar} alt="completedBar" />
-            <h3 className="text-[#131313] font-semibold text-lg   mt-2 item-[16px]">
-              Completed
-            </h3>
-            <p className="text-gray-500 text-sm">
-              You’ve completed <span className="font-medium">2 courses</span>
-            </p>
-          </div>
-          <button className="relative flex justify-between items-center pl-[5px] rounded-[100px] w-[102px] font-[400] bg-[#b5ffae] text-[#148d00] h-[22px] text-[12px] whitespace-nowrap  ">
+          <button
+            onClick={() => navigate('/courses')}
+            className="flex items-center gap-1 mt-4 px-3 py-1.5 bg-[var(--success-50)] dark:bg-[rgba(40,180,17,0.15)] text-[var(--success-200)] dark:text-[var(--success-color)] text-xs font-medium rounded-full hover:bg-[var(--success-100)] dark:hover:bg-[rgba(40,180,17,0.25)] transition-colors w-fit"
+          >
             Next course
-            <img
-              className="absolute top-[3px] right-2  "
-              src={leftArrow}
-              alt="guidance_left-arrow"
-            />
+            <ArrowRight className="w-3 h-3" />
           </button>
         </div>
-
-        {/* 3️⃣ My Library */}
-        <div className="bg-gray-50 rounded-xl py-5 px-2 border border-gray-200 flex flex-col justify-between">
-          <div>
-            <img src={libraryBar} alt="libraryBar" />
-            <h3 className="text-[#131313] font-semibold text-lg   mt-2 item-[16px]">
-              My Library
-            </h3>
-            <p className="text-gray-600 text-sm mb-3">
-              Saved and favorite content
-            </p>
-          </div>
-          <div className="flex gap-2 ">
-            <button className="rounded-[100px] w-[102px] flex justify-center items-center  text-[#d93d3d] bg-[#ffd8d8] h-[22px] text-[12px] whitespace-nowrap  ">
-              Saved Content
-            </button>
-            <button className="rounded-[100px] w-[102px]  flex justify-center items-center  text-[#d93d3d] bg-[#ffd8d8] h-[22px] text-[12px] whitespace-nowrap  ">
-              Favorite Content
-            </button>
-          </div>
-        </div>
       </div>
+
+
     </section>
   );
 }

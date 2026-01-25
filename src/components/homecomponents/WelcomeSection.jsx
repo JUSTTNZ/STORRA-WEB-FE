@@ -1,31 +1,88 @@
-import WelcomeImage from "../../assets/images/home-img/WelcomeImage.png";
+import { useNavigate } from 'react-router-dom';
+import { Trophy, ArrowRight } from 'lucide-react';
 
 function WelcomeSection() {
-  return (
-    <div className="flex w-[100%] h-[104px] bg-blue-500 mt-[20px] pt-[12px] gap-[10px] pb-[12px] pr-[20px] text-white rounded-[20px] items-center justify-between border-2 border-blue-500 ">
-      {/* Points */}
-      <img
-        className="md:w-[156px] w-[100px] h-[80px] md:h-[104px] "
-        src={WelcomeImage}
-        alt="welcomeImage"
-      />
-      <div className="flex justify-between items-center items-center w-[100%] ">
-        <div className=" flex md:flex-col flex-col-reverse ">
-          <p className="md:text-[14px] text-[10px] font-[500]">
-            You’ve earned 500 points this week!
-          </p>
+  const navigate = useNavigate();
+  const pointsEarned = 500;
+  const nextRewardAt = 1000;
+  const progress = (pointsEarned / nextRewardAt) * 100;
 
-          <p className=" md:text-[24px] text-[16px]  font-[700]  ">
-            Ready to unlock your{" "}
-            <span className="block sm:inline">next reward ?</span>
-          </p>
+  return (
+    <>
+      {/* Desktop Version with card-shimmer styling */}
+      <div className="hidden sm:block w-full">
+        <div className="card-shimmer bg-gradient-to-r from-[var(--primary-400)] to-[var(--primary-500)] dark:from-[var(--primary-600)] dark:to-[var(--primary-700)] rounded-xl border border-[var(--secondary-100)] dark:border-[var(--border-color)] p-5 flex flex-col gap-4">
+          <div className="flex justify-between items-start">
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 bg-white/20 dark:bg-[var(--primary-800)] rounded-lg flex items-center justify-center">
+                <Trophy className="w-5 h-5 text-[var(--success-color)] dark:text-[var(--success-200)]" />
+              </div>
+              <div>
+                <h3 className="text-white dark:text-[var(--text)] font-semibold text-base">
+                  Weekly Achievement
+                </h3>
+                <p className="text-[var(--primary-100)] dark:text-[var(--text-muted)] text-sm mt-0.5">
+                  You've earned {pointsEarned} points this week!
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => navigate('/courses')}
+              className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-[var(--primary-50)] text-[var(--primary-500)] dark:text-[var(--primary-700)] text-sm font-semibold rounded-lg hover:bg-white/90 dark:hover:bg-[var(--primary-100)] transition-colors"
+            >
+              Continue
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Progress Bar */}
+          <div>
+            <div className="flex justify-between mb-1">
+              <span className="text-xs text-white dark:text-[var(--text-muted)]">
+                Next reward at {nextRewardAt} points
+              </span>
+              <span className="text-xs font-medium text-[var(--success-color)] dark:text-[var(--success-200)]">
+                {Math.round(progress)}%
+              </span>
+            </div>
+            <div className="w-full bg-white/20 dark:bg-[var(--secondary-700)] rounded-full h-2 overflow-hidden">
+              <div
+                className="bg-[var(--success-color)] dark:bg-[var(--success-200)] h-2 rounded-full transition-all duration-300 ease-out"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          </div>
         </div>
-        {/* CTA Button */}
-        <button className="md:h-[48px] h-[32px]  whitespace-nowrap  w-[140px] md:w-[200px] bg-white md:text-[16px] text-[12px] font-[500] text-black rounded-[32px] border-2 border-white ">
-          Continue Learning
-        </button>
       </div>
-    </div>
+
+      {/* Mobile Version */}
+      <div className="sm:hidden w-full">
+        <div className="card-shimmer bg-gradient-to-r from-[var(--primary-400)] to-[var(--primary-500)] rounded-xl border border-[var(--secondary-100)] p-4">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                <Trophy className="w-4 h-4 text-[var(--success-color)]" />
+              </div>
+              <div>
+                <h3 className="text-white font-semibold text-sm">
+                  {pointsEarned} Points
+                </h3>
+                <p className="text-[var(--primary-100)] text-xs">
+                  Earned this week
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => navigate('/courses')}
+              className="flex items-center gap-1 px-3 py-1.5 bg-white text-[var(--primary-500)] text-xs font-medium rounded-lg hover:bg-white/90 transition-colors"
+            >
+              Continue
+              <ArrowRight className="w-3 h-3" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
 
