@@ -31,6 +31,8 @@ const saveAuthState = (state) => {
   }
 };
 
+import themeReducer from '../features/ui/themeSlice';
+
 // Get persisted auth state
 const persistedAuth = loadAuthState();
 
@@ -38,7 +40,7 @@ export const store = configureStore({
   reducer: {
     auth: authReducer,
     ui: uiReducer,
-    // user: userReducer,
+    theme: themeReducer,
   },
   preloadedState: persistedAuth ? {
     auth: {

@@ -4,7 +4,10 @@ import Navbar from '../common/Navbar';
 
 const MainLayout = () => {
   return (
-    <div className="min-h-screen bg-secondary-0 flex">
+    <div
+      className="min-h-screen flex"
+      style={{ backgroundColor: 'var(--background)' }}
+    >
       {/* Sidebar */}
       <LeftSideBar />
 

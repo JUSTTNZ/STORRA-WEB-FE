@@ -9,14 +9,14 @@ const Loading = ({ fullScreen = false, size = 'md', text = '' }) => {
 
   const spinner = (
     <div className="flex flex-col items-center justify-center gap-3">
-      <Loader2 className={`${sizeClasses[size]} animate-spin text-primary-400`} />
-      {text && <p className="text-secondary-600 text-sm">{text}</p>}
+      <Loader2 className={`${sizeClasses[size]} animate-spin text-[var(--primary-400)] dark:text-[var(--primary)]`} />
+      {text && <p className="text-[var(--secondary-600)] dark:text-[var(--text-muted)] text-sm">{text}</p>}
     </div>
   );
 
   if (fullScreen) {
     return (
-      <div className="fixed inset-0 bg-secondary-0 flex items-center justify-center z-50">
+      <div className="fixed inset-0 bg-[var(--secondary-0)] dark:bg-[var(--background)] flex items-center justify-center z-50">
         {spinner}
       </div>
     );

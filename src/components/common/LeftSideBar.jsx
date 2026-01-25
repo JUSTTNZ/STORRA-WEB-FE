@@ -10,7 +10,7 @@ import {
   Settings,
   LogOut,
   Menu,
-  X
+  X,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -25,7 +25,7 @@ const sidebarItems = [
 ];
 
 const LeftSideBar = () => {
-  const { logout, user } = useAuth();
+  const { logout } = useAuth();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -37,19 +37,27 @@ const LeftSideBar = () => {
   const SidebarContent = () => (
     <>
       {/* Logo */}
-      <div className="flex items-center justify-between p-4 border-b border-secondary-100">
+      <div
+        className="flex items-center justify-between p-4 border-b"
+        style={{ borderColor: 'var(--border-color)' }}
+      >
         <div className="flex items-center gap-2">
           <div className="w-10 h-10 bg-primary-400 rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-xl">C</span>
           </div>
-          <span className="font-bold text-md text-secondary-800">Classora</span>
+          <span className="font-bold text-md" style={{ color: 'var(--text)' }}>
+            Classora
+          </span>
         </div>
         {/* Mobile close button */}
         <button
           className="lg:hidden p-2 hover:bg-secondary-100 rounded-lg"
           onClick={() => setIsMobileMenuOpen(false)}
+          style={{ '--hover-bg': 'var(--secondary)' }}
+          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = 'var(--hover-bg)')}
+          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '')}
         >
-          <X className="w-5 h-5 text-secondary-600" />
+          <X className="w-5 h-5" style={{ color: 'var(--link-color)' }} />
         </button>
       </div>
 
@@ -61,27 +69,31 @@ const LeftSideBar = () => {
             to={item.url}
             onClick={() => setIsMobileMenuOpen(false)}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
-                isActive
-                  ? 'bg-primary-400 text-white'
-                  : 'text-secondary-600 hover:bg-secondary-100 hover:text-secondary-800'
-              }`
+              `flex items-center gap-3 px-4 py-3 rounded-lg transition-all`
             }
+            style={({ isActive }) => ({
+              backgroundColor: isActive ? 'var(--link-active-background)' : 'transparent',
+              color: isActive ? 'var(--link-active-color)' : 'var(--link-color)',
+            })}
           >
             <item.icon className="w-5 h-5" />
-            <span className="font-medium text-sm" >{item.title}</span>
+            <span className="font-medium text-sm">{item.title}</span>
           </NavLink>
         ))}
       </nav>
 
       {/* User Profile & Logout */}
-      <div className="p-3 border-t border-secondary-100">
-      
-
+      <div className="p-3 border-t" style={{ borderColor: 'var(--border-color)' }}>
         {/* Logout Button */}
         <button
           onClick={handleLogout}
-          className="flex items-center gap-3 w-full px-4 py-3 text-error-200 hover:bg-error-50 rounded-lg transition-colors"
+          className="flex items-center gap-3 w-full px-4 py-3 rounded-lg transition-colors"
+          style={{
+            color: 'var(--error-color)',
+            '--hover-bg': 'var(--error-background-hover)',
+          }}
+          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = 'var(--hover-bg)')}
+          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '')}
         >
           <LogOut className="w-5 h-5" />
           <span className="font-medium">Logout</span>
@@ -94,10 +106,11 @@ const LeftSideBar = () => {
     <>
       {/* Mobile Menu Button */}
       <button
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-md"
+        className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-lg shadow-md"
         onClick={() => setIsMobileMenuOpen(true)}
+        style={{ backgroundColor: 'var(--sidebar-background)' }}
       >
-        <Menu className="w-6 h-6 text-secondary-800" />
+        <Menu className="w-6 h-6" style={{ color: 'var(--text)' }} />
       </button>
 
       {/* Mobile Overlay */}
@@ -110,9 +123,10 @@ const LeftSideBar = () => {
 
       {/* Mobile Sidebar */}
       <aside
-        className={`lg:hidden fixed inset-y-0 left-0 w-72 bg-white z-50 transform transition-transform duration-300 ${
+        className={`lg:hidden fixed inset-y-0 left-0 w-72 z-50 transform transition-transform duration-300 ${
           isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
+        style={{ backgroundColor: 'var(--sidebar-background)' }}
       >
         <div className="flex flex-col h-full">
           <SidebarContent />
@@ -120,7 +134,13 @@ const LeftSideBar = () => {
       </aside>
 
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex lg:w-64 xl:w-72 bg-white border-r border-secondary-100 flex-col h-screen sticky top-0">
+      <aside
+        className="hidden lg:flex lg:w-64 xl:w-72 border-r flex-col h-screen sticky top-0"
+        style={{
+          backgroundColor: 'var(--sidebar-background)',
+          borderColor: 'var(--border-color)',
+        }}
+      >
         <SidebarContent />
       </aside>
     </>
@@ -128,3 +148,4 @@ const LeftSideBar = () => {
 };
 
 export default LeftSideBar;
+

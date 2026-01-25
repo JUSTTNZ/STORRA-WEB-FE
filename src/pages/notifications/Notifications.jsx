@@ -11,11 +11,11 @@ const notificationIcons = {
 };
 
 const notificationColors = {
-  course: 'bg-primary-100 text-primary-500',
-  achievement: 'bg-attention-100 text-attention-200',
-  reward: 'bg-success-50 text-success-200',
-  wallet: 'bg-secondary-100 text-secondary-600',
-  system: 'bg-error-50 text-error-200',
+  course: 'bg-[var(--primary-100)] dark:bg-[var(--primary-800)] text-[var(--primary-500)] dark:text-[var(--primary-200)]',
+  achievement: 'bg-[var(--attention-100)] dark:bg-[rgba(255,239,152,0.15)] text-[var(--attention-200)] dark:text-[var(--attention-100)]',
+  reward: 'bg-[var(--success-50)] dark:bg-[rgba(40,180,17,0.15)] text-[var(--success-200)] dark:text-[var(--success-color)]',
+  wallet: 'bg-[var(--secondary-100)] dark:bg-[var(--secondary-700)] text-[var(--secondary-600)] dark:text-[var(--secondary-300)]',
+  system: 'bg-[var(--error-50)] dark:bg-[rgba(237,33,33,0.15)] text-[var(--error-200)] dark:text-[var(--error-color)]',
 };
 
 const Notifications = () => {
@@ -87,9 +87,9 @@ const Notifications = () => {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-secondary-800">Notifications</h1>
+          <h1 className="text-2xl font-bold text-[var(--secondary-800)] dark:text-[var(--text)]">Notifications</h1>
           {unreadCount > 0 && (
-            <p className="text-sm text-secondary-500 mt-1">
+            <p className="text-sm text-[var(--secondary-500)] dark:text-[var(--text-muted)] mt-1">
               You have {unreadCount} unread notification{unreadCount > 1 ? 's' : ''}
             </p>
           )}
@@ -100,7 +100,7 @@ const Notifications = () => {
             {unreadCount > 0 && (
               <button
                 onClick={markAllAsRead}
-                className="flex items-center gap-2 px-4 py-2 text-sm text-primary-500 hover:bg-primary-0 rounded-lg transition-colors"
+                className="flex items-center gap-2 px-4 py-2 text-sm text-[var(--primary-500)] dark:text-[var(--primary)] hover:bg-[var(--primary-0)] dark:hover:bg-[var(--primary-900)] rounded-lg transition-colors"
               >
                 <Check className="w-4 h-4" />
                 Mark all read
@@ -108,7 +108,7 @@ const Notifications = () => {
             )}
             <button
               onClick={clearAll}
-              className="flex items-center gap-2 px-4 py-2 text-sm text-error-200 hover:bg-error-50 rounded-lg transition-colors"
+              className="flex items-center gap-2 px-4 py-2 text-sm text-[var(--error-200)] dark:text-[var(--error-color)] hover:bg-[var(--error-50)] dark:hover:bg-[rgba(237,33,33,0.15)] rounded-lg transition-colors"
             >
               <Trash2 className="w-4 h-4" />
               Clear all
@@ -133,10 +133,10 @@ const Notifications = () => {
             return (
               <div
                 key={notification.id}
-                className={`bg-white rounded-xl border p-4 transition-all ${
+                className={`card-shimmer bg-white dark:bg-[var(--card-background)] rounded-xl border p-4 transition-all ${
                   notification.read
-                    ? 'border-secondary-100'
-                    : 'border-primary-200 bg-primary-0/30'
+                    ? 'border-[var(--secondary-100)] dark:border-[var(--border-color)]'
+                    : 'border-[var(--primary-200)] dark:border-[var(--primary)] bg-[var(--primary-0)]/30 dark:bg-[var(--primary-900)]/30'
                 }`}
               >
                 <div className="flex gap-4">
@@ -153,12 +153,14 @@ const Notifications = () => {
                       <div>
                         <h3
                           className={`font-medium ${
-                            notification.read ? 'text-secondary-700' : 'text-secondary-800'
+                            notification.read
+                              ? 'text-[var(--secondary-700)] dark:text-[var(--text-muted)]'
+                              : 'text-[var(--secondary-800)] dark:text-[var(--text)]'
                           }`}
                         >
                           {notification.title}
                         </h3>
-                        <p className="text-sm text-secondary-500 mt-0.5">
+                        <p className="text-sm text-[var(--secondary-500)] dark:text-[var(--text-muted)] mt-0.5">
                           {notification.message}
                         </p>
                       </div>
@@ -168,23 +170,23 @@ const Notifications = () => {
                         {!notification.read && (
                           <button
                             onClick={() => markAsRead(notification.id)}
-                            className="p-1.5 hover:bg-secondary-100 rounded-lg transition-colors"
+                            className="p-1.5 hover:bg-[var(--secondary-100)] dark:hover:bg-[var(--secondary-700)] rounded-lg transition-colors"
                             title="Mark as read"
                           >
-                            <Check className="w-4 h-4 text-secondary-500" />
+                            <Check className="w-4 h-4 text-[var(--secondary-500)] dark:text-[var(--secondary-400)]" />
                           </button>
                         )}
                         <button
                           onClick={() => deleteNotification(notification.id)}
-                          className="p-1.5 hover:bg-error-50 rounded-lg transition-colors"
+                          className="p-1.5 hover:bg-[var(--error-50)] dark:hover:bg-[rgba(237,33,33,0.15)] rounded-lg transition-colors"
                           title="Delete"
                         >
-                          <Trash2 className="w-4 h-4 text-secondary-400 hover:text-error-200" />
+                          <Trash2 className="w-4 h-4 text-[var(--secondary-400)] dark:text-[var(--secondary-500)] hover:text-[var(--error-200)] dark:hover:text-[var(--error-color)]" />
                         </button>
                       </div>
                     </div>
 
-                    <p className="text-xs text-secondary-400 mt-2">{notification.time}</p>
+                    <p className="text-xs text-[var(--secondary-400)] dark:text-[var(--caption-color)] mt-2">{notification.time}</p>
                   </div>
                 </div>
               </div>

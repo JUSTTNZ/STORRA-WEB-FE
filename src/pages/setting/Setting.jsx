@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../components/common/Toast';
+import { useTheme } from '../../hooks/useTheme';
 import {
   User,
   Bell,
@@ -21,15 +22,13 @@ import {
 const Setting = () => {
   const { user, logout } = useAuth();
   const toast = useToast();
+  const { theme, toggleTheme } = useTheme();
 
   const [settings, setSettings] = useState({
     notifications: {
       push: true,
       email: true,
       sound: true,
-    },
-    appearance: {
-      darkMode: false,
     },
     privacy: {
       profileVisible: true,
@@ -54,23 +53,25 @@ const Setting = () => {
 
   const SettingItem = ({ icon: Icon, title, description, action, danger }) => (
     <div
-      className={`flex items-center justify-between p-4 hover:bg-secondary-50 rounded-xl transition-colors ${
-        danger ? 'hover:bg-error-50' : ''
+      className={`flex items-center justify-between p-4 hover:bg-[var(--secondary-50)] dark:hover:bg-[var(--hover-overlay)] rounded-xl transition-colors ${
+        danger ? 'hover:bg-[var(--error-50)] dark:hover:bg-[rgba(237,33,33,0.15)]' : ''
       }`}
     >
       <div className="flex items-center gap-4">
         <div
           className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-            danger ? 'bg-error-50 text-error-200' : 'bg-secondary-100 text-secondary-600'
+            danger
+              ? 'bg-[var(--error-50)] dark:bg-[rgba(237,33,33,0.15)] text-[var(--error-200)] dark:text-[var(--error-color)]'
+              : 'bg-[var(--secondary-100)] dark:bg-[var(--secondary-700)] text-[var(--secondary-600)] dark:text-[var(--secondary-300)]'
           }`}
         >
           <Icon className="w-5 h-5" />
         </div>
         <div>
-          <h3 className={`font-medium ${danger ? 'text-error-200' : 'text-secondary-800'}`}>
+          <h3 className={`font-medium ${danger ? 'text-[var(--error-200)] dark:text-[var(--error-color)]' : 'text-[var(--secondary-800)] dark:text-[var(--text)]'}`}>
             {title}
           </h3>
-          {description && <p className="text-sm text-secondary-500">{description}</p>}
+          {description && <p className="text-sm text-[var(--secondary-500)] dark:text-[var(--text-muted)]">{description}</p>}
         </div>
       </div>
       {action}
@@ -81,7 +82,7 @@ const Setting = () => {
     <button
       onClick={onToggle}
       className={`relative w-12 h-6 rounded-full transition-colors ${
-        enabled ? 'bg-primary-400' : 'bg-secondary-200'
+        enabled ? 'bg-[var(--primary-400)] dark:bg-[var(--primary)]' : 'bg-[var(--secondary-200)] dark:bg-[var(--secondary-600)]'
       }`}
     >
       <div
@@ -94,25 +95,25 @@ const Setting = () => {
 
   return (
     <div className="max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold text-secondary-800 mb-6">Settings</h1>
+      <h1 className="text-2xl font-bold text-[var(--secondary-800)] dark:text-[var(--text)] mb-6">Settings</h1>
 
       {/* Profile Section */}
-      <div className="bg-white rounded-xl border border-secondary-100 mb-6 overflow-hidden">
-        <div className="p-4 border-b border-secondary-100">
-          <h2 className="font-semibold text-secondary-800">Profile</h2>
+      <div className="card-shimmer bg-white dark:bg-[var(--card-background)] rounded-xl border border-[var(--secondary-100)] dark:border-[var(--border-color)] mb-6 overflow-hidden">
+        <div className="p-4 border-b border-[var(--secondary-100)] dark:border-[var(--border-color)]">
+          <h2 className="font-semibold text-[var(--secondary-800)] dark:text-[var(--text)]">Profile</h2>
         </div>
         <SettingItem
           icon={User}
           title="Edit Profile"
           description="Update your personal information"
-          action={<ChevronRight className="w-5 h-5 text-secondary-400" />}
+          action={<ChevronRight className="w-5 h-5 text-[var(--secondary-400)] dark:text-[var(--secondary-500)]" />}
         />
       </div>
 
       {/* Notifications Section */}
-      <div className="bg-white rounded-xl border border-secondary-100 mb-6 overflow-hidden">
-        <div className="p-4 border-b border-secondary-100">
-          <h2 className="font-semibold text-secondary-800">Notifications</h2>
+      <div className="card-shimmer bg-white dark:bg-[var(--card-background)] rounded-xl border border-[var(--secondary-100)] dark:border-[var(--border-color)] mb-6 overflow-hidden">
+        <div className="p-4 border-b border-[var(--secondary-100)] dark:border-[var(--border-color)]">
+          <h2 className="font-semibold text-[var(--secondary-800)] dark:text-[var(--text)]">Notifications</h2>
         </div>
         <SettingItem
           icon={Bell}
@@ -150,18 +151,18 @@ const Setting = () => {
       </div>
 
       {/* Appearance Section */}
-      <div className="bg-white rounded-xl border border-secondary-100 mb-6 overflow-hidden">
-        <div className="p-4 border-b border-secondary-100">
-          <h2 className="font-semibold text-secondary-800">Appearance</h2>
+      <div className="card-shimmer bg-white dark:bg-[var(--card-background)] rounded-xl border border-[var(--secondary-100)] dark:border-[var(--border-color)] mb-6 overflow-hidden">
+        <div className="p-4 border-b border-[var(--secondary-100)] dark:border-[var(--border-color)]">
+          <h2 className="font-semibold text-[var(--secondary-800)] dark:text-[var(--text)]">Appearance</h2>
         </div>
         <SettingItem
-          icon={settings.appearance.darkMode ? Moon : Sun}
+          icon={theme === 'dark' ? Moon : Sun}
           title="Dark Mode"
           description="Switch to dark theme"
           action={
             <Toggle
-              enabled={settings.appearance.darkMode}
-              onToggle={() => handleToggle('appearance', 'darkMode')}
+              enabled={theme === 'dark'}
+              onToggle={toggleTheme}
             />
           }
         />
@@ -169,20 +170,20 @@ const Setting = () => {
           icon={Globe}
           title="Language"
           description="English"
-          action={<ChevronRight className="w-5 h-5 text-secondary-400" />}
+          action={<ChevronRight className="w-5 h-5 text-[var(--secondary-400)] dark:text-[var(--secondary-500)]" />}
         />
       </div>
 
       {/* Privacy Section */}
-      <div className="bg-white rounded-xl border border-secondary-100 mb-6 overflow-hidden">
-        <div className="p-4 border-b border-secondary-100">
-          <h2 className="font-semibold text-secondary-800">Privacy & Security</h2>
+      <div className="card-shimmer bg-white dark:bg-[var(--card-background)] rounded-xl border border-[var(--secondary-100)] dark:border-[var(--border-color)] mb-6 overflow-hidden">
+        <div className="p-4 border-b border-[var(--secondary-100)] dark:border-[var(--border-color)]">
+          <h2 className="font-semibold text-[var(--secondary-800)] dark:text-[var(--text)]">Privacy & Security</h2>
         </div>
         <SettingItem
           icon={Lock}
           title="Change Password"
           description="Update your password"
-          action={<ChevronRight className="w-5 h-5 text-secondary-400" />}
+          action={<ChevronRight className="w-5 h-5 text-[var(--secondary-400)] dark:text-[var(--secondary-500)]" />}
         />
         <SettingItem
           icon={Shield}
@@ -209,22 +210,22 @@ const Setting = () => {
       </div>
 
       {/* Support Section */}
-      <div className="bg-white rounded-xl border border-secondary-100 mb-6 overflow-hidden">
-        <div className="p-4 border-b border-secondary-100">
-          <h2 className="font-semibold text-secondary-800">Support</h2>
+      <div className="card-shimmer bg-white dark:bg-[var(--card-background)] rounded-xl border border-[var(--secondary-100)] dark:border-[var(--border-color)] mb-6 overflow-hidden">
+        <div className="p-4 border-b border-[var(--secondary-100)] dark:border-[var(--border-color)]">
+          <h2 className="font-semibold text-[var(--secondary-800)] dark:text-[var(--text)]">Support</h2>
         </div>
         <SettingItem
           icon={HelpCircle}
           title="Help Center"
           description="Get help and support"
-          action={<ChevronRight className="w-5 h-5 text-secondary-400" />}
+          action={<ChevronRight className="w-5 h-5 text-[var(--secondary-400)] dark:text-[var(--secondary-500)]" />}
         />
       </div>
 
       {/* Danger Zone */}
-      <div className="bg-white rounded-xl border border-error-100 mb-6 overflow-hidden">
-        <div className="p-4 border-b border-error-100">
-          <h2 className="font-semibold text-error-200">Danger Zone</h2>
+      <div className="card-shimmer bg-white dark:bg-[var(--card-background)] rounded-xl border border-[var(--error-100)] dark:border-[rgba(237,33,33,0.3)] mb-6 overflow-hidden">
+        <div className="p-4 border-b border-[var(--error-100)] dark:border-[rgba(237,33,33,0.3)]">
+          <h2 className="font-semibold text-[var(--error-200)] dark:text-[var(--error-color)]">Danger Zone</h2>
         </div>
         <button className="w-full" onClick={handleLogout}>
           <SettingItem
@@ -239,7 +240,7 @@ const Setting = () => {
           title="Delete Account"
           description="Permanently delete your account"
           danger
-          action={<ChevronRight className="w-5 h-5 text-error-200" />}
+          action={<ChevronRight className="w-5 h-5 text-[var(--error-200)] dark:text-[var(--error-color)]" />}
         />
       </div>
     </div>
