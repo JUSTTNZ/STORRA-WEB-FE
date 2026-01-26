@@ -11,12 +11,14 @@ import {
   LogOut,
   Menu,
   X,
+  ClipboardList,
 } from 'lucide-react';
 import { useState } from 'react';
 
 const sidebarItems = [
   { icon: Home, title: 'Home', url: '/home' },
   { icon: BookOpen, title: 'Courses', url: '/courses' },
+  { icon: ClipboardList, title: 'Quiz', url: '/quiz' },
   { icon: Wallet, title: 'Wallet', url: '/wallet' },
   { icon: Trophy, title: 'Leaderboard', url: '/leaderboard' },
   { icon: RotateCw, title: 'Spin the Wheel', url: '/spin' },

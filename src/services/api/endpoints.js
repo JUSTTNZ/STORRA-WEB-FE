@@ -18,9 +18,9 @@ export const ENDPOINTS = {
     GET_COURSE_TOPICS: (classId, courseId) => `/classes/${classId}/courses/${courseId}/topics`,
   },
   QUIZ: {
-    GET_QUIZ: (quizId) => `/quiz/${quizId}`,
-    SUBMIT_QUIZ: (quizId) => `/quiz/${quizId}/submit`,
-    GET_PROGRESS: (courseId) => `/quiz/progress/${courseId}`,
+    GET_QUIZ: (courseId, quizId) => `/quiz/course/${courseId}/quiz/${quizId}`,
+    SUBMIT_QUIZ: (courseId, quizId) => `/quiz/course/${courseId}/quiz/${quizId}/submit`,
+    GET_PROGRESS: (courseId) => `/quiz/course/${courseId}/progress`,
     GET_STATS: '/quiz/stats',
   },
   REWARDS: {
@@ -43,6 +43,8 @@ export const ENDPOINTS = {
     LESSON: (lessonId) => `/progress/lesson/${lessonId}`,
     UPDATE_LESSON: (lessonId) => `/progress/lesson/${lessonId}`,
     COMPLETE_LESSON: (lessonId) => `/progress/lesson/${lessonId}/complete`,
+    MARK_VIDEO_PLAYED: (lessonId) => `/progress/lesson/${lessonId}/video`,
+    MARK_AUDIO_PLAYED: (lessonId) => `/progress/lesson/${lessonId}/audio`,
     TOGGLE_BOOKMARK: (lessonId) => `/progress/lesson/${lessonId}/bookmark`,
     UPDATE_NOTES: (lessonId) => `/progress/lesson/${lessonId}/notes`,
   },

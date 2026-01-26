@@ -1,29 +1,24 @@
-import api from './api';
-import { ENDPOINTS } from './endpoints';
+import quizApi from "./api/quizApi";
 
 export const quizService = {
-  // Get quiz by ID
+  // Get quiz by courseId and quizId
   async getQuiz(courseId, quizId) {
-    const response = await api.get(ENDPOINTS.QUIZ.GET_QUIZ(courseId, quizId));
-    return response.data;
+    return quizApi.getQuiz(courseId, quizId);
   },
 
   // Submit quiz attempt
-  async submitQuiz(courseId, quizId, answers) {
-    const response = await api.post(ENDPOINTS.QUIZ.SUBMIT_QUIZ(courseId, quizId), { answers });
-    return response.data;
+  async submitQuiz(courseId, quizId, answers, timeSpent) {
+    return quizApi.submitQuiz(courseId, quizId, answers, timeSpent);
   },
 
   // Get course quiz progress
   async getCourseProgress(courseId) {
-    const response = await api.get(ENDPOINTS.QUIZ.GET_COURSE_PROGRESS(courseId));
-    return response.data;
+    return quizApi.getCourseProgress(courseId);
   },
 
   // Get user's quiz stats
   async getStats() {
-    const response = await api.get(ENDPOINTS.QUIZ.GET_STATS);
-    return response.data;
+    return quizApi.getStats();
   },
 };
 
