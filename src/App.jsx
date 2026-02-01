@@ -18,6 +18,7 @@ import OnboardingPage from './pages/OnboardingPage';
 import StudentLogin from './pages/auth/student/Login';
 import StudentRegister from './pages/auth/student/Register';
 import Personalization from './pages/personalization/personalization';
+import ClassSelection from './pages/personalization/ClassSelection';
 
 // Protected Pages
 import HomeLayout from './pages/home/HomeLayout';
@@ -56,6 +57,14 @@ function App() {
                 element={
                   <PrivateRoute>
                     <Personalization />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/class-selection"
+                element={
+                  <PrivateRoute>
+                    <ClassSelection />
                   </PrivateRoute>
                 }
               />

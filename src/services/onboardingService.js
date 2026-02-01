@@ -9,8 +9,8 @@ export const onboardingService = {
   },
 
   // Update learning goals
-  async updateLearningGoals(userId, goals) {
-    const response = await api.patch(ENDPOINTS.ONBOARDING.LEARNING_GOALS(userId), { goals });
+  async updateLearningGoals(userId, data) {
+    const response = await api.patch(ENDPOINTS.ONBOARDING.LEARNING_GOALS(userId), data);
     return response.data;
   },
 
