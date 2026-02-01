@@ -121,7 +121,7 @@ export default function StudentRegister() {
                     onChange={(e) => updateFormData('fullName', e.target.value)}
                     className="w-full border border-secondary-100 rounded-lg pl-10 pr-4 py-2.5 text-sm
                                focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent
-                               placeholder:text-secondary-400"
+                               placeholder:text-gray-400 text-gray-800"
                   />
                 </div>
               </div>
@@ -140,7 +140,7 @@ export default function StudentRegister() {
                     onChange={(e) => updateFormData('email', e.target.value)}
                     className="w-full border border-secondary-100 rounded-lg pl-10 pr-4 py-2.5 text-sm
                                focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent
-                               placeholder:text-secondary-400"
+                               placeholder:text-gray-400 text-gray-800"
                   />
                 </div>
               </div>
@@ -159,7 +159,7 @@ export default function StudentRegister() {
                     onChange={(e) => updateFormData('phoneNumber', e.target.value)}
                     className="w-full border border-secondary-100 rounded-lg pl-10 pr-4 py-2.5 text-sm
                                focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent
-                               placeholder:text-secondary-400"
+                               placeholder:text-gray-400 text-gray-800"
                   />
                 </div>
               </div>
@@ -178,7 +178,7 @@ export default function StudentRegister() {
                     onChange={(e) => updateFormData('parentPhoneNumber', e.target.value)}
                     className="w-full border border-secondary-100 rounded-lg pl-10 pr-4 py-2.5 text-sm
                                focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent
-                               placeholder:text-secondary-400"
+                               placeholder:text-gray-400 text-gray-800"
                   />
                 </div>
               </div>
@@ -197,7 +197,7 @@ export default function StudentRegister() {
                     onChange={(e) => updateFormData('password', e.target.value)}
                     className="w-full border border-secondary-100 rounded-lg pl-10 pr-12 py-2.5 text-sm
                                focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent
-                               placeholder:text-secondary-400"
+                               placeholder:text-gray-400 text-gray-800"
                   />
                   <button
                     type="button"
