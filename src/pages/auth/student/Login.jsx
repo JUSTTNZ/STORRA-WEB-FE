@@ -95,8 +95,8 @@ export default function Login() {
                     value={formData.email}
                     onChange={(e) => updateFormData('email', e.target.value)}
                     className="w-full border border-secondary-100 rounded-lg pl-10 pr-4 py-2.5 text-sm sm:text-base
-                               focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent
-                               placeholder:text-secondary-400"
+                               focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent text-gray-800
+                               placeholder:text-gray-400"
                   />
                 </div>
               </div>
@@ -115,7 +115,7 @@ export default function Login() {
                     onChange={(e) => updateFormData('password', e.target.value)}
                     className="w-full border border-secondary-100 rounded-lg pl-10 pr-12 py-2.5 text-sm sm:text-base
                                focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent
-                               placeholder:text-secondary-400"
+                               placeholder:text-gray-400 text-gray-800"
                   />
                   <button
                     type="button"
