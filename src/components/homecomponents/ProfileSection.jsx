@@ -15,7 +15,7 @@ function ProfileSection() {
       .toUpperCase()
       .slice(0, 2);
   };
-
+console.log("profile", user)
   return (
     <>
       {/* Desktop Header */}
@@ -38,7 +38,7 @@ function ProfileSection() {
             </div>
             <div>
               <h2 className="text-2xl font-semibold text-[var(--secondary-800)] dark:text-[var(--text)]">
-                Hello {firstName},
+                Hello {user?.firstname},
               </h2>
               <p className="text-sm text-[var(--secondary-500)] dark:text-[var(--text-muted)]">
                 Here's your learning progress today

@@ -11,7 +11,7 @@ const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const { theme, toggleTheme } = useTheme();
-
+console.log(user)
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -121,9 +121,10 @@ const Navbar = () => {
             >
               {/* Avatar */}
               <div className="w-9 h-9 bg-primary-100 rounded-full flex items-center justify-center overflow-hidden">
-                {user?.avatar ? (
+                {user?.profilePictureUrl ? (
                   <img
-                    src={user.avatar}
+                    src={user.profilePictureUrl
+}
                     alt={user.fullName}
                     className="w-full h-full object-cover"
                   />
@@ -140,7 +141,7 @@ const Navbar = () => {
                   className="text-sm font-medium truncate max-w-[120px]"
                   style={{ color: 'var(--text)' }}
                 >
-                  {user?.fullName || 'User'}
+                  {user?.fullname || 'User'}
                 </p>
                 <p className="text-xs text-secondary-500">Student</p>
               </div>
@@ -168,7 +169,7 @@ const Navbar = () => {
                   style={{ borderColor: 'var(--border-color)' }}
                 >
                   <p className="font-medium" style={{ color: 'var(--text)' }}>
-                    {user?.fullName || 'User'}
+                    {user?.fullname || 'User'}
                   </p>
                   <p className="text-sm" style={{ color: 'var(--link-color)' }}>
                     {user?.email || 'user@email.com'}

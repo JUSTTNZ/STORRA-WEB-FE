@@ -27,7 +27,7 @@ export default function SpinPage() {
     try {
       const response = await spinService.getWheelPreview();
       const data = response?.data || response;
-
+    console.log("Wheel Data:", data);
       if (data?.segments) {
         setSegments(data.segments);
       }
@@ -119,10 +119,9 @@ export default function SpinPage() {
     { name: "50 Points", type: "points", color: "#10B981" },
     { name: "2 Diamonds", type: "diamond", color: "#8B5CF6" }
   ];
-
+console.log;("SEGMENTS:", segments || 0);
   const displaySegments = segments.length > 0 ? segments : defaultSegments;
   const segmentAngle = 360 / displaySegments.length;
-  const spinsUsed = 3 - spinChances;
 
   return (
     <div className="min-h-screen p-4 animate-fade-in">
@@ -169,7 +168,7 @@ export default function SpinPage() {
         </div>
 
         {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-1 gap-8">
           {/* Wheel Container */}
           <div className="lg:col-span-2 animate-fade-in-up stagger-1">
             <div className="card-shimmer bg-[var(--card-background)] rounded-2xl p-6 shadow-lg border border-[var(--border-color)]">
@@ -217,7 +216,7 @@ export default function SpinPage() {
                               <div className="flex items-center gap-2">
                                 {getRewardIcon(segment.type)}
                                 <span className="text-sm font-semibold text-white whitespace-nowrap drop-shadow-md">
-                                  {segment.name}
+                                  {segment.text}
                                 </span>
                               </div>
                             </div>
@@ -274,84 +273,7 @@ export default function SpinPage() {
             )}
           </div>
 
-          {/* Rewards Info */}
-          <div className="space-y-6 animate-fade-in-up stagger-2">
-            {/* Available Rewards */}
-            <div className="card-shimmer bg-[var(--card-background)] rounded-2xl p-6 shadow-lg border border-[var(--border-color)]">
-              <h3 className="text-xl font-bold text-[var(--secondary-900)] dark:text-[var(--text)] mb-4 flex items-center gap-2">
-                <Target className="w-5 h-5 text-[var(--primary-400)] dark:text-[var(--primary)]" />
-                Available Rewards
-              </h3>
-              <div className="space-y-3">
-                {displaySegments.map((segment, index) => (
-                  <div
-                    key={index}
-                    className={`flex items-center gap-3 p-3 rounded-xl ${getRewardColor(segment.type)} border border-[var(--border-color)]`}
-                  >
-                    {getRewardIcon(segment.type)}
-                    <div className="flex-1">
-                      <p className="font-medium text-[var(--secondary-900)] dark:text-[var(--text)]">{segment.name}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Spin Info */}
-            <div className="card-shimmer bg-[var(--card-background)] rounded-2xl p-6 shadow-lg border border-[var(--border-color)]">
-              <h3 className="text-xl font-bold text-[var(--secondary-900)] dark:text-[var(--text)] mb-4">How It Works</h3>
-              <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-full bg-[var(--primary-100)] dark:bg-[var(--primary-800)] flex items-center justify-center flex-shrink-0">
-                    <span className="font-bold text-[var(--primary-500)] dark:text-[var(--primary-200)]">1</span>
-                  </div>
-                  <div>
-                    <p className="font-medium text-[var(--secondary-900)] dark:text-[var(--text)]">Get 3 free spins daily</p>
-                    <p className="text-sm text-[var(--secondary-600)] dark:text-[var(--text-muted)]">Spins reset every day</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-full bg-[var(--primary-100)] dark:bg-[var(--primary-800)] flex items-center justify-center flex-shrink-0">
-                    <span className="font-bold text-[var(--primary-500)] dark:text-[var(--primary-200)]">2</span>
-                  </div>
-                  <div>
-                    <p className="font-medium text-[var(--secondary-900)] dark:text-[var(--text)]">Click SPIN to play</p>
-                    <p className="text-sm text-[var(--secondary-600)] dark:text-[var(--text-muted)]">Win coins, diamonds, and more</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-full bg-[var(--primary-100)] dark:bg-[var(--primary-800)] flex items-center justify-center flex-shrink-0">
-                    <span className="font-bold text-[var(--primary-500)] dark:text-[var(--primary-200)]">3</span>
-                  </div>
-                  <div>
-                    <p className="font-medium text-[var(--secondary-900)] dark:text-[var(--text)]">Rewards auto-claim</p>
-                    <p className="text-sm text-[var(--secondary-600)] dark:text-[var(--text-muted)]">Instantly added to your balance</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Quick Stats */}
-            <div className="card-shimmer bg-gradient-to-r from-[var(--primary-400)] to-[var(--primary-500)] dark:from-[var(--primary)] dark:to-[var(--primary-hover)] rounded-2xl p-6 text-white">
-              <h3 className="text-lg font-bold mb-4">Daily Stats</h3>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="opacity-90">Spins Used Today</span>
-                  <span className="font-bold">{spinsUsed} / 3</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="opacity-90">Spins Remaining</span>
-                  <span className="font-bold">{spinChances}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="opacity-90">Best Win Today</span>
-                  <span className="font-bold">100 Coins</span>
-                </div>
-              </div>
-            </div>
-          </div>
+      
         </div>
 
         {/* Footer Note */}

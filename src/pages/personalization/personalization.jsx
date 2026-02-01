@@ -1,16 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { ChevronLeft, ChevronDown, Plus, Headphones, Video, Gamepad2, Pencil, Puzzle, Calculator, BookOpen, Microscope, Palette, Code, MessageSquare, Trophy, Gift, Brain, Gamepad } from 'lucide-react';
+import { useSelector } from 'react-redux';
+import { ChevronLeft, ChevronDown, Plus, Headphones, Video, Gamepad2, Pencil, Puzzle, Calculator, BookOpen, Microscope, Palette, Code, MessageSquare, Trophy, Gift, Brain, Gamepad, Camera, User } from 'lucide-react';
 import { onboardingService } from '../../services/onboardingService';
+import { profileService } from '../../services/profileService';
 import { selectUser } from '../../features/auth/authSlice';
+
+const CLASS_LEVEL_MAP = {
+  'Nursery': 'nursery',
+  'Primary': 'primary',
+  'Secondary': 'secondary',
+  'Tertiary': 'tertiary',
+  'General Studies': 'general-studies',
+};
 
 const Personalization = () => {
   const navigate = useNavigate();
   const user = useSelector(selectUser);
+  const fileInputRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [profileImage, setProfileImage] = useState(null);
+  const [profileImagePreview, setProfileImagePreview] = useState(null);
   const [formData, setFormData] = useState({
     age: '',
     currentClass: '',
@@ -22,6 +34,24 @@ const Personalization = () => {
     daysPerWeek: '',
     timePerDay: ''
   });
+
+  const handleImageSelect = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setError('Please select an image file');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Image must be less than 5MB');
+      return;
+    }
+
+    setProfileImage(file);
+    setProfileImagePreview(URL.createObjectURL(file));
+    setError('');
+  };
 
   const toggleSelection = (field, value) => {
     setFormData(prev => ({
@@ -47,29 +77,45 @@ const Personalization = () => {
     try {
       const userId = user?.id || user?._id;
 
-      if (userId) {
-        // Update personalization data
-        await onboardingService.updatePersonalization(userId, {
-          age: formData.age,
-          currentClass: formData.currentClass,
-          language: formData.language,
-          learningStyle: formData.learningStyle,
-          interests: formData.interests,
-          excitedAbout: formData.excitedAbout,
-        });
-
-        // Update learning goals
-        await onboardingService.updateLearningGoals(userId, {
-          goals: formData.goals,
-          daysPerWeek: formData.daysPerWeek,
-          timePerDay: formData.timePerDay,
-        });
+      if (!userId) {
+        throw new Error('User not found. Please log in again.');
       }
 
-      // Navigate to home on success
-      navigate('/home');
+      let profilePictureUrl = null;
+
+      // Upload profile picture first if selected
+      if (profileImage) {
+        const uploadResponse = await profileService.uploadProfilePicture(profileImage, userId);
+        profilePictureUrl = uploadResponse?.data?.profilePictureUrl || null;
+      }
+
+      // Step 1: Update personalization with correct field names
+      const personalizationData = {
+        age: formData.age,
+        currentClassLevel: CLASS_LEVEL_MAP[formData.currentClass] || formData.currentClass.toLowerCase(),
+        preferredLanguage: formData.language,
+      };
+      if (profilePictureUrl) {
+        personalizationData.profilePictureUrl = profilePictureUrl;
+      }
+
+      const personalizationResponse = await onboardingService.updatePersonalization(userId, personalizationData);
+
+      // Step 2: Update learning goals
+      const goalsResponse = await onboardingService.updateLearningGoals(userId, {
+        learningGoals: formData.goals,
+      });
+
+      // Handle nextStep from backend response
+      const nextStep = goalsResponse?.data?.nextStep || personalizationResponse?.data?.nextStep;
+
+      if (nextStep === 'class-selection') {
+        navigate('/class-selection');
+      } else {
+        navigate('/home');
+      }
     } catch (err) {
-      setError(err.message || 'Failed to save preferences. Please try again.');
+      setError(err.response?.data?.message || err.message || 'Failed to save preferences. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -129,40 +175,87 @@ const Personalization = () => {
 
       <ProgressBar step={1} />
 
-      <DropdownField
-        label="What is your age?"
-        value={formData.age}
-        options={['5-7', '8-10', '11-13', '14-16', '17+']}
-        onChange={(e) => setFormData({...formData, age: e.target.value})}
-      />
+      {/* Profile Picture Upload */}
+      <div className="flex flex-col items-center mb-6 sm:mb-8">
+        <div
+          className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full cursor-pointer group"
+          onClick={() => fileInputRef.current?.click()}
+        >
+          {profileImagePreview ? (
+            <img
+              src={profileImagePreview}
+              alt="Profile"
+              className="w-full h-full rounded-full object-cover border-2 border-secondary-200"
+            />
+          ) : (
+            <div className="w-full h-full rounded-full bg-secondary-100 flex items-center justify-center border-2 border-secondary-200">
+              <User size={40} className="text-secondary-400" />
+            </div>
+          )}
+          <div className="absolute bottom-0 right-0 w-8 h-8 bg-primary-400 rounded-full flex items-center justify-center border-2 border-white group-hover:bg-primary-500 transition-colors">
+            <Camera size={16} className="text-white" />
+          </div>
+        </div>
+        <p className="text-sm text-secondary-500 mt-2">Tap to add a profile photo</p>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleImageSelect}
+          className="hidden"
+        />
+      </div>
 
       <div className="mb-4 sm:mb-6">
-        <label className="block text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-secondary-800">What is your current class?</label>
-        <div className="space-y-2 sm:space-y-3">
-          {['Nursery', 'Primary', 'Secondary', 'Tertiary', 'General Studies'].map(cls => (
-            <div key={cls} className="relative">
-              <button
-                onClick={() => setFormData({...formData, currentClass: cls})}
-                className={`w-full p-3 sm:p-4 pr-12 border-2 rounded-lg text-left transition-all text-sm sm:text-base ${
-                  formData.currentClass === cls
-                    ? 'bg-primary-0 border-primary-400 text-primary-500'
-                    : 'bg-white border-secondary-100 text-secondary-700 hover:border-secondary-200'
-                }`}
-              >
-                {cls}
-              </button>
-              <ChevronDown className="absolute right-4 top-1/2 transform -translate-y-1/2 text-secondary-400 pointer-events-none" size={20} />
-            </div>
+        <label className="block text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-secondary-800">What is your age?</label>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
+          {['5', '6', '7', '8', '9'].map(age => (
+            <SelectButton
+              key={age}
+              selected={formData.age === age}
+              onClick={() => setFormData({...formData, age})}
+            >
+              {age}
+            </SelectButton>
           ))}
         </div>
       </div>
 
-      <DropdownField
-        label="What language do you prefer to work in?"
-        value={formData.language}
-        options={['English', 'Spanish', 'French', 'German', 'Chinese', 'Other']}
-        onChange={(e) => setFormData({...formData, language: e.target.value})}
-      />
+      <div className="mb-4 sm:mb-6">
+        <label className="block text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-secondary-800">What is your current class?</label>
+        <div className="flex flex-wrap gap-2 sm:gap-3">
+          {['Nursery', 'Primary', 'Secondary', 'Tertiary', 'General Studies'].map(cls => (
+            <SelectButton
+              key={cls}
+              selected={formData.currentClass === cls}
+              onClick={() => setFormData({...formData, currentClass: cls})}
+            >
+              {cls}
+            </SelectButton>
+          ))}
+        </div>
+      </div>
+
+      <div className="mb-4 sm:mb-6">
+        <label className="block text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-secondary-800">What language do you prefer to work in?</label>
+        <div className="flex flex-wrap gap-2 sm:gap-3">
+          {['English', 'Spanish', 'French', 'German', 'Chinese', 'Other'].map(lang => (
+            <SelectButton
+              key={lang}
+              selected={formData.language === lang}
+              onClick={() => setFormData({...formData, language: lang})}
+            >
+              {lang}
+            </SelectButton>
+          ))}
+        </div>
+      </div>
+
+      {error && (
+        <div className="p-3 bg-error-50 border border-error-100 text-error-200 rounded-lg text-sm mb-4">
+          {error}
+        </div>
+      )}
 
       <div className="flex flex-col sm:flex-row justify-between gap-3 mt-6 sm:mt-8">
         <button
@@ -385,10 +478,14 @@ const Personalization = () => {
           <span className="font-semibold text-base sm:text-lg text-secondary-800">Storra</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-primary-100 rounded-full" />
+          {profileImagePreview ? (
+            <img src={profileImagePreview} alt="Profile" className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover" />
+          ) : (
+            <div className="w-7 h-7 sm:w-8 sm:h-8 bg-primary-100 rounded-full" />
+          )}
           <div className="hidden sm:block">
             <div className="text-sm font-medium text-secondary-800">Welcome</div>
-            <div className="text-xs text-secondary-500">Student</div>
+            <div className="text-xs text-secondary-500">{user?.fullname || 'Student'}</div>
           </div>
         </div>
       </header>

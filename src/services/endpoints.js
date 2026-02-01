@@ -22,7 +22,7 @@ export const ENDPOINTS = {
 
   // ============ CLASS ROUTES (/classes) ============
   CLASSES: {
-    GET_COURSES: '/classes/courses',
+     fiGET_COURSES: '/classes/courses',
     GET_COURSE_TOPICS: (courseId) => `/classes/courses/${courseId}/topics`,
   },
 

@@ -5,6 +5,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './components/common/Toast';
 import { ErrorBoundary, PrivateRoute } from './components/common';
+import { GameSettingsProvider } from './contexts/GameSettingsContext';
 
 // Layouts
 import MainLayout from './components/layout/MainLayout';
@@ -17,10 +18,13 @@ import OnboardingPage from './pages/OnboardingPage';
 import StudentLogin from './pages/auth/student/Login';
 import StudentRegister from './pages/auth/student/Register';
 import Personalization from './pages/personalization/personalization';
+import ClassSelection from './pages/personalization/ClassSelection';
 
 // Protected Pages
 import HomeLayout from './pages/home/HomeLayout';
 import CoursePage from './pages/courses';
+import CourseDetail from './pages/courses/CourseDetail';
+import LessonView from './pages/courses/LessonView';
 import WalletPage from './pages/wallet';
 import StorraLeaderboard from './pages/leaderboard/StorraLeaderboard';
 import SpinPage from './pages/spin_the_wheel/Spin';
@@ -28,14 +32,17 @@ import RewardsPage from './pages/Rewards';
 import SettingsPage from './pages/setting/Setting';
 import Notifications from './pages/notifications/Notifications';
 import Profile from './pages/profile/Profile';
+import QuizPage from './pages/quiz';
+import QuizTaking from './pages/quiz/QuizTaking';
 
 function App() {
   return (
     <ErrorBoundary>
       <AuthProvider>
-        <ToastProvider>
-          <BrowserRouter>
-            <Routes>
+        <GameSettingsProvider>
+          <ToastProvider>
+            <BrowserRouter>
+              <Routes>
               {/* PUBLIC ROUTES */}
               <Route path="/" element={<LogoPage />} />
               <Route path="/onboarding" element={<OnboardingPage />} />
@@ -53,6 +60,14 @@ function App() {
                   </PrivateRoute>
                 }
               />
+              <Route
+                path="/class-selection"
+                element={
+                  <PrivateRoute>
+                    <ClassSelection />
+                  </PrivateRoute>
+                }
+              />
 
               {/* PROTECTED ROUTES WITH MAIN LAYOUT */}
               <Route
@@ -67,6 +82,8 @@ function App() {
 
                 {/* Courses */}
                 <Route path="/courses" element={<CoursePage />} />
+                <Route path="/courses/:courseId" element={<CourseDetail />} />
+                <Route path="/courses/:courseId/lesson/:lessonId" element={<LessonView />} />
 
                 {/* Wallet */}
                 <Route path="/wallet" element={<WalletPage />} />
@@ -88,13 +105,18 @@ function App() {
 
                 {/* Profile */}
                 <Route path="/profile" element={<Profile />} />
+
+                {/* Quiz */}
+                <Route path="/quiz" element={<QuizPage />} />
+                <Route path="/quiz/:courseId/:quizId" element={<QuizTaking />} />
               </Route>
 
               {/* Redirect unknown routes */}
               {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
-            </Routes>
-          </BrowserRouter>
-        </ToastProvider>
+              </Routes>
+            </BrowserRouter>
+          </ToastProvider>
+        </GameSettingsProvider>
       </AuthProvider>
     </ErrorBoundary>
   );
