@@ -81,7 +81,7 @@ const Profile = () => {
 
   const handleCancel = () => {
     setFormData({
-      fullName: user?.fullName || '',
+      fullName: user?.fullname || '',
       email: user?.email || '',
       phoneNumber: user?.phoneNumber || '',
     });
@@ -108,16 +108,16 @@ const Profile = () => {
           {/* Avatar */}
           <div className="relative -mt-16 mb-4">
             <div className="w-28 h-28 rounded-full bg-white dark:bg-[var(--card-background)] border-4 border-white dark:border-[var(--card-background)] overflow-hidden shadow-lg">
-              {user?.profilePicture ? (
+              {user?.profilePictureUrl ? (
                 <img
-                  src={user.profilePicture}
-                  alt={user.fullName}
+                  src={user.profilePictureUrl}
+                  alt={user.fullname}
                   className="w-full h-full object-cover"
                 />
               ) : (
                 <div className="w-full h-full bg-[var(--primary-100)] dark:bg-[var(--primary-800)] flex items-center justify-center">
                   <span className="text-4xl font-bold text-[var(--primary-500)] dark:text-[var(--primary-200)]">
-                    {user?.fullName?.charAt(0) || 'U'}
+                    {user?.fullname?.charAt(0) || 'U'}
                   </span>
                 </div>
               )}
@@ -190,13 +190,13 @@ const Profile = () => {
                 <input
                   type="text"
                   name="fullName"
-                  value={formData.fullName}
+                  value={formData.fullname}
                   onChange={handleChange}
                   className="w-full px-4 py-2.5 border border-[var(--secondary-200)] dark:border-[var(--border-color)] rounded-lg bg-white dark:bg-[var(--input-background)] text-[var(--secondary-800)] dark:text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-400)] dark:focus:ring-[var(--primary)] focus:border-transparent"
                 />
               ) : (
                 <p className="px-4 py-2.5 bg-[var(--secondary-50)] dark:bg-[var(--secondary-800)] rounded-lg text-[var(--secondary-800)] dark:text-[var(--text)]">
-                  {user?.fullName || '-'}
+                  {user?.fullname || '-'}
                 </p>
               )}
             </div>

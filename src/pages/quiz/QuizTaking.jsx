@@ -607,7 +607,8 @@ const QuizTaking = () => {
                 <div>
                   <span className="text-[var(--secondary-500)] dark:text-[var(--text-muted)]">Best Score:</span>
                   <span className="ml-2 font-medium text-[var(--secondary-800)] dark:text-[var(--text)]">
-                    {progress.bestPercentage}%
+                    {Math.round(progress.bestPercentage)}%
+                        
                   </span>
                 </div>
                 <div>
@@ -720,7 +721,7 @@ const QuizTaking = () => {
     const isPassed = result.percentage >= 70;
     const needsRetake = result.percentage < 50;
     const isPerfect = result.percentage === 100;
-
+console.log('Quiz Result:', result);
     return (
       <div className="w-full max-w-2xl mx-auto">
         <div className="bg-white dark:bg-[var(--card-background)] rounded-2xl border border-[var(--secondary-100)] dark:border-[var(--border-color)] p-8">
@@ -805,7 +806,7 @@ const QuizTaking = () => {
               <CheckCircle className="w-6 h-6 text-[var(--success-200)] dark:text-[var(--success-color)] mx-auto mb-2" />
               <p className="text-[var(--secondary-500)] dark:text-[var(--text-muted)] text-sm">Correct</p>
               <p className="text-[var(--secondary-800)] dark:text-[var(--text)] font-bold text-lg">
-                {result.correctCount}/{result.totalQuestions}
+                {result.score}/{result.totalQuestions}
               </p>
             </div>
             <div className="bg-[var(--secondary-50)] dark:bg-[var(--secondary-800)] rounded-xl p-4 text-center">
@@ -988,7 +989,8 @@ const QuizTaking = () => {
             }`}
           >
             <Clock className="w-5 h-5" />
-            {formatTime(timeLeft)}
+            {/* {formatTime(timeLeft)} || {20} */}
+            10m
           </div>
         </div>
       </div>

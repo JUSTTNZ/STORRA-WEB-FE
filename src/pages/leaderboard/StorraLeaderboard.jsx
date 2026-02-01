@@ -108,13 +108,13 @@ console.log("Fetched leaderboard data:", formattedData);
     <div className="card-shimmer bg-white dark:bg-[var(--card-background)] rounded-xl sm:rounded-2xl shadow-sm dark:shadow-none border border-[var(--secondary-200)] dark:border-[var(--border-color)] p-4 sm:p-6 lg:p-8">
           <div className="max-w-7xl mx-auto">
       <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold mb-2 sm:mb-3 leading-tight text-[var(--secondary-900)] dark:text-[var(--text)]">
-        Storra Global Leaderboard
+        Classora Leaderboard
       </h1>
 
     </div>
       {/* Filters */}
       <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center mb-6 sm:mb-8 gap-4 sm:gap-6">
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 lg:gap-6 w-full lg:w-auto">
+        {/* <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 lg:gap-6 w-full lg:w-auto">
           <div className="flex items-center gap-2 sm:gap-3">
             <label className="text-[var(--secondary-700)] dark:text-[var(--text-muted)] font-medium whitespace-nowrap text-sm sm:text-base lg:text-lg">
               Timeframe:
@@ -129,7 +129,7 @@ console.log("Fetched leaderboard data:", formattedData);
               <option>All Time</option>
             </select>
           </div>
-        </div>
+        </div> */}
 
         <div className="relative w-full lg:w-72">
           <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--secondary-400)] dark:text-[var(--secondary-500)] w-4 h-4 sm:w-5 sm:h-5" />
