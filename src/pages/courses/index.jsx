@@ -46,7 +46,7 @@ const CoursePage = () => {
     const courseId = course.id || course._id;
     const title = course.title || course.name;
     const description = course.description || '';
-    const lessonsCount = course.lessonsCount || course.lessons_count || course.topicsCount || 0;
+    const lessonsCount = course.totalLessons || course.lessons_count || course.topicsCount || 0;
     const duration = course.duration || `${lessonsCount} lessons`;
     const progress = course.progress || 0;
     const imageUrl = course.image || course.imageUrl;

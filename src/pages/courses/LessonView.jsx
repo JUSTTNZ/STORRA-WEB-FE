@@ -48,7 +48,7 @@ const LessonView = () => {
   const [isEditingNotes, setIsEditingNotes] = useState(false);
   const [isSavingNotes, setIsSavingNotes] = useState(false);
   const [isCompleting, setIsCompleting] = useState(false);
-
+console.log("CURRENT LESSON:", currentLesson)
   useEffect(() => {
     if (courseId) {
       fetchLessonData();
@@ -106,7 +106,7 @@ const LessonView = () => {
         const hasText = lesson.textContent?.length > 0 || lesson.content?.text?.length > 0;
         const hasAudio = lesson.audioContent?.length > 0 || lesson.content?.audio?.length > 0;
         const hasVideo = lesson.videoContent?.length > 0 || lesson.content?.video?.length > 0;
-
+  if (hasText) setActiveTab('text');
         if (hasVideo) setActiveTab('video');
         else if (hasAudio) setActiveTab('audio');
         else setActiveTab('text');
@@ -397,37 +397,41 @@ const LessonView = () => {
 
           {/* Content Area */}
           <div className="bg-white dark:bg-[var(--card-background)] rounded-xl border border-[var(--secondary-100)] dark:border-[var(--border-color)] p-6 mb-6">
-            {activeTab === 'text' && (
-              <div className="prose dark:prose-invert max-w-none">
-                {textContent.length > 0 ? (
-                  textContent.map((item, index) => (
-                    <div key={index} className="mb-6">
-                      {item.title && (
-                        <h2 className="text-xl font-semibold text-[var(--secondary-800)] dark:text-[var(--text)] mb-3">
-                          {item.title}
-                        </h2>
-                      )}
-                      {Array.isArray(item.description) ? (
-                        <ul className="list-disc pl-5 space-y-2 text-[var(--secondary-600)] dark:text-[var(--text-muted)]">
-                          {item.description.map((desc, i) => (
-                            <li key={i}>{desc}</li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <p className="text-[var(--secondary-600)] dark:text-[var(--text-muted)]">
-                          {item.description || item.content}
-                        </p>
-                      )}
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-[var(--secondary-600)] dark:text-[var(--text-muted)]">
-                    {currentLesson?.description || 'No text content available for this lesson.'}
-                  </p>
-                )}
-              </div>
-            )}
-
+     {activeTab === 'text' && (
+  <div className="prose dark:prose-invert max-w-none">
+    {textContent.length > 0 ? (
+      textContent.map((item, index) => (
+        <div key={index} className="mb-6">
+          {/* If item is a string, display it directly */}
+          {typeof item === 'string' ? (
+            <p className="text-[var(--secondary-600)] dark:text-[var(--text-muted)]">
+              {item}
+            </p>
+          ) : (
+            <>
+              {/* If item is an object with title */}
+              {item.title && (
+                <h2 className="text-xl font-semibold text-[var(--secondary-800)] dark:text-[var(--text)] mb-3">
+                  {item.title}
+                </h2>
+              )}
+              {/* If item has description or content */}
+              {(item.description || item.content) && (
+                <p className="text-[var(--secondary-600)] dark:text-[var(--text-muted)]">
+                  {item.description || item.content}
+                </p>
+              )}
+            </>
+          )}
+        </div>
+      ))
+    ) : (
+      <p className="text-[var(--secondary-600)] dark:text-[var(--text-muted)]">
+        {currentLesson?.description || currentLesson?.paragraph || 'No text content available.'}
+      </p>
+    )}
+  </div>
+)}
             {activeTab === 'audio' && (
               <div className="space-y-4">
                 {audioContent.length > 0 ? (

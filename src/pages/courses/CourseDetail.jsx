@@ -142,7 +142,7 @@ const CourseDetail = () => {
         return 'bg-white dark:bg-[var(--card-background)] border-[var(--secondary-100)] dark:border-[var(--border-color)]';
     }
   };
-
+console.log('current data', course)
   const getLessonIcon = (lesson) => {
     const hasVideo = lesson.videoContent?.length > 0 || lesson.content?.video?.length > 0;
     const hasAudio = lesson.audioContent?.length > 0 || lesson.content?.audio?.length > 0;
@@ -153,12 +153,14 @@ const CourseDetail = () => {
   };
 
   // Calculate progress
-  const completedLessons = lessons.filter((l) => l.status === 'completed').length;
-  const totalLessons = lessons.length;
-  const overallProgress = courseProgress?.overallProgress ||
-    (totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0);
+// Remove the duplicate line and fix the progress calculation
+const completedLessons = lessons.filter((l) => l.status === 'completed').length;
+const totalLessons = lessons.length;
+const overallProgress = courseProgress?.overallProgress || 
+                       courseProgress?.progress || 
+                       (totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0);
   const isCompleted = overallProgress === 100;
-
+ console.log(overallProgress)
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -238,10 +240,7 @@ const CourseDetail = () => {
               <Clock className="w-4 h-4" />
               {course?.duration || `${totalLessons * 10} mins`}
             </span>
-            <span className="flex items-center gap-1">
-              <Users className="w-4 h-4" />
-              {course?.studentsCount || 124} students
-            </span>
+         
             {courseData?.quiz && (
               <span className="flex items-center gap-1">
                 <Target className="w-4 h-4" />
@@ -257,7 +256,7 @@ const CourseDetail = () => {
                 Course Progress
               </span>
               <span className="text-sm font-medium text-[var(--primary-500)] dark:text-[var(--primary)]">
-                {overallProgress}%
+                {course.progress}%
               </span>
             </div>
             <div className="w-full bg-[var(--secondary-100)] dark:bg-[var(--secondary-700)] rounded-full h-3">
@@ -267,7 +266,7 @@ const CourseDetail = () => {
                     ? 'bg-[var(--success-200)] dark:bg-[var(--success-color)]'
                     : 'bg-[var(--primary-400)] dark:bg-[var(--primary)]'
                 }`}
-                style={{ width: `${overallProgress}%` }}
+                style={{ width: `${course.progress}%` }}
               />
             </div>
             <p className="text-xs text-[var(--secondary-500)] dark:text-[var(--text-muted)] mt-1">

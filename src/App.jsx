@@ -5,6 +5,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './components/common/Toast';
 import { ErrorBoundary, PrivateRoute } from './components/common';
+import { GameSettingsProvider } from './contexts/GameSettingsContext';
 
 // Layouts
 import MainLayout from './components/layout/MainLayout';
@@ -37,9 +38,10 @@ function App() {
   return (
     <ErrorBoundary>
       <AuthProvider>
-        <ToastProvider>
-          <BrowserRouter>
-            <Routes>
+        <GameSettingsProvider>
+          <ToastProvider>
+            <BrowserRouter>
+              <Routes>
               {/* PUBLIC ROUTES */}
               <Route path="/" element={<LogoPage />} />
               <Route path="/onboarding" element={<OnboardingPage />} />
@@ -102,9 +104,10 @@ function App() {
 
               {/* Redirect unknown routes */}
               {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
-            </Routes>
-          </BrowserRouter>
-        </ToastProvider>
+              </Routes>
+            </BrowserRouter>
+          </ToastProvider>
+        </GameSettingsProvider>
       </AuthProvider>
     </ErrorBoundary>
   );
