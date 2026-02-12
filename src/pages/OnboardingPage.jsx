@@ -42,18 +42,18 @@ const OnboardingPage = () => {
   }, [slides.length]);
 
   return (
-    <div className="min-h-screen bg-blue-700 flex items-center justify-center px-4 relative overflow-hidden">
-      
+    <div className="h-screen min-h-screen bg-blue-700 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+
       {/* Skip */}
       <button
         onClick={() => navigate('/auth/student/login')}
-        className="absolute top-6 right-6 text-white text-lg font-medium opacity-90 hover:opacity-100"
+        className="absolute top-4 right-4 sm:top-6 sm:right-6 text-white text-sm sm:text-lg font-medium opacity-90 hover:opacity-100 z-10"
       >
         Skip
       </button>
 
       {/* Slide container */}
-      <div className="w-full max-w-md text-center relative">
+      <div className="w-full max-w-xs sm:max-w-md lg:max-w-lg text-center relative">
         {slides.map((slide, index) => (
           <div
             key={index}
@@ -72,31 +72,31 @@ const OnboardingPage = () => {
               <img
                 src={slide.image}
                 alt={slide.title}
-                className="w-full h-100 object-contain mb-8"
+                className="w-full h-48 sm:h-64 lg:h-68 object-contain "
               />
             </div>
 
             {/* Title */}
-            <h2 className={`text-white text-2xl font-semibold leading-snug mb-4 transition-all duration-700 delay-200 ${
+            <h2 className={`text-white text-xl sm:text-2xl lg:text-2xl font-semibold leading-snug mb-2 sm:mb-4 px-2 transition-all duration-700 delay-200 ${
               index === currentSlide ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
             }`}>
               {slide.title}
             </h2>
 
             {/* Subtitle */}
-            <p className={`text-blue-100 text-base leading-relaxed mb-8 transition-all duration-700 delay-300 ${
+            <p className={`text-blue-100 text-sm sm:text-base lg:text-lg leading-relaxed mb-6 sm:mb-8 px-2 transition-all duration-700 delay-300 ${
               index === currentSlide ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
             }`}>
               {slide.subtitle}
             </p>
 
             {/* Dots */}
-            <div className="flex justify-center mb-8">
+            <div className="flex justify-center mb-6 sm:mb-8">
               {slides.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setCurrentSlide(i)}
-                  className={`w-3 h-3 mx-1.5 rounded-full transition-all duration-300 ${
+                  className={`w-2.5 h-2.5 sm:w-3 sm:h-3 mx-1 sm:mx-1.5 rounded-full transition-all duration-300 ${
                     i === currentSlide
                       ? 'bg-white scale-125'
                       : 'bg-white/40'

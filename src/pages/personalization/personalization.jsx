@@ -7,11 +7,10 @@ import { profileService } from '../../services/profileService';
 import { selectUser } from '../../features/auth/authSlice';
 
 const CLASS_LEVEL_MAP = {
-  'Nursery': 'nursery',
+
   'Primary': 'primary',
   'Secondary': 'secondary',
-  'Tertiary': 'tertiary',
-  'General Studies': 'general-studies',
+
 };
 
 const Personalization = () => {
@@ -224,7 +223,7 @@ const Personalization = () => {
       <div className="mb-4 sm:mb-6">
         <label className="block text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-secondary-800">What is your current class?</label>
         <div className="flex flex-wrap gap-2 sm:gap-3">
-          {['Nursery', 'Primary', 'Secondary', 'Tertiary', 'General Studies'].map(cls => (
+          {[ 'Primary', 'Secondary', ].map(cls => (
             <SelectButton
               key={cls}
               selected={formData.currentClass === cls}

@@ -46,7 +46,7 @@ console.log(user)
     >
       <div className="flex items-center justify-between px-4 lg:px-6 py-3">
         {/* Search Bar */}
-        <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-md">
+        {/* <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-md">
           <div className="relative w-full">
             <Search
               className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5"
@@ -67,19 +67,19 @@ console.log(user)
               }}
             />
           </div>
-        </form>
+        </form> */}
 
         {/* Right Side - Notifications & Profile */}
         <div className="flex items-center gap-3 ml-auto">
           {/* Mobile Search */}
-          <button
+          {/* <button
             className="md:hidden p-2 hover:bg-secondary-100 rounded-lg"
             style={{ '--hover-bg': 'var(--secondary)' }}
             onMouseOver={(e) => (e.currentTarget.style.backgroundColor = 'var(--hover-bg)')}
             onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '')}
           >
             <Search className="w-5 h-5" style={{ color: 'var(--link-color)' }} />
-          </button>
+          </button> */}
 
           {/* Theme Toggle */}
           <button
@@ -130,7 +130,7 @@ console.log(user)
                   />
                 ) : (
                   <span className="text-primary-500 font-semibold text-sm">
-                    {user?.fullName?.charAt(0) || 'U'}
+                    {user?.fullname?.charAt(0) || 'U'}
                   </span>
                 )}
               </div>

@@ -15,7 +15,7 @@ function ProfileSection() {
       .toUpperCase()
       .slice(0, 2);
   };
-console.log("profile", user)
+console.log(user)
   return (
     <>
       {/* Desktop Header */}
@@ -38,7 +38,7 @@ console.log("profile", user)
             </div>
             <div>
               <h2 className="text-2xl font-semibold text-[var(--secondary-800)] dark:text-[var(--text)]">
-                Hello {user?.firstname},
+                Hello {firstName},
               </h2>
               <p className="text-sm text-[var(--secondary-500)] dark:text-[var(--text-muted)]">
                 Here's your learning progress today
@@ -50,9 +50,9 @@ console.log("profile", user)
             {/* Class Selector */}
             <div className="flex items-center gap-2 px-3 py-2 bg-[var(--primary-50)] dark:bg-[var(--primary-900)] rounded-lg cursor-pointer hover:bg-[var(--primary-100)] dark:hover:bg-[var(--primary-800)] transition-colors">
               <span className="text-sm font-medium text-[var(--primary-700)] dark:text-[var(--primary-200)]">
-                {user?.currentClassId || 'Primary 1'}
+                {user?.currentClassId || 'Primary '}
               </span>
-              <ChevronDown className="w-4 h-4 text-[var(--primary-500)] dark:text-[var(--primary-300)]" />
+              {/* <ChevronDown className="w-4 h-4 text-[var(--primary-500)] dark:text-[var(--primary-300)]" /> */}
             </div>
           </div>
         </div>
@@ -90,7 +90,7 @@ console.log("profile", user)
             <span className="text-xs font-medium text-[var(--primary-700)] dark:text-[var(--primary-200)]">
               {user?.currentClassId || 'Pri 1'}
             </span>
-            <ChevronDown className="w-3 h-3 text-[var(--primary-500)] dark:text-[var(--primary-300)]" />
+            {/* <ChevronDown className="w-3 h-3 text-[var(--primary-500)] dark:text-[var(--primary-300)]" /> */}
           </div>
         </div>
       </div>

@@ -295,7 +295,7 @@ const Rewards = () => {
         {/* Calendar Grid */}
         <div>
           <h3 className="text-lg font-semibold text-[var(--secondary-900)] dark:text-[var(--text)] mb-4">This Month's Calendar</h3>
-          <div className="grid grid-cols-7 gap-2">
+          <div className="grid grid-cols-4 lg:grid-cols-7 gap-2">
             {rewards.calendar.map((dayData) => {
               const today = new Date();
               const isToday = dayData.day === today.getDate();

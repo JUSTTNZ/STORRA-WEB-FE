@@ -102,7 +102,7 @@ export default function StudentRegister() {
                 Create Account
               </h2>
               <p className="text-secondary-500 text-sm mt-1">
-                Start your learning journey with Storra
+                Start your learning journey with Classora
               </p>
             </div>
 
