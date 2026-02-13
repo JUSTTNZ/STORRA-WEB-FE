@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 // Context & Providers
 import { AuthProvider } from './context/AuthContext';
+import { AIProvider } from './context/AIContext';
 import { ToastProvider } from './components/common/Toast';
 import { ErrorBoundary, PrivateRoute } from './components/common';
 import { GameSettingsProvider } from './contexts/GameSettingsContext';
@@ -41,6 +42,7 @@ function App() {
       <AuthProvider>
         <GameSettingsProvider>
           <ToastProvider>
+            <AIProvider>
             <BrowserRouter>
               <Routes>
               {/* PUBLIC ROUTES */}
@@ -115,6 +117,7 @@ function App() {
               {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
               </Routes>
             </BrowserRouter>
+            </AIProvider>
           </ToastProvider>
         </GameSettingsProvider>
       </AuthProvider>

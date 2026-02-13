@@ -22,10 +22,12 @@ import {
   Edit3,
   Save,
   RotateCcw,
+  Sparkles,
 } from 'lucide-react';
 import { courseService } from '../../services/courseService';
 import { progressService } from '../../services/progressService';
 import { useToast } from '../../components/common/Toast';
+import { summarizeLesson } from '../../services/aiService';
 
 const LessonView = () => {
   const { courseId, lessonId } = useParams();
@@ -48,6 +50,8 @@ const LessonView = () => {
   const [isEditingNotes, setIsEditingNotes] = useState(false);
   const [isSavingNotes, setIsSavingNotes] = useState(false);
   const [isCompleting, setIsCompleting] = useState(false);
+  const [aiSummary, setAiSummary] = useState('');
+  const [isSummarizing, setIsSummarizing] = useState(false);
 console.log("CURRENT LESSON:", currentLesson)
   useEffect(() => {
     if (courseId) {
@@ -204,6 +208,27 @@ console.log("CURRENT LESSON:", currentLesson)
       showToast('Audio completed!', 'success');
     } catch (error) {
       console.error('Failed to mark audio as played:', error);
+    }
+  };
+
+  const handleSummarize = async () => {
+    if (isSummarizing) return;
+    setIsSummarizing(true);
+    try {
+      const title = currentLesson?.title || currentLesson?.name || 'Lesson';
+      // Gather all text content into a single string
+      const parts = textContent.map((item) =>
+        typeof item === 'string' ? item : item.description || item.content || item.title || ''
+      );
+      if (currentLesson?.description) parts.push(currentLesson.description);
+      const content = parts.filter(Boolean).join('\n\n') || 'No text content available.';
+      const summary = await summarizeLesson(title, content);
+      setAiSummary(summary);
+    } catch (err) {
+      console.error('AI summarization failed:', err);
+      showToast('Failed to generate summary. Please try again.', 'error');
+    } finally {
+      setIsSummarizing(false);
     }
   };
 
@@ -549,6 +574,47 @@ console.log("CURRENT LESSON:", currentLesson)
                   </p>
                 )}
               </div>
+            )}
+          </div>
+
+          {/* AI Summary Section */}
+          <div className="bg-white dark:bg-[var(--card-background)] rounded-xl border border-[var(--secondary-100)] dark:border-[var(--border-color)] p-6 mb-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold text-[var(--secondary-800)] dark:text-[var(--text)] flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-[var(--primary-400)] dark:text-[var(--primary)]" />
+                AI Summary
+              </h3>
+              <button
+                onClick={handleSummarize}
+                disabled={isSummarizing}
+                className="text-sm font-medium flex items-center gap-1 px-3 py-1.5 rounded-lg transition-colors bg-[var(--primary-50)] dark:bg-[var(--primary-800)]/30 text-[var(--primary-500)] dark:text-[var(--primary)] hover:bg-[var(--primary-100)] dark:hover:bg-[var(--primary-800)]/50 disabled:opacity-50"
+              >
+                {isSummarizing ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Summarizing...
+                  </>
+                ) : aiSummary ? (
+                  <>
+                    <RotateCcw className="w-4 h-4" />
+                    Regenerate
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-4 h-4" />
+                    Summarize
+                  </>
+                )}
+              </button>
+            </div>
+            {aiSummary ? (
+              <div className="prose dark:prose-invert max-w-none text-sm text-[var(--secondary-600)] dark:text-[var(--text-muted)] whitespace-pre-wrap">
+                {aiSummary}
+              </div>
+            ) : (
+              <p className="text-sm text-[var(--secondary-500)] dark:text-[var(--text-muted)]">
+                Click "Summarize" to generate an AI-powered summary of this lesson.
+              </p>
             )}
           </div>
 

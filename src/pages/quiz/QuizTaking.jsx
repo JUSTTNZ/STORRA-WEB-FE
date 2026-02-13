@@ -24,9 +24,11 @@ import {
   Mic,
   MicOff,
   Keyboard,
+  Sparkles,
 } from 'lucide-react';
 import { quizService } from '../../services/quizService';
 import { useToast } from '../../components/common/Toast';
+import { getQuizFeedback } from '../../services/aiService';
 import { soundManager } from '../../utils/sounds';
 import { confetti } from '../../utils/confetti';
 import GameSettings from '../../components/common/GameSettings';
@@ -53,6 +55,10 @@ const QuizTaking = () => {
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [result, setResult] = useState(null);
   const [showReview, setShowReview] = useState(false);
+
+  // AI Feedback State
+  const [aiFeedback, setAiFeedback] = useState({});
+  const [loadingFeedback, setLoadingFeedback] = useState({});
 
   // Speech State
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -872,12 +878,56 @@ console.log('Quiz Result:', result);
                       </span>
                     </p>
                     {!answer.isCorrect && (
-                      <p className="text-sm">
-                        <span className="text-[var(--secondary-500)] dark:text-[var(--text-muted)]">Correct answer: </span>
-                        <span className="text-[var(--success-200)] dark:text-[var(--success-color)]">
-                          {answer.correctAnswer}
-                        </span>
-                      </p>
+                      <>
+                        <p className="text-sm">
+                          <span className="text-[var(--secondary-500)] dark:text-[var(--text-muted)]">Correct answer: </span>
+                          <span className="text-[var(--success-200)] dark:text-[var(--success-color)]">
+                            {answer.correctAnswer}
+                          </span>
+                        </p>
+                        {aiFeedback[answer.questionId] ? (
+                          <div className="mt-2 p-3 rounded-lg bg-white/60 dark:bg-[var(--secondary-800)]/60 text-sm text-[var(--secondary-700)] dark:text-[var(--text-muted)]">
+                            <div className="flex items-center gap-1 mb-1 text-[var(--primary-500)] dark:text-[var(--primary)] font-medium text-xs">
+                              <Sparkles className="w-3 h-3" />
+                              AI Explanation
+                            </div>
+                            {aiFeedback[answer.questionId]}
+                          </div>
+                        ) : (
+                          <button
+                            onClick={async () => {
+                              setLoadingFeedback((prev) => ({ ...prev, [answer.questionId]: true }));
+                              try {
+                                const feedback = await getQuizFeedback(
+                                  question?.questionText || '',
+                                  answer.selectedAnswer || 'Not answered',
+                                  answer.correctAnswer
+                                );
+                                setAiFeedback((prev) => ({ ...prev, [answer.questionId]: feedback }));
+                              } catch (err) {
+                                console.error('AI feedback error:', err);
+                                showToast('Failed to get AI explanation', 'error');
+                              } finally {
+                                setLoadingFeedback((prev) => ({ ...prev, [answer.questionId]: false }));
+                              }
+                            }}
+                            disabled={loadingFeedback[answer.questionId]}
+                            className="mt-2 flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg transition-colors bg-[var(--primary-50)] dark:bg-[var(--primary-800)]/30 text-[var(--primary-500)] dark:text-[var(--primary)] hover:bg-[var(--primary-100)] dark:hover:bg-[var(--primary-800)]/50 disabled:opacity-50"
+                          >
+                            {loadingFeedback[answer.questionId] ? (
+                              <>
+                                <Loader2 className="w-3 h-3 animate-spin" />
+                                Explaining...
+                              </>
+                            ) : (
+                              <>
+                                <Sparkles className="w-3 h-3" />
+                                Explain with AI
+                              </>
+                            )}
+                          </button>
+                        )}
+                      </>
                     )}
                   </div>
                 );
@@ -908,6 +958,8 @@ console.log('Quiz Result:', result);
                 setHintsRemaining(3);
                 setShowHint(false);
                 setEliminatedOptions([]);
+                setAiFeedback({});
+                setLoadingFeedback({});
                 fetchQuiz();
               }}
               className="flex-1 py-3 bg-[var(--primary-400)] dark:bg-[var(--primary)] text-white rounded-xl font-medium hover:bg-[var(--primary-500)] dark:hover:bg-[var(--primary-hover)] transition-colors flex items-center justify-center gap-2"
