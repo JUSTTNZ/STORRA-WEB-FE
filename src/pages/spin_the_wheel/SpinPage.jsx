@@ -16,11 +16,14 @@ export default function SpinPage() {
     points: user?.rewards?.totalPoints || 0
   });
   const [segments, setSegments] = useState([]);
-
-  const spinChances = user?.spinChances || user?.rewards?.spinChances || 3;
+  const [spinChances, setSpinChances] = useState(
+    user?.spinChances || user?.rewards?.spinChances || 3
+  );
 
   useEffect(() => {
     fetchWheelData();
+    const chances = user?.spinChances ?? user?.rewards?.spinChances ?? 3;
+    setSpinChances(chances);
   }, [user]);
 
   const fetchWheelData = async () => {
@@ -85,6 +88,7 @@ export default function SpinPage() {
       setTimeout(() => {
         setIsSpinning(false);
         setSpinResult(data.reward);
+        setSpinChances((prev) => Math.max(0, prev - 1));
 
         if (data.balances) {
           setBalance({
@@ -174,75 +178,99 @@ console.log;("SEGMENTS:", segments || 0);
             <div className="card-shimmer bg-[var(--card-background)] rounded-2xl p-6 shadow-lg border border-[var(--border-color)]">
               <div className="relative w-full max-w-md mx-auto">
                 {/* Wheel Pointer */}
-                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-4 z-30">
-                  <div className="relative">
-                    <div className="w-0 h-0 border-l-[20px] border-r-[20px] border-b-[40px] border-l-transparent border-r-transparent border-b-red-500 drop-shadow-lg"></div>
-                    <div className="absolute top-[35px] left-1/2 transform -translate-x-1/2 w-1 h-8 bg-red-500 rounded-full"></div>
-                  </div>
-                </div>
+           
 
                 {/* Wheel */}
-                <div className="relative w-full aspect-square">
-                  <div
-                    className="absolute inset-0 rounded-full border-8 border-[var(--secondary-800)] dark:border-[var(--secondary-600)] overflow-hidden transition-transform ease-out shadow-2xl"
-                    style={{
-                      transform: `rotate(${rotation}deg)`,
-                      transitionDuration: isSpinning ? '4000ms' : '0ms'
-                    }}
-                  >
-                    {/* Wheel Segments */}
-                    {displaySegments.map((segment, index) => {
-                      const angle = (index * segmentAngle) - (segmentAngle / 2);
-                      const style = {
-                        transform: `rotate(${angle}deg)`,
-                        transformOrigin: 'center'
-                      };
+           <div className="relative w-full aspect-square">
+  {/* Pointer / Arrow */}
+  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1 z-30">
+    <div className="w-0 h-0 border-l-[14px] border-r-[14px] border-t-[28px] border-l-transparent border-r-transparent border-t-red-500 drop-shadow-lg" />
+  </div>
 
-                      return (
-                        <div
-                          key={index}
-                          className="absolute top-0 left-0 w-full h-full"
-                          style={style}
-                        >
-                          <div
-                            className="absolute top-0 left-1/2 w-1/2 h-1/2 origin-top-left"
-                            style={{
-                              backgroundColor: segment.color,
-                              transform: `rotate(${segmentAngle}deg) skewY(-${90 - segmentAngle}deg)`,
-                              borderRight: '2px solid rgba(255,255,255,0.3)'
-                            }}
-                          >
-                            <div className="absolute top-1/2 right-4 transform -translate-y-1/2 rotate-90">
-                              <div className="flex items-center gap-2">
-                                {getRewardIcon(segment.type)}
-                                <span className="text-sm font-semibold text-white whitespace-nowrap drop-shadow-md">
-                                  {segment.text}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
+  <div
+    className="absolute inset-0 rounded-full border-8 border-[var(--secondary-800)] dark:border-[var(--secondary-600)] overflow-hidden transition-transform ease-out shadow-2xl"
+    style={{
+      transform: `rotate(${rotation}deg)`,
+      transitionDuration: isSpinning ? '4000ms' : '0ms'
+    }}
+  >
+    {/* Single conic-gradient background for all segments */}
+    <div
+      className="absolute inset-0 rounded-full"
+      style={{
+        background: `conic-gradient(${displaySegments.map((seg, i) => {
+          const start = (i * segmentAngle).toFixed(2);
+          const end = ((i + 1) * segmentAngle).toFixed(2);
+          return `${seg.color} ${start}deg ${end}deg`;
+        }).join(', ')})`
+      }}
+    />
 
-                    {/* Center Circle */}
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full bg-gradient-to-br from-[var(--secondary-800)] to-[var(--secondary-900)] dark:from-[var(--secondary-700)] dark:to-[var(--secondary-800)] border-8 border-[var(--secondary-600)] dark:border-[var(--secondary-500)] shadow-2xl flex items-center justify-center">
-                      <button
-                        onClick={handleSpin}
-                        disabled={isSpinning || spinChances <= 0}
-                        className={`w-24 h-24 rounded-full bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 disabled:from-[var(--secondary-400)] disabled:to-[var(--secondary-500)] transition-all flex items-center justify-center shadow-lg disabled:cursor-not-allowed ${isSpinning ? '' : 'animate-pulse-glow'}`}
-                      >
-                        {isSpinning ? (
-                          <Loader2 className="w-10 h-10 text-white animate-spin" />
-                        ) : (
-                          <span className="text-white text-xl font-bold">
-                            {spinChances > 0 ? 'SPIN' : 'NO SPINS'}
-                          </span>
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                </div>
+    {/* Segment divider lines */}
+    {displaySegments.map((_, i) => (
+      <div
+        key={`line-${i}`}
+        className="absolute top-0 left-1/2 h-1/2 origin-bottom"
+        style={{
+          transform: `rotate(${i * segmentAngle}deg)`,
+          width: '2px',
+          marginLeft: '-1px'
+        }}
+      >
+        <div className="w-full h-full bg-white/20" />
+      </div>
+    ))}
+
+    {/* Text labels on each segment */}
+    {displaySegments.map((segment, index) => {
+      const midAngle = index * segmentAngle + segmentAngle / 2;
+      return (
+        <div
+          key={`label-${index}`}
+          className="absolute top-0 left-1/2 h-1/2 origin-bottom"
+          style={{
+            transform: `rotate(${midAngle}deg)`,
+            width: '0px'
+          }}
+        >
+          <div
+            className="absolute flex flex-col items-center"
+            style={{
+              top: '18%',
+              left: '50%',
+              transform: 'translate(-50%, -50%) rotate(180deg)',
+              color: 'white',
+              textShadow: '0 1px 3px rgba(0,0,0,0.4)',
+              whiteSpace: 'nowrap'
+            }}
+          >
+            {getRewardIcon(segment.type)}
+            <span className="text-[10px] sm:text-xs font-bold mt-0.5 drop-shadow-md">
+              {segment.text || segment.name}
+            </span>
+          </div>
+        </div>
+      );
+    })}
+
+    {/* Center Circle */}
+    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1/3 aspect-square rounded-full bg-gradient-to-br from-[var(--secondary-800)] to-[var(--secondary-900)] dark:from-[var(--secondary-700)] dark:to-[var(--secondary-800)] border-8 border-[var(--secondary-600)] dark:border-[var(--secondary-500)] shadow-2xl flex items-center justify-center z-20">
+      <button
+        onClick={handleSpin}
+        disabled={isSpinning || spinChances <= 0}
+        className={`w-3/4 h-3/4 rounded-full bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 disabled:from-[var(--secondary-400)] disabled:to-[var(--secondary-500)] transition-all flex items-center justify-center shadow-lg disabled:cursor-not-allowed ${isSpinning ? '' : 'animate-pulse-glow'}`}
+      >
+        {isSpinning ? (
+          <Loader2 className="w-1/3 h-1/3 text-white animate-spin" />
+        ) : (
+          <span className="text-white text-sm sm:text-base md:text-xl font-bold">
+            {spinChances > 0 ? 'SPIN' : 'NO SPINS'}
+          </span>
+        )}
+      </button>
+    </div>
+  </div>
+</div>
               </div>
             </div>
 

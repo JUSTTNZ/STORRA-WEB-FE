@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import LeftSideBar from '../common/LeftSideBar';
 import Navbar from '../common/Navbar';
+import AIChatWidget from '../common/AIChatWidget';
 
 const MainLayout = () => {
   return (
@@ -21,6 +22,8 @@ const MainLayout = () => {
           <Outlet />
         </main>
       </div>
+
+      <AIChatWidget />
     </div>
   );
 };

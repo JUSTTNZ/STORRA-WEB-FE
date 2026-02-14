@@ -33,7 +33,13 @@ export default function Login() {
         password: formData.password,
       });
       console.log('Login response:', response);
-      navigate('/home');
+    if (response.user.hasCompletedOnboarding === true) {
+    // User has completed onboarding → go to home
+    navigate('/home');
+  } else {
+    // User hasn't completed onboarding → go personalization
+    navigate('/personalization');
+  }
     } catch (err) {
       console.error('Login error:', err);
       setError(err.response?.data?.message || err.message || 'Login failed. Please try again.');
