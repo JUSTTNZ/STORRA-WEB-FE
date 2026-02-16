@@ -11,9 +11,9 @@ export default function SpinPage() {
   const [rotation, setRotation] = useState(0);
   const [spinResult, setSpinResult] = useState(null);
   const [balance, setBalance] = useState({
-    coins: user?.rewards?.totalCoins || 0,
-    diamonds: user?.rewards?.totalDiamonds || 0,
-    points: user?.rewards?.totalPoints || 0
+    coins: user?.data.rewards?.totalCoins || 0,
+    diamonds: user?.data.rewards?.totalDiamonds || 0,
+    points: user?.data.rewards?.totalPoints || 0
   });
   const [segments, setSegments] = useState([]);
   const [spinChances, setSpinChances] = useState(
@@ -37,9 +37,9 @@ export default function SpinPage() {
 
       if (user?.rewards) {
         setBalance({
-          coins: user.rewards.totalCoins || 0,
-          diamonds: user.rewards.totalDiamonds || 0,
-          points: user.rewards.totalPoints || 0
+          coins: user.data.rewards.totalCoins || 0,
+          diamonds: user.data.rewards.totalDiamonds || 0,
+          points: user.data.rewards.totalPoints || 0
         });
       }
     } catch (error) {

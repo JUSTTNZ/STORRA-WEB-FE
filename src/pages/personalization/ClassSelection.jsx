@@ -23,6 +23,7 @@ const ClassSelection = () => {
         const response = await onboardingService.getClasses(userId);
         const data = response?.data;
 
+        
         if (data?.requiresClassSelection === false) {
           navigate('/home');
           return;
