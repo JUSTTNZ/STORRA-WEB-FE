@@ -221,7 +221,6 @@ const QuizTaking = () => {
 
     recognition.onresult = (event) => {
       const transcript = event.results[event.results.length - 1][0].transcript.toLowerCase().trim();
-      console.log('Voice command:', transcript);
 
       const currentQuestion = quiz?.questions?.[currentQuestionIndex];
       if (!currentQuestion) return;
@@ -360,9 +359,18 @@ const QuizTaking = () => {
     const currentQuestion = quiz?.questions?.[currentQuestionIndex];
     if (!currentQuestion) return;
 
-    // Find wrong options to eliminate (keep correct + one wrong)
-    const correctAnswer = currentQuestion.correctAnswer;
-    const wrongOptions = currentQuestion.options.filter(opt => opt !== correctAnswer);
+    // Find correct answer - handle both index and text formats
+    const rawCorrect = currentQuestion.correctAnswer;
+    const correctOptionText =
+      typeof rawCorrect === 'number'
+        ? currentQuestion.options[rawCorrect]
+        : currentQuestion.options.includes(rawCorrect)
+        ? rawCorrect
+        : currentQuestion.options[parseInt(rawCorrect)] || null;
+
+    if (!correctOptionText) return; // safety: don't eliminate if we can't identify correct answer
+
+    const wrongOptions = currentQuestion.options.filter(opt => opt !== correctOptionText);
 
     // Eliminate half of wrong options
     const toEliminate = wrongOptions.slice(0, Math.ceil(wrongOptions.length / 2));
@@ -651,7 +659,7 @@ const QuizTaking = () => {
               <Clock className="w-6 h-6 text-[var(--attention-200)] dark:text-[var(--attention-color)] mx-auto mb-2" />
               <p className="text-[var(--secondary-500)] dark:text-[var(--text-muted)] text-sm">Time Limit</p>
               <p className="text-[var(--secondary-800)] dark:text-[var(--text)] font-bold text-lg">
-                {quiz.timeLimit} mins
+                {quiz.timeLimit} 
               </p>
             </div>
             <div className="bg-[var(--secondary-50)] dark:bg-[var(--secondary-800)] rounded-xl p-4 text-center">
@@ -669,7 +677,8 @@ const QuizTaking = () => {
           </div>
 
           {/* Features Info */}
-          <div className="bg-[var(--primary-50)] dark:bg-[var(--primary-800)]/20 border border-[var(--primary-100)] dark:border-[var(--primary)]/20 rounded-xl p-4 mb-6">
+         
+          <div className=" bg-[var(--primary-50)] dark:bg-[var(--primary-800)]/20 border border-[var(--primary-100)] dark:border-[var(--primary)]/20 rounded-xl p-4 mb-6">
             <h3 className="font-semibold text-[var(--primary-500)] dark:text-[var(--primary)] mb-2 flex items-center gap-2">
               <Zap className="w-4 h-4" />
               Interactive Features
@@ -696,7 +705,7 @@ const QuizTaking = () => {
             </div>
           </div>
 
-          <div className="bg-[var(--attention-50)] dark:bg-[var(--attention-background)] border border-[var(--attention-100)] dark:border-[var(--attention-color)]/20 rounded-xl p-4 mb-6">
+          <div className="hidden md:block bg-[var(--attention-50)] dark:bg-[var(--attention-background)] border border-[var(--attention-100)] dark:border-[var(--attention-color)]/20 rounded-xl p-4 mb-6">
             <h3 className="font-semibold text-[var(--attention-300)] dark:text-[var(--attention-color)] mb-2">
               Keyboard Shortcuts
             </h3>
@@ -727,7 +736,7 @@ const QuizTaking = () => {
     const isPassed = result.percentage >= 70;
     const needsRetake = result.percentage < 50;
     const isPerfect = result.percentage === 100;
-console.log('Quiz Result:', result);
+
     return (
       <div className="w-full max-w-2xl mx-auto">
         <div className="bg-white dark:bg-[var(--card-background)] rounded-2xl border border-[var(--secondary-100)] dark:border-[var(--border-color)] p-8">
@@ -1023,12 +1032,12 @@ console.log('Quiz Result:', result);
           </button>
 
           {/* Settings */}
-          <button
+          {/* <button
             onClick={() => setShowSettings(true)}
             className="p-2 rounded-full bg-[var(--secondary-100)] dark:bg-[var(--secondary-800)] text-[var(--secondary-600)] dark:text-[var(--text-muted)] hover:bg-[var(--secondary-200)] transition-colors"
           >
             <Settings className="w-5 h-5" />
-          </button>
+          </button> */}
 
           {/* Timer */}
           <div
@@ -1116,12 +1125,12 @@ console.log('Quiz Result:', result);
                   </button>
 
                   {/* Speech Rate */}
-                  <div className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[var(--secondary-100)] dark:bg-[var(--secondary-800)]">
-                    <span className="text-xs text-[var(--secondary-500)] dark:text-[var(--text-muted)]">Speed:</span>
+                  <div className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-[var(--primary-200)] dark:border-[var(--border-color)] bg-[var(--primary-50)] dark:bg-[var(--secondary-800)]">
+                    <span className="text-xs text-[var(--primary-500)] dark:text-[var(--text-muted)]">Speed:</span>
                     <select
                       value={speechRate}
                       onChange={(e) => setSpeechRate(parseFloat(e.target.value))}
-                      className="bg-transparent text-sm font-medium text-[var(--secondary-700)] dark:text-[var(--text)] focus:outline-none"
+                      className="text-sm font-medium text-[var(--primary-600)] dark:text-[var(--text)] focus:outline-none bg-[var(--primary-50)] dark:bg-[var(--secondary-800)] cursor-pointer [&>option]:bg-white [&>option]:dark:bg-[#1e293b] [&>option]:text-[var(--secondary-800)] [&>option]:dark:text-white"
                     >
                       <option value="0.5">0.5x</option>
                       <option value="0.75">0.75x</option>

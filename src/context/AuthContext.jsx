@@ -43,7 +43,6 @@ export const AuthProvider = ({ children }) => {
         
         // 2. Fetch complete user profile
         const userProfile = await fetchUserProfile();
-        console.log(userProfile,"userprofile")
         // 3. Dispatch success with both token and full user data
         dispatch(
           loginSuccess({

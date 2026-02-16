@@ -155,64 +155,64 @@ const Rewards = () => {
       {showConfetti && <Confetti recycle={false} numberOfPieces={200} />}
 
       {/* Header Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="card-shimmer bg-gradient-to-br from-[var(--primary-500)] to-[var(--primary-600)] rounded-2xl p-4 text-white shadow-lg">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+        <div className="card-shimmer bg-gradient-to-br from-[var(--primary-500)] to-[var(--primary-600)] rounded-xl sm:rounded-2xl p-3 sm:p-4 text-white shadow-lg">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[var(--primary-100)] text-sm mb-1">Coins</p>
-              <h2 className="text-2xl font-bold">{rewards.balance}</h2>
+              <p className="text-[var(--primary-100)] text-xs sm:text-sm mb-1">Coins</p>
+              <h2 className="text-lg sm:text-2xl font-bold">{rewards.balance}</h2>
             </div>
-            <Coins className="w-10 h-10 opacity-80" />
+            <Coins className="w-7 h-7 sm:w-10 sm:h-10 opacity-80" />
           </div>
         </div>
 
-        <div className="card-shimmer bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl p-4 text-white shadow-lg">
+        <div className="card-shimmer bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl sm:rounded-2xl p-3 sm:p-4 text-white shadow-lg">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-emerald-100 text-sm mb-1">Points</p>
-              <h2 className="text-2xl font-bold">{rewards.points}</h2>
+              <p className="text-emerald-100 text-xs sm:text-sm mb-1">Points</p>
+              <h2 className="text-lg sm:text-2xl font-bold">{rewards.points}</h2>
             </div>
-            <Star className="w-10 h-10 opacity-80" />
+            <Star className="w-7 h-7 sm:w-10 sm:h-10 opacity-80" />
           </div>
         </div>
 
-        <div className="card-shimmer bg-gradient-to-br from-orange-500 to-amber-600 rounded-2xl p-4 text-white shadow-lg">
+        <div className="card-shimmer bg-gradient-to-br from-orange-500 to-amber-600 rounded-xl sm:rounded-2xl p-3 sm:p-4 text-white shadow-lg">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-amber-100 text-sm mb-1">Spins</p>
-              <h2 className="text-2xl font-bold">{rewards.spinChances}</h2>
+              <p className="text-amber-100 text-xs sm:text-sm mb-1">Spins</p>
+              <h2 className="text-lg sm:text-2xl font-bold">{rewards.spinChances}</h2>
             </div>
-            <Zap className="w-10 h-10 opacity-80" />
+            <Zap className="w-7 h-7 sm:w-10 sm:h-10 opacity-80" />
           </div>
         </div>
 
-        <div className="card-shimmer bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl p-4 text-white shadow-lg">
+        <div className="card-shimmer bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl sm:rounded-2xl p-3 sm:p-4 text-white shadow-lg">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-purple-100 text-sm mb-1">Streak</p>
-              <h2 className="text-2xl font-bold">{rewards.currentStreak} days</h2>
+              <p className="text-purple-100 text-xs sm:text-sm mb-1">Streak</p>
+              <h2 className="text-lg sm:text-2xl font-bold">{rewards.currentStreak} days</h2>
             </div>
-            <Flame className="w-10 h-10 opacity-80" />
+            <Flame className="w-7 h-7 sm:w-10 sm:h-10 opacity-80" />
           </div>
         </div>
       </div>
 
       {/* Daily Rewards Section */}
-      <div className="card-shimmer bg-white dark:bg-[var(--card-background)] rounded-2xl border border-[var(--secondary-200)] dark:border-[var(--border-color)] p-6 shadow-sm dark:shadow-none">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <Calendar className="w-6 h-6 text-[var(--primary-500)] dark:text-[var(--primary)]" />
+      <div className="card-shimmer bg-white dark:bg-[var(--card-background)] rounded-xl sm:rounded-2xl border border-[var(--secondary-200)] dark:border-[var(--border-color)] p-4 sm:p-6 shadow-sm dark:shadow-none">
+        <div className="flex items-center justify-between mb-4 sm:mb-6">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--primary-500)] dark:text-[var(--primary)]" />
             <div>
-              <h2 className="text-xl font-bold text-[var(--secondary-900)] dark:text-[var(--text)]">Daily Rewards</h2>
-              <p className="text-sm text-[var(--secondary-600)] dark:text-[var(--text-muted)]">Claim your reward for today!</p>
+              <h2 className="text-base sm:text-xl font-bold text-[var(--secondary-900)] dark:text-[var(--text)]">Daily Rewards</h2>
+              <p className="text-xs sm:text-sm text-[var(--secondary-600)] dark:text-[var(--text-muted)]">Claim your reward for today!</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Flame className="w-5 h-5 text-orange-500" />
-            <span className="text-sm font-medium text-[var(--secondary-700)] dark:text-[var(--text-muted)]">
-              Streak: {rewards.currentStreak} days
+          <div className="flex items-center gap-1 sm:gap-2">
+            <Flame className="w-4 h-4 sm:w-5 sm:h-5 text-orange-500" />
+            <span className="text-xs sm:text-sm font-medium text-[var(--secondary-700)] dark:text-[var(--text-muted)]">
+              {rewards.currentStreak}d
             </span>
-            <span className="text-xs text-[var(--secondary-500)] dark:text-[var(--caption-color)]">
+            <span className="hidden sm:inline text-xs text-[var(--secondary-500)] dark:text-[var(--caption-color)]">
               (Best: {rewards.longestStreak})
             </span>
           </div>
@@ -227,8 +227,8 @@ const Rewards = () => {
           }`}>
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <div className="flex-1">
-                <h3 className="text-lg font-bold text-[var(--secondary-900)] dark:text-[var(--text)] mb-4">
-                  Today's Reward • Day {new Date().getDate()}
+                <h3 className="text-sm sm:text-lg font-bold text-[var(--secondary-900)] dark:text-[var(--text)] mb-3 sm:mb-4">
+                  Today's Reward
                 </h3>
                 <div className="flex flex-wrap gap-4">
                   {todayRewards.length > 0 ? (
@@ -294,7 +294,7 @@ const Rewards = () => {
 
         {/* Calendar Grid */}
         <div>
-          <h3 className="text-lg font-semibold text-[var(--secondary-900)] dark:text-[var(--text)] mb-4">This Month's Calendar</h3>
+          <h3 className="text-sm sm:text-lg font-semibold text-[var(--secondary-900)] dark:text-[var(--text)] mb-3 sm:mb-4">This Month's Calendar</h3>
           <div className="grid grid-cols-4 lg:grid-cols-7 gap-2">
             {rewards.calendar.map((dayData) => {
               const today = new Date();
@@ -306,7 +306,7 @@ const Rewards = () => {
               return (
                 <div
                   key={dayData.day}
-                  className={`relative rounded-xl p-3 flex flex-col items-center justify-center min-h-[90px] transition-all duration-200 ${
+                  className={`relative rounded-lg sm:rounded-xl p-1.5 sm:p-3 flex flex-col items-center justify-center min-h-[60px] sm:min-h-[90px] transition-all duration-200 ${
                     isClaimed
                       ? 'bg-gradient-to-br from-[var(--success-100)] to-[var(--success-50)] dark:from-[var(--success-background)] dark:to-[rgba(40,180,17,0.1)] border-2 border-[var(--success-200)] dark:border-[var(--success-color)]'
                       : isToday
@@ -316,13 +316,13 @@ const Rewards = () => {
                       : 'bg-[var(--secondary-50)] dark:bg-[var(--secondary-900)] border border-[var(--secondary-200)] dark:border-[var(--border-color)]'
                   }`}
                 >
-                  <div className="text-base font-bold text-[var(--secondary-900)] dark:text-[var(--text)] mb-2">
+                  <div className="text-xs sm:text-base font-bold text-[var(--secondary-900)] dark:text-[var(--text)] mb-1 sm:mb-2">
                     {dayData.day}
                   </div>
 
-                  <div className="flex items-center gap-1 mb-2">
-                    <Coins className="w-4 h-4 text-yellow-500" />
-                    <span className="text-sm font-semibold text-[var(--secondary-900)] dark:text-[var(--text)]">
+                  <div className="flex items-center gap-0.5 sm:gap-1 mb-1 sm:mb-2">
+                    <Coins className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-500" />
+                    <span className="text-[10px] sm:text-sm font-semibold text-[var(--secondary-900)] dark:text-[var(--text)]">
                       +{totalValue}
                     </span>
                   </div>

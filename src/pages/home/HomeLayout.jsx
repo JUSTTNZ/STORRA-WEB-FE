@@ -52,10 +52,7 @@ function HomeLayout() {
       setIsLoading(false);
     }
   };
-
-  console.log("USER DATA:", user);
-  console.log("FETCHED SUBJECTS:", subjects);
-
+console.log(user)
   // ShimmerCard Component
   const ShimmerCard = ({ children, className = "", isLoading = false }) => {
     return (
@@ -113,12 +110,12 @@ function HomeLayout() {
       {/* Subjects Section */}
       <section className="py-4">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="font-bold text-[var(--secondary-800)] dark:text-[var(--text)] text-xl md:text-2xl">
+          <h2 className="font-bold text-[var(--secondary-800)] dark:text-[var(--text)] text-base sm:text-xl md:text-2xl">
             My Subjects
           </h2>
           <button
             onClick={() => navigate('/courses')}
-            className="text-sm text-primary-500 font-medium hover:text-primary-600 transition-colors"
+            className="text-xs sm:text-sm text-primary-500 font-medium hover:text-primary-600 transition-colors"
           >
             View All
           </button>
@@ -167,12 +164,12 @@ function HomeLayout() {
                     </div>
 
                     {/* Subject Name */}
-                    <h3 className="font-semibold text-[var(--secondary-800)] dark:text-[var(--text)] text-sm mb-1">
+                    <h3 className="font-semibold text-[var(--secondary-800)] dark:text-[var(--text)] text-xs sm:text-sm mb-1">
                       {subject.name || subject.title}
                     </h3>
 
                     {/* Lessons Count */}
-                    <p className="text-xs text-secondary-500 mb-3">
+                    <p className="text-[10px] sm:text-xs text-secondary-500 mb-2 sm:mb-3">
                       {subject.totalLessons || subject.lessons_count || subject.topicsCount || 0} lessons
                     </p>
 

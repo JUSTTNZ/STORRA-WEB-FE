@@ -103,10 +103,10 @@ const CoursePage = () => {
 
           {/* Progress Bar */}
           {!isCompleted && (
-            <div className="mb-3">
+            <div className="mb-2 sm:mb-3">
               <div className="flex justify-between items-center mb-1">
-                <span className="text-xs text-[var(--secondary-500)] dark:text-[var(--text-muted)]">Progress</span>
-                <span className="text-xs font-medium text-[var(--primary-500)] dark:text-[var(--primary)]">{progress}%</span>
+                <span className="text-[10px] sm:text-xs text-[var(--secondary-500)] dark:text-[var(--text-muted)]">Progress</span>
+                <span className="text-[10px] sm:text-xs font-medium text-[var(--primary-500)] dark:text-[var(--primary)]">{progress}%</span>
               </div>
               <div className="w-full bg-[var(--secondary-100)] dark:bg-[var(--secondary-700)] rounded-full h-2">
                 <div
@@ -150,10 +150,10 @@ const CoursePage = () => {
       </h1>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 p-1 rounded-xl bg-[var(--secondary-100)] dark:bg-[var(--secondary-800)] w-fit mb-6 md:mb-8 animate-fade-in-up stagger-1">
+      <div className="flex items-center gap-1 sm:gap-2 p-1 rounded-xl bg-[var(--secondary-100)] dark:bg-[var(--secondary-800)] w-fit mb-6 md:mb-8 animate-fade-in-up stagger-1">
         <button
           onClick={() => setActiveTab('ongoing')}
-          className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
+          className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium text-xs sm:text-sm transition-all ${
             activeTab === 'ongoing'
               ? 'bg-white dark:bg-[var(--card-background)] text-[var(--primary-500)] dark:text-[var(--primary)] shadow-sm'
               : 'text-[var(--secondary-600)] dark:text-[var(--text-muted)] hover:text-[var(--secondary-800)] dark:hover:text-[var(--text)]'
@@ -163,7 +163,7 @@ const CoursePage = () => {
         </button>
         <button
           onClick={() => setActiveTab('completed')}
-          className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
+          className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium text-xs sm:text-sm transition-all ${
             activeTab === 'completed'
               ? 'bg-white dark:bg-[var(--card-background)] text-[var(--primary-500)] dark:text-[var(--primary)] shadow-sm'
               : 'text-[var(--secondary-600)] dark:text-[var(--text-muted)] hover:text-[var(--secondary-800)] dark:hover:text-[var(--text)]'

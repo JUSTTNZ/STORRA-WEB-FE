@@ -96,7 +96,7 @@ const Profile = () => {
 
   return (
     <div className="max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold text-[var(--secondary-800)] dark:text-[var(--text)] mb-6">My Profile</h1>
+      <h1 className="text-lg sm:text-2xl font-bold text-[var(--secondary-800)] dark:text-[var(--text)] mb-4 sm:mb-6">My Profile</h1>
 
       {/* Profile Card */}
       <div className="card-shimmer bg-white dark:bg-[var(--card-background)] rounded-xl border border-[var(--secondary-100)] dark:border-[var(--border-color)] overflow-hidden">
@@ -183,7 +183,7 @@ const Profile = () => {
           <div className="space-y-4">
             {/* Full Name */}
             <div>
-              <label className="block text-sm font-medium text-[var(--secondary-700)] dark:text-[var(--text-muted)] mb-1.5">
+              <label className="block text-xs sm:text-sm font-medium text-[var(--secondary-700)] dark:text-[var(--text-muted)] mb-1 sm:mb-1.5">
                 Full Name
               </label>
               {isEditing ? (
@@ -203,7 +203,7 @@ const Profile = () => {
 
             {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-[var(--secondary-700)] dark:text-[var(--text-muted)] mb-1.5">
+              <label className="block text-xs sm:text-sm font-medium text-[var(--secondary-700)] dark:text-[var(--text-muted)] mb-1 sm:mb-1.5">
                 Email Address
               </label>
               <div className="relative">
@@ -226,7 +226,7 @@ const Profile = () => {
 
             {/* Phone */}
             <div>
-              <label className="block text-sm font-medium text-[var(--secondary-700)] dark:text-[var(--text-muted)] mb-1.5">
+              <label className="block text-xs sm:text-sm font-medium text-[var(--secondary-700)] dark:text-[var(--text-muted)] mb-1 sm:mb-1.5">
                 Phone Number
               </label>
               <div className="relative">
@@ -251,19 +251,19 @@ const Profile = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-3 gap-4 mt-6">
+      <div className="grid grid-cols-3 gap-3 sm:gap-4 mt-4 sm:mt-6">
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="card-shimmer bg-white dark:bg-[var(--card-background)] rounded-xl border border-[var(--secondary-100)] dark:border-[var(--border-color)] p-4 text-center"
+            className="card-shimmer bg-white dark:bg-[var(--card-background)] rounded-xl border border-[var(--secondary-100)] dark:border-[var(--border-color)] p-3 sm:p-4 text-center"
           >
             <div
-              className={`w-12 h-12 rounded-full ${stat.color} flex items-center justify-center mx-auto mb-3`}
+              className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full ${stat.color} flex items-center justify-center mx-auto mb-2 sm:mb-3`}
             >
-              <stat.icon className="w-6 h-6" />
+              <stat.icon className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
-            <p className="text-2xl font-bold text-[var(--secondary-800)] dark:text-[var(--text)]">{stat.value}</p>
-            <p className="text-sm text-[var(--secondary-500)] dark:text-[var(--text-muted)]">{stat.label}</p>
+            <p className="text-lg sm:text-2xl font-bold text-[var(--secondary-800)] dark:text-[var(--text)]">{stat.value}</p>
+            <p className="text-xs sm:text-sm text-[var(--secondary-500)] dark:text-[var(--text-muted)]">{stat.label}</p>
           </div>
         ))}
       </div>

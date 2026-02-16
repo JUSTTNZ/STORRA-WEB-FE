@@ -18,6 +18,7 @@ import OnboardingPage from './pages/OnboardingPage';
 // Auth Pages
 import StudentLogin from './pages/auth/student/Login';
 import StudentRegister from './pages/auth/student/Register';
+import ForgotPassword from './pages/auth/student/ForgotPassword';
 import Personalization from './pages/personalization/personalization';
 import ClassSelection from './pages/personalization/ClassSelection';
 
@@ -52,6 +53,7 @@ function App() {
               {/* AUTH ROUTES */}
               <Route path="/auth/student/login" element={<StudentLogin />} />
               <Route path="/auth/student/register" element={<StudentRegister />} />
+              <Route path="/auth/forgot-password" element={<ForgotPassword />} />
 
               {/* PERSONALIZATION (requires auth but no sidebar) */}
               <Route

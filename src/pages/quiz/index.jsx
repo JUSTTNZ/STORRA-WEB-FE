@@ -133,13 +133,13 @@ const QuizPage = () => {
           )}
 
           {/* Status Badge */}
-          <div className={`absolute top-3 left-3 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(quiz.status)}`}>
+          <div className={`absolute top-2 left-2 sm:top-3 sm:left-3 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium ${getStatusColor(quiz.status)}`}>
             {getStatusLabel(quiz.status)}
           </div>
 
           {/* Points Badge */}
-          <div className="absolute top-3 right-3 bg-[var(--attention-100)] dark:bg-[var(--attention-background)] text-[var(--attention-300)] dark:text-[var(--attention-color)] px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
-            <Star className="w-3 h-3" fill="currentColor" />
+          <div className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-[var(--attention-100)] dark:bg-[var(--attention-background)] text-[var(--attention-300)] dark:text-[var(--attention-color)] px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium flex items-center gap-1">
+            <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3" fill="currentColor" />
             {quiz.pointsEarned} pts
           </div>
 
@@ -153,8 +153,8 @@ const QuizPage = () => {
 
         {/* Quiz Info */}
         <div className="p-3 sm:p-4">
-          <div className="mb-2">
-            <span className="text-xs text-[var(--primary-400)] dark:text-[var(--primary)] font-medium">
+          <div className="mb-1 sm:mb-2">
+            <span className="text-[10px] sm:text-xs text-[var(--primary-500)] dark:text-[var(--primary)] font-medium">
               {quiz.courseName}
             </span>
           </div>
@@ -163,25 +163,25 @@ const QuizPage = () => {
           </h3>
 
           {/* Stats */}
-          <div className="flex items-center gap-4 text-xs text-[var(--secondary-500)] dark:text-[var(--caption-color)] mb-3">
+          <div className="flex items-center gap-2 sm:gap-4 text-[10px] sm:text-xs text-[var(--secondary-500)] dark:text-[var(--caption-color)] mb-2 sm:mb-3">
             <span className="flex items-center gap-1">
-              <Target className="w-3.5 h-3.5" />
-              {quiz.totalQuestions} questions
+              <Target className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+              {quiz.totalQuestions} Qs
             </span>
             <span className="flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5" />
-              {quiz.timeLimit} 
+              <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+              {quiz.timeLimit} min
             </span>
           </div>
 
           {/* Progress Info */}
           {quiz.attempts > 0 && (
-            <div className="mb-3 p-2 bg-[var(--primary-400)] dark:bg-[var(--primary-800)] rounded-lg">
-              <div className="flex justify-between text-xs">
-                <span className=" text-white ">
+            <div className="mb-3 p-2 bg-[var(--primary-50)] dark:bg-[var(--primary-900)] rounded-lg border border-[var(--primary-100)] dark:border-[var(--primary-800)]">
+              <div className="flex justify-between text-[10px] sm:text-xs">
+                <span className="text-[var(--primary-600)] dark:text-[var(--primary-200)]">
                   Attempts: {quiz.attempts}
                 </span>
-                <span className="text-white">
+                <span className="text-[var(--primary-600)] dark:text-[var(--primary-200)]">
                   Best: {quiz.bestPercentage.toFixed(0)}%
                 </span>
               </div>
@@ -189,15 +189,15 @@ const QuizPage = () => {
           )}
 
           {/* Pass Score Info */}
-          <div className="flex items-center gap-2 text-xs text-[var(--secondary-500)] dark:text-[var(--text-muted)] mb-4">
-            <Target className="w-3.5 h-3.5" />
-            Pass score: {quiz.passingScore}%
+          <div className="flex items-center gap-2 text-[10px] sm:text-xs text-[var(--secondary-500)] dark:text-[var(--text-muted)] mb-3 sm:mb-4">
+            <Target className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+            Pass: {quiz.passingScore}%
           </div>
 
           {/* Action Button */}
           <button
             onClick={() => navigate(`/quiz/${quiz.courseId}/${quiz.quizId}`)}
-            className={`w-full py-2.5 rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-colors ${
+            className={`w-full py-2 sm:py-2.5 rounded-lg font-medium text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 transition-colors ${
               isCompleted
                 ? 'bg-[var(--secondary-100)] dark:bg-[var(--secondary-700)] text-[var(--secondary-600)] dark:text-[var(--text-muted)] hover:bg-[var(--secondary-200)]'
                 : quiz.status === 'incomplete'
@@ -301,10 +301,10 @@ const QuizPage = () => {
       )}
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 p-1 rounded-xl bg-[var(--secondary-100)] dark:bg-[var(--secondary-800)] w-fit mb-6 md:mb-8 animate-fade-in-up stagger-3">
+      <div className="flex items-center gap-1 sm:gap-2 p-1 rounded-xl bg-[var(--secondary-100)] dark:bg-[var(--secondary-800)] w-fit mb-6 md:mb-8 animate-fade-in-up stagger-3">
         <button
           onClick={() => setActiveTab('available')}
-          className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
+          className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium text-xs sm:text-sm transition-all ${
             activeTab === 'available'
               ? 'bg-white dark:bg-[var(--card-background)] text-[var(--primary-500)] dark:text-[var(--primary)] shadow-sm'
               : 'text-[var(--secondary-600)] dark:text-[var(--text-muted)] hover:text-[var(--secondary-800)] dark:hover:text-[var(--text)]'
@@ -314,7 +314,7 @@ const QuizPage = () => {
         </button>
         <button
           onClick={() => setActiveTab('completed')}
-          className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
+          className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium text-xs sm:text-sm transition-all ${
             activeTab === 'completed'
               ? 'bg-white dark:bg-[var(--card-background)] text-[var(--primary-500)] dark:text-[var(--primary)] shadow-sm'
               : 'text-[var(--secondary-600)] dark:text-[var(--text-muted)] hover:text-[var(--secondary-800)] dark:hover:text-[var(--text)]'
@@ -326,7 +326,7 @@ const QuizPage = () => {
 
       {/* Quiz Grid */}
       {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
           {Array.from({ length: 6 }).map((_, i) => (
             <SkeletonCard key={i} variant="course" />
           ))}
@@ -352,7 +352,7 @@ const QuizPage = () => {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
           {(activeTab === 'available' ? availableQuizzes : completedQuizzes).map((quiz) => (
             <QuizCard key={quiz.quizId} quiz={quiz} isCompleted={activeTab === 'completed'} />
           ))}
