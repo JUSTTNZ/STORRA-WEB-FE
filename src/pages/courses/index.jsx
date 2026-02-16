@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BookOpen, Play, CheckCircle, Clock, Loader2, AlertCircle } from 'lucide-react';
+import { BookOpen, Play, CheckCircle, Clock, AlertCircle } from 'lucide-react';
 import { courseService } from '../../services/courseService';
+import SkeletonCard from '../../components/common/SkeletonCard';
+import { getCache, setCache } from '../../services/dataCache';
 
 const CoursePage = () => {
   const navigate = useNavigate();
@@ -15,14 +17,21 @@ const CoursePage = () => {
   }, []);
 
   const fetchCourses = async () => {
+    const cached = getCache('courses');
+    if (cached) {
+      const coursesData = cached?.data || cached || [];
+      setAllCourses(coursesData);
+      setIsLoading(false);
+      return;
+    }
     setIsLoading(true);
     setError(null);
     try {
       const response = await courseService.getCourses();
       const coursesData = response?.data || response || [];
+      setCache('courses', response);
       setAllCourses(coursesData);
     } catch (error) {
-      console.error('Failed to fetch courses:', error);
       setError('Failed to load courses. Please try again.');
       setAllCourses([]);
     } finally {
@@ -57,7 +66,7 @@ const CoursePage = () => {
         className="card-shimmer bg-white dark:bg-[var(--card-background)] rounded-xl border border-[var(--secondary-100)] dark:border-[var(--border-color)] overflow-hidden hover:border-[var(--primary-200)] dark:hover:border-[var(--primary)] hover:shadow-lg transition-all cursor-pointer group"
       >
         {/* Course Image */}
-        <div className="relative h-40 bg-gradient-to-br from-[var(--primary-100)] to-[var(--primary-200)] dark:from-[var(--primary-800)] dark:to-[var(--primary-700)] flex items-center justify-center overflow-hidden">
+        <div className="relative h-24 sm:h-40 bg-gradient-to-br from-[var(--primary-100)] to-[var(--primary-200)] dark:from-[var(--primary-800)] dark:to-[var(--primary-700)] flex items-center justify-center overflow-hidden">
           {imageUrl ? (
             <img src={imageUrl} alt={title} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
           ) : (
@@ -72,21 +81,21 @@ const CoursePage = () => {
         </div>
 
         {/* Course Info */}
-        <div className="p-4">
-          <h3 className="font-semibold text-[var(--secondary-800)] dark:text-[var(--text)] text-lg mb-1 line-clamp-1">
+        <div className="p-3 sm:p-4">
+          <h3 className="font-semibold text-[var(--secondary-800)] dark:text-[var(--text)] text-xs sm:text-lg mb-1 line-clamp-1">
             {title}
           </h3>
-          <p className="text-[var(--secondary-500)] dark:text-[var(--text-muted)] text-sm mb-3 line-clamp-2">
+          <p className="text-[var(--secondary-500)] dark:text-[var(--text-muted)] text-xs sm:text-sm mb-2 sm:mb-3 line-clamp-2 hidden sm:block">
             {description}
           </p>
 
           {/* Stats */}
-          <div className="flex items-center gap-4 text-xs text-[var(--secondary-500)] dark:text-[var(--caption-color)] mb-3">
+          <div className="flex items-center gap-2 sm:gap-4 text-[10px] sm:text-xs text-[var(--secondary-500)] dark:text-[var(--caption-color)] mb-2 sm:mb-3">
             <span className="flex items-center gap-1">
-              <BookOpen className="w-3.5 h-3.5" />
+              <BookOpen className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
               {lessonsCount} lessons
             </span>
-            <span className="flex items-center gap-1">
+            <span className="hidden sm:flex items-center gap-1">
               <Clock className="w-3.5 h-3.5" />
               {duration}
             </span>
@@ -110,7 +119,7 @@ const CoursePage = () => {
 
           {/* Action Button */}
           <button
-            className={`w-full py-2.5 rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-colors ${
+            className={`w-full py-2 sm:py-2.5 rounded-lg font-medium text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 transition-colors ${
               isCompleted
                 ? 'bg-[var(--success-50)] dark:bg-[var(--success-background)] text-[var(--success-200)] dark:text-[var(--success-color)] hover:bg-[var(--success-100)]'
                 : 'bg-[var(--primary-400)] dark:bg-[var(--primary)] text-white hover:bg-[var(--primary-500)] dark:hover:bg-[var(--primary-hover)]'
@@ -136,12 +145,12 @@ const CoursePage = () => {
   return (
     <div className="w-full">
       {/* Header */}
-      <h1 className="text-2xl md:text-3xl font-bold text-[var(--secondary-800)] dark:text-[var(--text)] mb-6">
+      <h1 className="text-lg md:text-3xl font-bold text-[var(--secondary-800)] dark:text-[var(--text)] mb-6 animate-fade-in-up">
         My Courses
       </h1>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 p-1 rounded-xl bg-[var(--secondary-100)] dark:bg-[var(--secondary-800)] w-fit mb-8">
+      <div className="flex items-center gap-2 p-1 rounded-xl bg-[var(--secondary-100)] dark:bg-[var(--secondary-800)] w-fit mb-6 md:mb-8 animate-fade-in-up stagger-1">
         <button
           onClick={() => setActiveTab('ongoing')}
           className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
@@ -166,8 +175,10 @@ const CoursePage = () => {
 
       {/* Course Grid */}
       {isLoading ? (
-        <div className="flex items-center justify-center h-64">
-          <Loader2 className="w-8 h-8 animate-spin text-[var(--primary-400)]" />
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <SkeletonCard key={i} variant="course" />
+          ))}
         </div>
       ) : error ? (
         <div className="flex flex-col items-center justify-center h-64 text-center">
@@ -190,7 +201,7 @@ const CoursePage = () => {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 animate-fade-in-up stagger-2">
           {courses.map((course) => (
             <CourseCard
               key={course.id || course._id}

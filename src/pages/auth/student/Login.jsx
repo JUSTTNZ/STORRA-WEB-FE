@@ -32,7 +32,6 @@ export default function Login() {
         email: formData.email,
         password: formData.password,
       });
-      console.log('Login response:', response);
     if (response.user.hasCompletedOnboarding === true) {
     // User has completed onboarding → go to home
     navigate('/home');
@@ -41,7 +40,6 @@ export default function Login() {
     navigate('/personalization');
   }
     } catch (err) {
-      console.error('Login error:', err);
       setError(err.response?.data?.message || err.message || 'Login failed. Please try again.');
     } finally {
       setIsLoading(false);
@@ -54,8 +52,8 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-secondary-0 flex items-center justify-center px-4 py-6 sm:py-8">
-      <div className="w-full max-w-6xl bg-white rounded-xl overflow-hidden shadow-lg">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 flex items-center justify-center px-4 py-6 sm:py-8">
+      <div className="w-full max-w-6xl bg-white rounded-xl overflow-hidden shadow-lg animate-fade-in-up">
         <div className="grid grid-cols-1 lg:grid-cols-2">
           {/* FORM SECTION */}
           <div className="p-5 sm:p-6 md:p-8 lg:p-12">

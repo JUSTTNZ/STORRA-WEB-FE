@@ -11,7 +11,7 @@ const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const { theme, toggleTheme } = useTheme();
-console.log(user)
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -98,7 +98,7 @@ console.log(user)
           </button>
 
           {/* Notifications */}
-          <button
+          {/* <button
             onClick={() => navigate('/notifications')}
             className="relative p-2 hover:bg-secondary-100 rounded-lg"
             style={{ '--hover-bg': 'var(--secondary)' }}
@@ -106,9 +106,9 @@ console.log(user)
             onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '')}
           >
             <Bell className="w-5 h-5" style={{ color: 'var(--link-color)' }} />
-            {/* Notification Badge */}
+         
             <span className="absolute top-1 right-1 w-2 h-2 bg-error-200 rounded-full" />
-          </button>
+          </button> */}
 
           {/* Profile Dropdown */}
           <div className="relative" ref={dropdownRef}>
@@ -121,16 +121,16 @@ console.log(user)
             >
               {/* Avatar */}
               <div className="w-9 h-9 bg-primary-100 rounded-full flex items-center justify-center overflow-hidden">
-                {user?.profilePictureUrl ? (
+                {user?.data.profilePictureUrl ? (
                   <img
-                    src={user.profilePictureUrl
+                    src={user.data.profilePictureUrl
 }
-                    alt={user.fullName}
+                    alt={user.data.fullName}
                     className="w-full h-full object-cover"
                   />
                 ) : (
                   <span className="text-primary-500 font-semibold text-sm">
-                    {user?.fullname?.charAt(0) || 'U'}
+                    {user?.data.fullname?.charAt(0) || 'U'}
                   </span>
                 )}
               </div>
@@ -141,7 +141,7 @@ console.log(user)
                   className="text-sm font-medium truncate max-w-[120px]"
                   style={{ color: 'var(--text)' }}
                 >
-                  {user?.fullname || 'User'}
+                  {user?.data.fullname || 'User'}
                 </p>
                 <p className="text-xs text-secondary-500">Student</p>
               </div>
@@ -169,10 +169,10 @@ console.log(user)
                   style={{ borderColor: 'var(--border-color)' }}
                 >
                   <p className="font-medium" style={{ color: 'var(--text)' }}>
-                    {user?.fullname || 'User'}
+                    {user?.data.fullname || 'User'}
                   </p>
                   <p className="text-sm" style={{ color: 'var(--link-color)' }}>
-                    {user?.email || 'user@email.com'}
+                    {user?.data.email || 'user@email.com'}
                   </p>
                 </div>
 

@@ -6,7 +6,6 @@ import {
   Clock,
   CheckCircle,
   Play,
-  Loader2,
   AlertCircle,
   Target,
   Zap,
@@ -15,6 +14,8 @@ import {
 } from 'lucide-react';
 import { quizService } from '../../services/quizService';
 import { courseService } from '../../services/courseService';
+import SkeletonCard from '../../components/common/SkeletonCard';
+import { getCache, setCache } from '../../services/dataCache';
 
 const QuizPage = () => {
   const navigate = useNavigate();
@@ -32,10 +33,13 @@ const QuizPage = () => {
     setIsLoading(true);
     setError(null);
     try {
-      // Fetch stats and courses in parallel
+      // Check cache first
+      const cachedStats = getCache('quizStats');
+      const cachedCourses = getCache('courses');
+
       const [statsResponse, coursesResponse] = await Promise.all([
-        quizService.getStats().catch(() => null),
-        courseService.getCourses().catch(() => null),
+        cachedStats ? Promise.resolve(cachedStats) : quizService.getStats().then(res => { setCache('quizStats', res); return res; }).catch(() => null),
+        cachedCourses ? Promise.resolve(cachedCourses) : courseService.getCourses().then(res => { setCache('courses', res); return res; }).catch(() => null),
       ]);
 
       // Process stats
@@ -58,7 +62,7 @@ const QuizPage = () => {
             const quizzesProgress = progressResponse?.data?.quizzes || progressResponse?.quizzes || [];
             progress = quizzesProgress.find(q => q.quizId === course.quiz.quizId);
           } catch (e) {
-            console.log('Could not fetch progress for course:', course.courseId);
+            // silently ignore progress fetch failures
           }
 
           extractedQuizzes.push({
@@ -82,7 +86,6 @@ const QuizPage = () => {
 
       setQuizzes(extractedQuizzes);
     } catch (error) {
-      console.error('Failed to fetch quiz data:', error);
       setError('Failed to load quizzes. Please try again.');
     } finally {
       setIsLoading(false);
@@ -119,7 +122,7 @@ const QuizPage = () => {
     return (
       <div className="card-shimmer bg-white dark:bg-[var(--card-background)] rounded-xl border border-[var(--secondary-100)] dark:border-[var(--border-color)] overflow-hidden hover:border-[var(--primary-200)] dark:hover:border-[var(--primary)] hover:shadow-lg transition-all cursor-pointer group">
         {/* Quiz Header */}
-        <div className="relative h-32 bg-gradient-to-br from-[var(--primary-100)] to-[var(--primary-200)] dark:from-[var(--primary-800)] dark:to-[var(--primary-700)] flex items-center justify-center overflow-hidden">
+        <div className="relative h-24 sm:h-32 bg-gradient-to-br from-[var(--primary-100)] to-[var(--primary-200)] dark:from-[var(--primary-800)] dark:to-[var(--primary-700)] flex items-center justify-center overflow-hidden">
           {quiz.image ? (
             <img
               src={quiz.image}
@@ -150,13 +153,13 @@ const QuizPage = () => {
         </div>
 
         {/* Quiz Info */}
-        <div className="p-4">
+        <div className="p-3 sm:p-4">
           <div className="mb-2">
             <span className="text-xs text-[var(--primary-400)] dark:text-[var(--primary)] font-medium">
               {quiz.courseName}
             </span>
           </div>
-          <h3 className="font-semibold text-[var(--secondary-800)] dark:text-[var(--text)] text-lg mb-1 line-clamp-1">
+          <h3 className="font-semibold text-[var(--secondary-800)] dark:text-[var(--text)] text-sm sm:text-lg mb-1 line-clamp-1">
             {quiz.title}
           </h3>
 
@@ -226,13 +229,13 @@ const QuizPage = () => {
   };
 
   const StatsCard = ({ icon: Icon, label, value, color }) => (
-    <div className="bg-white dark:bg-[var(--card-background)] rounded-xl border border-[var(--secondary-100)] dark:border-[var(--border-color)] p-4 flex items-center gap-4">
-      <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${color}`}>
-        <Icon className="w-6 h-6" />
+    <div className="bg-white dark:bg-[var(--card-background)] rounded-xl border border-[var(--secondary-100)] dark:border-[var(--border-color)] p-3 md:p-4 flex items-center gap-3 md:gap-4">
+      <div className={`w-9 h-9 md:w-12 md:h-12 rounded-lg md:rounded-xl flex items-center justify-center flex-shrink-0 ${color}`}>
+        <Icon className="w-4 h-4 md:w-6 md:h-6" />
       </div>
-      <div>
-        <p className="text-[var(--secondary-500)] dark:text-[var(--text-muted)] text-sm">{label}</p>
-        <p className="text-[var(--secondary-800)] dark:text-[var(--text)] text-xl font-bold">{value}</p>
+      <div className="min-w-0">
+        <p className="text-[var(--secondary-500)] dark:text-[var(--text-muted)] text-xs md:text-sm truncate">{label}</p>
+        <p className="text-[var(--secondary-800)] dark:text-[var(--text)] text-base md:text-xl font-bold">{value}</p>
       </div>
     </div>
   );
@@ -240,13 +243,13 @@ const QuizPage = () => {
   return (
     <div className="w-full">
       {/* Header */}
-      <h1 className="text-2xl md:text-3xl font-bold text-[var(--secondary-800)] dark:text-[var(--text)] mb-6">
+      <h1 className="text-lg md:text-3xl font-bold text-[var(--secondary-800)] dark:text-[var(--text)] mb-6 animate-fade-in-up">
         Quizzes
       </h1>
 
       {/* Stats Section */}
       {!isLoading && stats && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8 animate-fade-in-up stagger-1">
           <StatsCard
             icon={BookOpen}
             label="Total Quizzes"
@@ -276,7 +279,7 @@ const QuizPage = () => {
 
       {/* Additional Stats Row */}
       {!isLoading && stats && (
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+        <div className="hidden md:grid grid-cols-3 gap-4 mb-8 animate-fade-in-up stagger-2">
           <StatsCard
             icon={XCircle}
             label="Incomplete"
@@ -299,7 +302,7 @@ const QuizPage = () => {
       )}
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 p-1 rounded-xl bg-[var(--secondary-100)] dark:bg-[var(--secondary-800)] w-fit mb-8">
+      <div className="flex items-center gap-2 p-1 rounded-xl bg-[var(--secondary-100)] dark:bg-[var(--secondary-800)] w-fit mb-6 md:mb-8 animate-fade-in-up stagger-3">
         <button
           onClick={() => setActiveTab('available')}
           className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
@@ -324,8 +327,10 @@ const QuizPage = () => {
 
       {/* Quiz Grid */}
       {isLoading ? (
-        <div className="flex items-center justify-center h-64">
-          <Loader2 className="w-8 h-8 animate-spin text-[var(--primary-400)]" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <SkeletonCard key={i} variant="course" />
+          ))}
         </div>
       ) : error ? (
         <div className="flex flex-col items-center justify-center h-64 text-center">

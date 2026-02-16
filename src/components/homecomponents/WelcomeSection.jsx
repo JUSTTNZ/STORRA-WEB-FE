@@ -10,7 +10,7 @@ function WelcomeSection() {
   return (
     <>
       {/* Desktop Version with card-shimmer styling */}
-      <div className="hidden sm:block w-full">
+      {/* <div className="hidden sm:block w-full">
         <div className="card-shimmer bg-gradient-to-r from-[var(--primary-400)] to-[var(--primary-500)] dark:from-[var(--primary-600)] dark:to-[var(--primary-700)] rounded-xl border border-[var(--secondary-100)] dark:border-[var(--border-color)] p-5 flex flex-col gap-4">
           <div className="flex justify-between items-start">
             <div className="flex items-start gap-3">
@@ -35,7 +35,7 @@ function WelcomeSection() {
             </button>
           </div>
 
-          {/* Progress Bar */}
+  
           <div>
             <div className="flex justify-between mb-1">
               <span className="text-xs text-white dark:text-[var(--text-muted)]">
@@ -53,10 +53,10 @@ function WelcomeSection() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Mobile Version */}
-      <div className="sm:hidden w-full">
+      {/* <div className="sm:hidden w-full">
         <div className="card-shimmer bg-gradient-to-r from-[var(--primary-400)] to-[var(--primary-500)] rounded-xl border border-[var(--secondary-100)] p-4">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
@@ -81,7 +81,7 @@ function WelcomeSection() {
             </button>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 }
