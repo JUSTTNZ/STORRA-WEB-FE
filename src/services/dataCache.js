@@ -1,3 +1,8 @@
+import { courseService } from './courseService';
+import { quizService } from './quizService';
+import { leaderboardService } from './leaderboardService';
+import { rewardsService } from './rewardsService';
+
 const cache = new Map();
 
 const DEFAULT_TTL = 5 * 60 * 1000; // 5 minutes
@@ -21,4 +26,18 @@ export function getCache(key) {
 
 export function clearCache() {
   cache.clear();
+}
+
+// Fire all major API calls at once after login
+// Each one is independent - if one fails, the rest still cache
+export function prefetchAll() {
+  const fetches = [
+    courseService.getCourses().then(res => setCache('courses', res)).catch(() => {}),
+    quizService.getStats().then(res => setCache('quizStats', res)).catch(() => {}),
+    leaderboardService.getLeaderboard(1, 20).then(res => setCache('leaderboard', res)).catch(() => {}),
+    rewardsService.getRewards().then(res => setCache('rewards', res)).catch(() => {}),
+    rewardsService.getCalendar().then(res => setCache('rewardsCalendar', res)).catch(() => {}),
+  ];
+
+  Promise.all(fetches);
 }

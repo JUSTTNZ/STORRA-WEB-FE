@@ -51,38 +51,37 @@ const QuizPage = () => {
 
       // Extract quizzes from courses
       const coursesData = coursesResponse?.data || coursesResponse || [];
-      const extractedQuizzes = [];
+      const coursesWithQuiz = coursesData.filter(c => c.quiz);
 
-      for (const course of coursesData) {
-        if (course.quiz) {
-          // Get quiz progress for this course
-          let progress = null;
-          try {
-            const progressResponse = await quizService.getCourseProgress(course.courseId || course.id || course._id);
-            const quizzesProgress = progressResponse?.data?.quizzes || progressResponse?.quizzes || [];
-            progress = quizzesProgress.find(q => q.quizId === course.quiz.quizId);
-          } catch (e) {
-            // silently ignore progress fetch failures
-          }
+      // Fetch ALL progress in parallel instead of one-by-one
+      const progressResults = await Promise.all(
+        coursesWithQuiz.map(course =>
+          quizService.getCourseProgress(course.courseId || course.id || course._id).catch(() => null)
+        )
+      );
 
-          extractedQuizzes.push({
-            quizId: course.quiz.quizId,
-            courseId: course.courseId || course.id || course._id,
-            courseName: course.courseName || course.title || course.name,
-            title: course.quiz.quizTitle || course.quiz.title,
-            image: course.quiz.quizImage,
-            totalQuestions: course.quiz.totalQuestions || course.quiz.questions?.length || 0,
-            passingScore: course.quiz.passingScore || 70,
-            timeLimit: course.quiz.timeLimit || 15,
-            status: progress?.status || 'new',
-            attempts: progress?.attempts || 0,
-            bestScore: progress?.bestScore || 0,
-            bestPercentage: progress?.bestPercentage || 0,
-            pointsEarned: progress?.pointsEarned || 0,
-            completedAt: progress?.completedAt,
-          });
-        }
-      }
+      const extractedQuizzes = coursesWithQuiz.map((course, i) => {
+        const progressResponse = progressResults[i];
+        const quizzesProgress = progressResponse?.data?.quizzes || progressResponse?.quizzes || [];
+        const progress = quizzesProgress.find(q => q.quizId === course.quiz.quizId);
+
+        return {
+          quizId: course.quiz.quizId,
+          courseId: course.courseId || course.id || course._id,
+          courseName: course.courseName || course.title || course.name,
+          title: course.quiz.quizTitle || course.quiz.title,
+          image: course.quiz.quizImage,
+          totalQuestions: course.quiz.totalQuestions || course.quiz.questions?.length || 0,
+          passingScore: course.quiz.passingScore || 70,
+          timeLimit: course.quiz.timeLimit || 15,
+          status: progress?.status || 'new',
+          attempts: progress?.attempts || 0,
+          bestScore: progress?.bestScore || 0,
+          bestPercentage: progress?.bestPercentage || 0,
+          pointsEarned: progress?.pointsEarned || 0,
+          completedAt: progress?.completedAt,
+        };
+      });
 
       setQuizzes(extractedQuizzes);
     } catch (error) {
@@ -171,19 +170,19 @@ const QuizPage = () => {
             </span>
             <span className="flex items-center gap-1">
               <Clock className="w-3.5 h-3.5" />
-              {quiz.timeLimit} mins
+              {quiz.timeLimit} 
             </span>
           </div>
 
           {/* Progress Info */}
           {quiz.attempts > 0 && (
-            <div className="mb-3 p-2 bg-[var(--secondary-50)] dark:bg-[var(--secondary-800)] rounded-lg">
+            <div className="mb-3 p-2 bg-[var(--primary-400)] dark:bg-[var(--primary-800)] rounded-lg">
               <div className="flex justify-between text-xs">
-                <span className="text-[var(--secondary-500)] dark:text-[var(--text-muted)]">
+                <span className=" text-white ">
                   Attempts: {quiz.attempts}
                 </span>
-                <span className="text-[var(--secondary-500)] dark:text-[var(--text-muted)]">
-                  Best: {quiz.bestPercentage}%
+                <span className="text-white">
+                  Best: {quiz.bestPercentage.toFixed(0)}%
                 </span>
               </div>
             </div>
@@ -202,7 +201,7 @@ const QuizPage = () => {
               isCompleted
                 ? 'bg-[var(--secondary-100)] dark:bg-[var(--secondary-700)] text-[var(--secondary-600)] dark:text-[var(--text-muted)] hover:bg-[var(--secondary-200)]'
                 : quiz.status === 'incomplete'
-                ? 'bg-[var(--attention-100)] dark:bg-[var(--attention-background)] text-[var(--attention-300)] dark:text-[var(--attention-color)] hover:bg-[var(--attention-200)]'
+                ?  'bg-[var(--primary-400)] dark:bg-[var(--primary)] text-white hover:bg-[var(--primary-500)] dark:hover:bg-[var(--primary-hover)]' 
                 : 'bg-[var(--primary-400)] dark:bg-[var(--primary)] text-white hover:bg-[var(--primary-500)] dark:hover:bg-[var(--primary-hover)]'
             }`}
           >

@@ -121,16 +121,16 @@ const Navbar = () => {
             >
               {/* Avatar */}
               <div className="w-9 h-9 bg-primary-100 rounded-full flex items-center justify-center overflow-hidden">
-                {user?.data.profilePictureUrl ? (
+                {user?.profilePictureUrl ? (
                   <img
-                    src={user.data.profilePictureUrl
+                    src={user.profilePictureUrl
 }
-                    alt={user.data.fullName}
+                    alt={user.fullName}
                     className="w-full h-full object-cover"
                   />
                 ) : (
                   <span className="text-primary-500 font-semibold text-sm">
-                    {user?.data.fullname?.charAt(0) || 'U'}
+                    {user?.fullname?.charAt(0) || 'U'}
                   </span>
                 )}
               </div>
@@ -141,7 +141,7 @@ const Navbar = () => {
                   className="text-sm font-medium truncate max-w-[120px]"
                   style={{ color: 'var(--text)' }}
                 >
-                  {user?.data.fullname || 'User'}
+                  {user?.fullname || 'User'}
                 </p>
                 <p className="text-xs text-secondary-500">Student</p>
               </div>
@@ -169,10 +169,10 @@ const Navbar = () => {
                   style={{ borderColor: 'var(--border-color)' }}
                 >
                   <p className="font-medium" style={{ color: 'var(--text)' }}>
-                    {user?.data.fullname || 'User'}
+                    {user?.fullname || 'User'}
                   </p>
                   <p className="text-sm" style={{ color: 'var(--link-color)' }}>
-                    {user?.data.email || 'user@email.com'}
+                    {user?.email || 'user@email.com'}
                   </p>
                 </div>
 

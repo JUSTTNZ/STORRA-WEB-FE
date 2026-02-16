@@ -154,13 +154,15 @@ console.log('current data', course)
 
   // Calculate progress
 // Remove the duplicate line and fix the progress calculation
-const completedLessons = lessons.filter((l) => l.status === 'completed').length;
+const completedLessons = course?.completedLessons
+;
 const totalLessons = lessons.length;
 const overallProgress = courseProgress?.overallProgress || 
                        courseProgress?.progress || 
                        (totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0);
   const isCompleted = overallProgress === 100;
- console.log(overallProgress)
+ console.log(overallProgress, "l")
+ console.log(completedLessons, "p")
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">

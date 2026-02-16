@@ -18,12 +18,12 @@ function ProgressSection() {
     }
 
     // Count completed courses (progress >= 100%)
-    const completedCourses = user.data.coursesProgress?.filter(course =>
+    const completedCourses = user.coursesProgress?.filter(course =>
       course.overallProgress >= 100
     ) || [];
 
     // Find current course (course with highest progress but less than 100%)
-    const inProgressCourse = user.data.coursesProgress?.reduce((current, course) => {
+    const inProgressCourse = user.coursesProgress?.reduce((current, course) => {
       if (course.overallProgress < 100 && course.overallProgress > 0) {
         if (!current || course.overallProgress > current.overallProgress) {
           return course;
@@ -33,8 +33,8 @@ function ProgressSection() {
     }, null);
 
     // You might need to adjust these based on your data structure
-    const bookmarksCount = user.data.bookmarks?.length || 0;
-    const favoritesCount = user.data.favorites?.length || 0;
+    const bookmarksCount = user.bookmarks?.length || 0;
+    const favoritesCount = user.favorites?.length || 0;
 
     return {
       inProgress: inProgressCourse,
@@ -45,7 +45,7 @@ function ProgressSection() {
   };
 
   const stats = calculateStats();
-  const progress = user?.data.overallProgressPercent || 0;
+  const progress = user?.overallProgressPercent || 0;
 
   // Loading state
   if (authLoading) {

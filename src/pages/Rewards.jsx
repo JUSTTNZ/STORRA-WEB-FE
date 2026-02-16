@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { rewardsService } from '../services/rewardsService';
 import { useToast } from '../components/common/Toast';
+import { getCache, setCache } from '../services/dataCache';
 import Confetti from 'react-confetti';
 
 const Rewards = () => {
@@ -38,11 +39,11 @@ const Rewards = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const rewardsData = await rewardsService.getRewards();
-      console.log('Rewards data:', rewardsData);
+      const cachedRewards = getCache('rewards');
+      const cachedCalendar = getCache('rewardsCalendar');
 
-      const calendarData = await rewardsService.getCalendar();
-      console.log('Calendar data:', calendarData);
+      const rewardsData = cachedRewards || await rewardsService.getRewards().then(res => { setCache('rewards', res); return res; });
+      const calendarData = cachedCalendar || await rewardsService.getCalendar().then(res => { setCache('rewardsCalendar', res); return res; });
 
       setRewards({
         balance: rewardsData.balance || 0,
@@ -60,7 +61,6 @@ const Rewards = () => {
         transactionHistory: rewardsData.transactionHistory || []
       });
     } catch (error) {
-      console.error('Failed to fetch rewards:', error);
       setError('Failed to load rewards. Please try again.');
     } finally {
       setIsLoading(false);
@@ -353,7 +353,7 @@ const Rewards = () => {
       </div>
 
       {/* Level Progress */}
-      <div className="card-shimmer bg-white dark:bg-[var(--card-background)] rounded-2xl border border-[var(--secondary-200)] dark:border-[var(--border-color)] p-6 shadow-sm dark:shadow-none">
+      {/* <div className="card-shimmer bg-white dark:bg-[var(--card-background)] rounded-2xl border border-[var(--secondary-200)] dark:border-[var(--border-color)] p-6 shadow-sm dark:shadow-none">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <Trophy className="w-6 h-6 text-yellow-500" />
@@ -380,7 +380,7 @@ const Rewards = () => {
             <span>{rewards.points} / {rewards.points + rewards.pointsToNextLevel} points</span>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -25,9 +25,9 @@ const Profile = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [formData, setFormData] = useState({
-    fullName: user?.data.fullName || '',
-    email: user?.data.email || '',
-    phoneNumber: user?.data.phoneNumber || '',
+    fullName: user?.fullname || '',
+    email: user?.email || '',
+    phoneNumber: user?.phoneNumber || '',
   });
 
   const handleChange = (e) => {
@@ -81,18 +81,17 @@ const Profile = () => {
 
   const handleCancel = () => {
     setFormData({
-      fullName: user?.data.fullname || '',
-      email: user?.data.email || '',
-      phoneNumber: user?.data.phoneNumber || '',
+      fullName: user?.fullname || '',
+      email: user?.email || '',
+      phoneNumber: user?.phoneNumber || '',
     });
     setIsEditing(false);
   };
- console.log( user?.data.rewards?.longestStreak )
+
   const stats = [
-    { icon: BookOpen, label: 'Courses', value: user?.data.overallProgressPercent
- || 0, color: 'bg-[var(--primary-100)] dark:bg-[var(--primary-800)] text-[var(--primary-500)] dark:text-[var(--primary-200)]' },
-    { icon: Trophy, label: 'total coin', value: user?.data.rewards?.totalCoins || 0, color: 'bg-[var(--attention-100)] dark:bg-[rgba(255,239,152,0.15)] text-[var(--attention-200)] dark:text-[var(--attention-100)]' },
-    { icon: Target, label: 'Streak', value: `${ user?.data.rewards?.longestStreak|| 0} days`, color: 'bg-[var(--success-50)] dark:bg-[rgba(40,180,17,0.15)] text-[var(--success-200)] dark:text-[var(--success-color)]' },
+    { icon: BookOpen, label: 'Courses', value: user?.overallProgressPercent || 0, color: 'bg-[var(--primary-100)] dark:bg-[var(--primary-800)] text-[var(--primary-500)] dark:text-[var(--primary-200)]' },
+    { icon: Trophy, label: 'total coin', value: user?.rewards?.totalCoins || 0, color: 'bg-[var(--attention-100)] dark:bg-[rgba(255,239,152,0.15)] text-[var(--attention-200)] dark:text-[var(--attention-100)]' },
+    { icon: Target, label: 'Streak', value: `${user?.rewards?.longestStreak || 0} days`, color: 'bg-[var(--success-50)] dark:bg-[rgba(40,180,17,0.15)] text-[var(--success-200)] dark:text-[var(--success-color)]' },
   ];
 
   return (
@@ -109,16 +108,16 @@ const Profile = () => {
           {/* Avatar */}
           <div className="relative -mt-16 mb-4">
             <div className="w-28 h-28 rounded-full bg-white dark:bg-[var(--card-background)] border-4 border-white dark:border-[var(--card-background)] overflow-hidden shadow-lg">
-              {user?.data.profilePictureUrl ? (
+              {user?.profilePictureUrl ? (
                 <img
-                  src={user.data.profilePictureUrl}
-                  alt={user.data.fullname}
+                  src={user.profilePictureUrl}
+                  alt={user.fullname}
                   className="w-full h-full object-cover"
                 />
               ) : (
                 <div className="w-full h-full bg-[var(--primary-100)] dark:bg-[var(--primary-800)] flex items-center justify-center">
                   <span className="text-4xl font-bold text-[var(--primary-500)] dark:text-[var(--primary-200)]">
-                    {user?.data.fullname?.charAt(0) || 'U'}
+                    {user?.fullname?.charAt(0) || 'U'}
                   </span>
                 </div>
               )}
@@ -191,13 +190,13 @@ const Profile = () => {
                 <input
                   type="text"
                   name="fullName"
-                  value={formData.data.fullname}
+                  value={formData.fullName}
                   onChange={handleChange}
                   className="w-full px-4 py-2.5 border border-[var(--secondary-200)] dark:border-[var(--border-color)] rounded-lg bg-white dark:bg-[var(--input-background)] text-[var(--secondary-800)] dark:text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-400)] dark:focus:ring-[var(--primary)] focus:border-transparent"
                 />
               ) : (
                 <p className="px-4 py-2.5 bg-[var(--secondary-50)] dark:bg-[var(--secondary-800)] rounded-lg text-[var(--secondary-800)] dark:text-[var(--text)]">
-                  {user?.data.fullname || '-'}
+                  {user?.fullname || '-'}
                 </p>
               )}
             </div>
@@ -213,13 +212,13 @@ const Profile = () => {
                   <input
                     type="email"
                     name="email"
-                    value={formData.data.email}
+                    value={formData.email}
                     onChange={handleChange}
                     className="w-full pl-10 pr-4 py-2.5 border border-[var(--secondary-200)] dark:border-[var(--border-color)] rounded-lg bg-white dark:bg-[var(--input-background)] text-[var(--secondary-800)] dark:text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-400)] dark:focus:ring-[var(--primary)] focus:border-transparent"
                   />
                 ) : (
                   <p className="pl-10 pr-4 py-2.5 bg-[var(--secondary-50)] dark:bg-[var(--secondary-800)] rounded-lg text-[var(--secondary-800)] dark:text-[var(--text)]">
-                    {user?.data.email || '-'}
+                    {user?.email || '-'}
                   </p>
                 )}
               </div>
@@ -236,13 +235,13 @@ const Profile = () => {
                   <input
                     type="tel"
                     name="phoneNumber"
-                    value={formData.data.phoneNumber}
+                    value={formData.phoneNumber}
                     onChange={handleChange}
                     className="w-full pl-10 pr-4 py-2.5 border border-[var(--secondary-200)] dark:border-[var(--border-color)] rounded-lg bg-white dark:bg-[var(--input-background)] text-[var(--secondary-800)] dark:text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-400)] dark:focus:ring-[var(--primary)] focus:border-transparent"
                   />
                 ) : (
                   <p className="pl-10 pr-4 py-2.5 bg-[var(--secondary-50)] dark:bg-[var(--secondary-800)] rounded-lg text-[var(--secondary-800)] dark:text-[var(--text)]">
-                    {user?.data.phoneNumber || '-'}
+                    {user?.phoneNumber || '-'}
                   </p>
                 )}
               </div>
