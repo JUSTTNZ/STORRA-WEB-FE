@@ -12,9 +12,7 @@ import {
   fetchCurrentUser, // Add this
 } from '../features/auth/authSlice';
 import authService from '../services/authService';
-import { courseService } from '../services/courseService';
-import { quizService } from '../services/quizService';
-import { setCache, clearCache } from '../services/dataCache';
+import { clearCache, prefetchAll } from '../services/dataCache';
 
 const AuthContext = createContext(null);
 
@@ -45,7 +43,6 @@ export const AuthProvider = ({ children }) => {
         
         // 2. Fetch complete user profile
         const userProfile = await fetchUserProfile();
-        console.log(userProfile,"userprofile")
         // 3. Dispatch success with both token and full user data
         dispatch(
           loginSuccess({
@@ -54,11 +51,8 @@ export const AuthProvider = ({ children }) => {
           })
         );
 
-        // Prefetch courses and quiz stats into cache
-        Promise.all([
-          courseService.getCourses().then(res => setCache('courses', res)),
-          quizService.getStats().then(res => setCache('quizStats', res)),
-        ]).catch(() => {});
+        // Prefetch all data into cache so pages load instantly
+        prefetchAll();
 
         return { token: data.token, user: userProfile };
       } catch (err) {

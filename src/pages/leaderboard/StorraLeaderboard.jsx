@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FiSearch, FiTrendingUp, FiTrendingDown, FiLoader } from "react-icons/fi";
 import { FaCrown } from "react-icons/fa";
 import { leaderboardService } from "../../services/leaderboardService";
+import { getCache, setCache } from "../../services/dataCache";
 
 const StorraLeaderboard = () => {
   const [timeframe, setTimeframe] = useState("Monthly");
@@ -18,14 +19,34 @@ const StorraLeaderboard = () => {
   }, [page]);
 
   const fetchLeaderboard = async () => {
+    // Check cache for first page
+    if (page === 1) {
+      const cached = getCache('leaderboard');
+      if (cached) {
+        const data = cached?.data || cached || [];
+        const leaderboard = Array.isArray(data) ? data : data.leaderboard || data.users || [];
+        const formattedData = leaderboard.map((user, index) => ({
+          rank: user.rank || index + 1,
+          name: user.name || user.fullName || user.username || 'User',
+          score: user.score || user.points || user.totalPoints || 0,
+          change: user.change || user.rankChange || 0,
+          avatar: user.avatar || user.profilePicture || "👤",
+          id: user.id || user._id,
+        }));
+        setLeaderboardData(formattedData);
+        setIsLoading(false);
+        return;
+      }
+    }
+
     setIsLoading(true);
     setError(null);
     try {
       const response = await leaderboardService.getLeaderboard(page, 10);
+      if (page === 1) setCache('leaderboard', response);
       const data = response?.data || response || [];
       const leaderboard = Array.isArray(data) ? data : data.leaderboard || data.users || [];
- console.log("Raw leaderboard data:", leaderboard);
-      // Map API response to component format
+
       const formattedData = leaderboard.map((user, index) => ({
         rank: user.rank || (page - 1) * 10 + index + 1,
         name: user.name || user.fullName || user.username || 'User',
@@ -34,7 +55,7 @@ const StorraLeaderboard = () => {
         avatar: user.avatar || user.profilePicture || "👤",
         id: user.id || user._id,
       }));
-console.log("Fetched leaderboard data:", formattedData);
+
       if (page === 1) {
         setLeaderboardData(formattedData);
       } else {
@@ -43,7 +64,6 @@ console.log("Fetched leaderboard data:", formattedData);
 
       setHasMore(formattedData.length === 10);
     } catch (error) {
-      console.error("Failed to fetch leaderboard:", error);
       setError("Failed to load leaderboard. Please try again.");
     } finally {
       setIsLoading(false);
@@ -225,8 +245,8 @@ console.log("Fetched leaderboard data:", formattedData);
                         </div>
                       )}
                       <span className="font-medium text-[var(--secondary-900)] dark:text-[var(--text)] text-sm sm:text-base lg:text-lg">
-                        {user.name}
-                      </span>
+                        {user.name.split(' ')[0]}
+                      </span>  
                     </div>
                   </td>
 

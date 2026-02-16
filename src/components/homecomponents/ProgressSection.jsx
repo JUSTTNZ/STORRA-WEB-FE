@@ -18,12 +18,12 @@ function ProgressSection() {
     }
 
     // Count completed courses (progress >= 100%)
-    const completedCourses = user.data.coursesProgress?.filter(course =>
+    const completedCourses = user.coursesProgress?.filter(course =>
       course.overallProgress >= 100
     ) || [];
 
     // Find current course (course with highest progress but less than 100%)
-    const inProgressCourse = user.data.coursesProgress?.reduce((current, course) => {
+    const inProgressCourse = user.coursesProgress?.reduce((current, course) => {
       if (course.overallProgress < 100 && course.overallProgress > 0) {
         if (!current || course.overallProgress > current.overallProgress) {
           return course;
@@ -33,8 +33,8 @@ function ProgressSection() {
     }, null);
 
     // You might need to adjust these based on your data structure
-    const bookmarksCount = user.data.bookmarks?.length || 0;
-    const favoritesCount = user.data.favorites?.length || 0;
+    const bookmarksCount = user.bookmarks?.length || 0;
+    const favoritesCount = user.favorites?.length || 0;
 
     return {
       inProgress: inProgressCourse,
@@ -45,8 +45,7 @@ function ProgressSection() {
   };
 
   const stats = calculateStats();
-  const progress = user?.data.overallProgressPercent || 0;
-
+  const progress = user?.overallProgressPercent || 0;
   // Loading state
   if (authLoading) {
     return (
@@ -74,16 +73,16 @@ function ProgressSection() {
         <div className="card-shimmer col-span-2 lg:col-span-1 bg-white dark:bg-[var(--card-background)] rounded-xl border border-[var(--secondary-100)] dark:border-[var(--border-color)] p-3 sm:p-5 flex flex-col gap-3 sm:gap-4">
           <div className="flex justify-between items-start">
             <div className="flex items-start gap-3">
-              <div className="w-10 h-10 bg-[var(--primary-100)] dark:bg-[var(--primary-800)] rounded-lg flex items-center justify-center">
-                <Play className="w-5 h-5 text-[var(--primary-500)] dark:text-[var(--primary-200)]" fill="currentColor" />
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[var(--primary-100)] dark:bg-[var(--primary-800)] rounded-lg flex items-center justify-center">
+                <Play className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--primary-500)] dark:text-[var(--primary-200)]" fill="currentColor" />
               </div>
               <div>
-                <h3 className="text-[var(--secondary-800)] dark:text-[var(--text)] font-semibold text-base">
+                <h3 className="text-[var(--secondary-800)] dark:text-[var(--text)] font-semibold text-sm sm:text-base">
                   In Progress
                 </h3>
-                <p className="text-[var(--secondary-500)] dark:text-[var(--text-muted)] text-sm mt-0.5">
+                <p className="text-[var(--secondary-500)] dark:text-[var(--text-muted)] text-xs sm:text-sm mt-0.5">
                   {stats.inProgress ?
-                    `${stats.inProgress.courseName || 'Course'} - ${stats.inProgress.progressPercent || 0}%` :
+                    `${stats.inProgress.courseName || 'Course'} - ${stats.inProgress.overallProgress || 0}%` :
                     'No course in progress'
                   }
                 </p>
@@ -115,16 +114,16 @@ function ProgressSection() {
         </div>
 
         {/* Completed Card */}
-        <div className="card-shimmer bg-white dark:bg-[var(--card-background)] rounded-xl border border-[var(--secondary-100)] dark:border-[var(--border-color)] p-3 sm:p-5 flex flex-col justify-between">
+        <div className="card-shimmer col-span-2 lg:col-span-1 bg-white dark:bg-[var(--card-background)] rounded-xl border border-[var(--secondary-100)] dark:border-[var(--border-color)] p-3 sm:p-5 flex flex-col justify-between">
           <div className="flex items-start gap-3">
-            <div className="w-10 h-10 bg-[var(--success-50)] dark:bg-[rgba(40,180,17,0.15)] rounded-lg flex items-center justify-center">
-              <CheckCircle className="w-5 h-5 text-[var(--success-200)] dark:text-[var(--success-color)]" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[var(--success-50)] dark:bg-[rgba(40,180,17,0.15)] rounded-lg flex items-center justify-center">
+              <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--success-200)] dark:text-[var(--success-color)]" />
             </div>
             <div>
-              <h3 className="text-[var(--secondary-800)] dark:text-[var(--text)] font-semibold text-base">
+              <h3 className="text-[var(--secondary-800)] dark:text-[var(--text)] font-semibold text-sm sm:text-base">
                 Completed
               </h3>
-              <p className="text-[var(--secondary-500)] dark:text-[var(--text-muted)] text-sm mt-0.5">
+              <p className="text-[var(--secondary-500)] dark:text-[var(--text-muted)] text-xs sm:text-sm mt-0.5">
                 You've completed <span className="font-medium text-[var(--secondary-700)] dark:text-[var(--text)]">
                   {stats.completedCount} {stats.completedCount === 1 ? 'course' : 'courses'}
                 </span>
