@@ -277,43 +277,43 @@ const overallProgress = courseProgress?.overallProgress ||
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-wrap gap-3">
-            {overallProgress === 0 ? (
-              <button
-                onClick={handleStartCourse}
-                className="flex-1 md:flex-none px-6 py-3 bg-[var(--primary-400)] dark:bg-[var(--primary)] text-white rounded-xl font-semibold hover:bg-[var(--primary-500)] dark:hover:bg-[var(--primary-hover)] transition-colors flex items-center justify-center gap-2"
-              >
-                <Play className="w-5 h-5" fill="currentColor" />
-                Start Course
-              </button>
-            ) : isCompleted ? (
-              <button
-                onClick={handleStartCourse}
-                className="flex-1 md:flex-none px-6 py-3 bg-[var(--secondary-100)] dark:bg-[var(--secondary-800)] text-[var(--secondary-700)] dark:text-[var(--text)] rounded-xl font-semibold hover:bg-[var(--secondary-200)] dark:hover:bg-[var(--secondary-700)] transition-colors flex items-center justify-center gap-2"
-              >
-                <Play className="w-5 h-5" fill="currentColor" />
-                Review Course
-              </button>
-            ) : (
-              <button
-                onClick={handleContinueLearning}
-                className="flex-1 md:flex-none px-6 py-3 bg-[var(--primary-400)] dark:bg-[var(--primary)] text-white rounded-xl font-semibold hover:bg-[var(--primary-500)] dark:hover:bg-[var(--primary-hover)] transition-colors flex items-center justify-center gap-2"
-              >
-                <Play className="w-5 h-5" fill="currentColor" />
-                Continue Learning
-              </button>
-            )}
+      <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
+  {overallProgress === 0 ? (
+    <button
+      onClick={handleStartCourse}
+      className="w-full sm:w-auto flex-1 md:flex-none px-6 py-3 bg-[var(--primary-400)] dark:bg-[var(--primary)] text-white rounded-xl font-semibold hover:bg-[var(--primary-500)] dark:hover:bg-[var(--primary-hover)] transition-colors flex items-center justify-center gap-2"
+    >
+      <Play className="w-5 h-5" fill="currentColor" />
+      Start Course
+    </button>
+  ) : isCompleted ? (
+    <button
+      onClick={handleStartCourse}
+      className="w-full sm:w-auto flex-1 md:flex-none px-6 py-3 bg-[var(--secondary-100)] dark:bg-[var(--secondary-800)] text-[var(--secondary-700)] dark:text-[var(--text)] rounded-xl font-semibold hover:bg-[var(--secondary-200)] dark:hover:bg-[var(--secondary-700)] transition-colors flex items-center justify-center gap-2"
+    >
+      <Play className="w-5 h-5" fill="currentColor" />
+      Review Course
+    </button>
+  ) : (
+    <button
+      onClick={handleContinueLearning}
+      className="w-full sm:w-auto flex-1 md:flex-none px-6 py-3 bg-[var(--primary-400)] dark:bg-[var(--primary)] text-white rounded-xl font-semibold hover:bg-[var(--primary-500)] dark:hover:bg-[var(--primary-hover)] transition-colors flex items-center justify-center gap-2"
+    >
+      <Play className="w-5 h-5" fill="currentColor" />
+      Continue Learning
+    </button>
+  )}
 
-            {courseData?.quiz && (
-              <button
-                onClick={handleTakeQuiz}
-                className="flex-1 md:flex-none px-6 py-3 bg-[var(--attention-100)] dark:bg-[var(--attention-background)] text-[var(--attention-300)] dark:text-[var(--attention-color)] rounded-xl font-semibold hover:bg-[var(--attention-200)] transition-colors flex items-center justify-center gap-2"
-              >
-                <Target className="w-5 h-5" />
-                Take Quiz
-              </button>
-            )}
-          </div>
+  {courseData?.quiz && (
+    <button
+      onClick={handleTakeQuiz}
+      className="w-full sm:w-auto flex-1 md:flex-none px-6 py-3 bg-[var(--attention-100)] dark:bg-[var(--attention-background)] text-[var(--attention-300)] dark:text-[var(--attention-color)] rounded-xl font-semibold hover:bg-[var(--attention-200)] transition-colors flex items-center justify-center gap-2"
+    >
+      <Target className="w-5 h-5" />
+      Take Quiz
+    </button>
+  )}
+</div>
         </div>
       </div>
 

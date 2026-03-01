@@ -236,7 +236,7 @@ console.log;("SEGMENTS:", segments || 0);
           <div
             className="absolute flex flex-col items-center"
             style={{
-              top: '18%',
+              top: '38%',
               left: '50%',
               transform: 'translate(-50%, -50%) rotate(180deg)',
               color: 'white',
