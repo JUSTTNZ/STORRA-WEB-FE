@@ -98,19 +98,21 @@ const Setting = () => {
       <h1 className="text-2xl font-bold text-[var(--secondary-800)] dark:text-[var(--text)] mb-6">Settings</h1>
 
       {/* Profile Section */}
-      <div className="card-shimmer bg-white dark:bg-[var(--card-background)] rounded-xl border border-[var(--secondary-100)] dark:border-[var(--border-color)] mb-6 overflow-hidden">
-        <div className="p-4 border-b border-[var(--secondary-100)] dark:border-[var(--border-color)]">
-          <h2 className="font-semibold text-[var(--secondary-800)] dark:text-[var(--text)]">Profile</h2>
-        </div>
-        <SettingItem
+        <div className="card-shimmer bg-white dark:bg-[var(--card-background)] rounded-xl border border-[var(--secondary-100)] dark:border-[var(--border-color)] mb-6 overflow-hidden">
+          <div className="p-4 border-b border-[var(--secondary-100)] dark:border-[var(--border-color)]">
+            <h2 className="font-semibold text-[var(--secondary-800)] dark:text-[var(--text)]">Profile</h2>
+          </div>
+          <a href="/profile">
+            <SettingItem
           icon={User}
           title="Edit Profile"
           description="Update your personal information"
           action={<ChevronRight className="w-5 h-5 text-[var(--secondary-400)] dark:text-[var(--secondary-500)]" />}
-        />
-      </div>
+            />
+          </a>
+        </div>
 
-      {/* Notifications Section */}
+        {/* Notifications Section */}
       <div className="card-shimmer bg-white dark:bg-[var(--card-background)] rounded-xl border border-[var(--secondary-100)] dark:border-[var(--border-color)] mb-6 overflow-hidden">
         <div className="p-4 border-b border-[var(--secondary-100)] dark:border-[var(--border-color)]">
           <h2 className="font-semibold text-[var(--secondary-800)] dark:text-[var(--text)]">Notifications</h2>
@@ -170,12 +172,12 @@ const Setting = () => {
           icon={Globe}
           title="Language"
           description="English"
-          action={<ChevronRight className="w-5 h-5 text-[var(--secondary-400)] dark:text-[var(--secondary-500)]" />}
+          // action={<ChevronRight className="w-5 h-5 text-[var(--secondary-400)] dark:text-[var(--secondary-500)]" />}
         />
       </div>
 
       {/* Privacy Section */}
-      <div className="card-shimmer bg-white dark:bg-[var(--card-background)] rounded-xl border border-[var(--secondary-100)] dark:border-[var(--border-color)] mb-6 overflow-hidden">
+      {/* <div className="card-shimmer bg-white dark:bg-[var(--card-background)] rounded-xl border border-[var(--secondary-100)] dark:border-[var(--border-color)] mb-6 overflow-hidden">
         <div className="p-4 border-b border-[var(--secondary-100)] dark:border-[var(--border-color)]">
           <h2 className="font-semibold text-[var(--secondary-800)] dark:text-[var(--text)]">Privacy & Security</h2>
         </div>
@@ -207,7 +209,7 @@ const Setting = () => {
             />
           }
         />
-      </div>
+      </div> */}
 
       {/* Support Section */}
       <div className="card-shimmer bg-white dark:bg-[var(--card-background)] rounded-xl border border-[var(--secondary-100)] dark:border-[var(--border-color)] mb-6 overflow-hidden">
@@ -233,15 +235,16 @@ const Setting = () => {
             title="Logout"
             description="Sign out of your account"
             danger
+            className="w-5 h-5 "
           />
         </button>
-        <SettingItem
+        {/* <SettingItem
           icon={Trash2}
           title="Delete Account"
           description="Permanently delete your account"
           danger
           action={<ChevronRight className="w-5 h-5 text-[var(--error-200)] dark:text-[var(--error-color)]" />}
-        />
+        /> */}
       </div>
     </div>
   );

@@ -673,39 +673,39 @@ console.log("CURRENT LESSON:", currentLesson)
           </div>
 
           {/* Navigation Buttons */}
-          <div className="flex justify-between items-center">
-            <button
-              onClick={handlePreviousLesson}
-              disabled={!hasPrevious}
-              className="px-6 py-3 rounded-xl font-medium flex items-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-[var(--secondary-100)] dark:bg-[var(--secondary-800)] text-[var(--secondary-700)] dark:text-[var(--text)] hover:bg-[var(--secondary-200)] dark:hover:bg-[var(--secondary-700)]"
-            >
-              <ChevronLeft className="w-5 h-5" />
-              Previous
-            </button>
+         <div className="flex flex-col-reverse sm:flex-row sm:justify-between sm:items-center gap-3">
+  <button
+    onClick={handlePreviousLesson}
+    disabled={!hasPrevious}
+    className="w-full sm:w-auto px-6 py-3 rounded-xl font-medium flex items-center justify-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-[var(--secondary-100)] dark:bg-[var(--secondary-800)] text-[var(--secondary-700)] dark:text-[var(--text)] hover:bg-[var(--secondary-200)] dark:hover:bg-[var(--secondary-700)]"
+  >
+    <ChevronLeft className="w-5 h-5" />
+    Previous
+  </button>
 
-            {lessonProgress?.status !== 'completed' ? (
-              <button
-                onClick={handleCompleteLesson}
-                disabled={isCompleting}
-                className="px-6 py-3 rounded-xl font-medium flex items-center gap-2 transition-colors bg-[var(--success-200)] dark:bg-[var(--success-color)] text-white hover:bg-[var(--success-300)] dark:hover:opacity-90"
-              >
-                {isCompleting ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                ) : (
-                  <CheckCircle className="w-5 h-5" />
-                )}
-                Mark Complete
-              </button>
-            ) : (
-              <button
-                onClick={handleNextLesson}
-                className="px-6 py-3 rounded-xl font-medium flex items-center gap-2 transition-colors bg-[var(--primary-400)] dark:bg-[var(--primary)] text-white hover:bg-[var(--primary-500)] dark:hover:bg-[var(--primary-hover)]"
-              >
-                {isLastLesson ? 'Finish Course' : 'Next Lesson'}
-                <ChevronRight className="w-5 h-5" />
-              </button>
-            )}
-          </div>
+  {lessonProgress?.status !== 'completed' ? (
+    <button
+      onClick={handleCompleteLesson}
+      disabled={isCompleting}
+      className="w-full sm:w-auto px-6 py-3 rounded-xl font-medium flex items-center justify-center gap-2 transition-colors bg-[var(--success-200)] dark:bg-[var(--success-color)] text-white hover:bg-[var(--success-300)] dark:hover:opacity-90"
+    >
+      {isCompleting ? (
+        <Loader2 className="w-5 h-5 animate-spin" />
+      ) : (
+        <CheckCircle className="w-5 h-5" />
+      )}
+      Mark Complete
+    </button>
+  ) : (
+    <button
+      onClick={handleNextLesson}
+      className="w-full sm:w-auto px-6 py-3 rounded-xl font-medium flex items-center justify-center gap-2 transition-colors bg-[var(--primary-400)] dark:bg-[var(--primary)] text-white hover:bg-[var(--primary-500)] dark:hover:bg-[var(--primary-hover)]"
+    >
+      {isLastLesson ? 'Finish Course' : 'Next Lesson'}
+      <ChevronRight className="w-5 h-5" />
+    </button>
+  )}
+</div>
         </div>
 
         {/* Sidebar - Desktop */}

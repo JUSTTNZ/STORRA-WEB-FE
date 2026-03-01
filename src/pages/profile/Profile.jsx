@@ -2,7 +2,6 @@ import { useState, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../components/common/Toast';
 import { profileService } from '../../services/profileService';
-import { authService } from '../../services/authService';
 import {
   Camera,
   Mail,
@@ -17,7 +16,7 @@ import {
 } from 'lucide-react';
 
 const Profile = () => {
-  const { user, updateUser } = useAuth();
+  const { user, editProfile, refreshUser } = useAuth();
   const toast = useToast();
   const fileInputRef = useRef(null);
 
@@ -26,8 +25,8 @@ const Profile = () => {
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [formData, setFormData] = useState({
     fullName: user?.fullname || '',
-    email: user?.email || '',
-    phoneNumber: user?.phoneNumber || '',
+   
+
   });
 
   const handleChange = (e) => {
@@ -53,13 +52,12 @@ const Profile = () => {
 
     setIsUploadingImage(true);
     try {
-      const response = await profileService.uploadProfilePicture(file);
-      if (response?.profilePicture) {
-        updateUser({ ...user, profilePicture: response.profilePicture });
-        toast.success('Profile picture updated successfully');
-      }
+      await profileService.uploadProfilePicture(file, user?._id);
+      await refreshUser();
+      toast.success('Profile picture updated successfully');
     } catch (error) {
       toast.error('Failed to upload profile picture');
+      console.log(error);
     } finally {
       setIsUploadingImage(false);
     }
@@ -68,12 +66,12 @@ const Profile = () => {
   const handleSave = async () => {
     setIsLoading(true);
     try {
-      await authService.editProfile(formData);
-      updateUser({ ...user, ...formData });
+      await editProfile(formData);
       setIsEditing(false);
       toast.success('Profile updated successfully');
     } catch (error) {
       toast.error('Failed to update profile');
+      console.log(error)
     } finally {
       setIsLoading(false);
     }

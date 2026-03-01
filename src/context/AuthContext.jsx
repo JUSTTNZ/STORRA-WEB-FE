@@ -9,7 +9,8 @@ import {
   registerFailure,
   logout,
   setToken,
-  fetchCurrentUser, // Add this
+  fetchCurrentUser,
+  updateUserData,
 } from '../features/auth/authSlice';
 import authService from '../services/authService';
 import { clearCache, prefetchAll } from '../services/dataCache';
@@ -102,6 +103,20 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token, user, dispatch]);
 
+  const editProfile = useCallback(
+    async (profileData) => {
+      try {
+        const updated = await authService.editProfile(profileData);
+        dispatch(updateUserData(updated));
+        return updated;
+      } catch (err) {
+        console.error('Failed to update profile:', err);
+        throw err;
+      }
+    },
+    [dispatch]
+  );
+
   const logoutUser = useCallback(() => {
     clearCache();
     dispatch(logout());
@@ -116,7 +131,8 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout: logoutUser,
-    refreshUser: fetchUserProfile, // Expose for manual refresh
+    editProfile,
+    refreshUser: fetchUserProfile,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
