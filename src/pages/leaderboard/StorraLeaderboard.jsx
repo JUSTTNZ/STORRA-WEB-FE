@@ -120,37 +120,18 @@ const StorraLeaderboard = () => {
   };
 
   return (
- <div className="w-full min-h-screen overflow-x-hidden text-[var(--secondary-600)] dark:text-[var(--text-muted)]">
-
-
-  {/* Main Content */}
+<div className="w-full min-h-screen overflow-x-hidden text-[var(--secondary-600)] dark:text-[var(--text-muted)]">
   <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-2 py-6 sm:py-8">
     <div className="card-shimmer bg-white dark:bg-[var(--card-background)] rounded-xl sm:rounded-2xl shadow-sm dark:shadow-none border border-[var(--secondary-200)] dark:border-[var(--border-color)] p-4 sm:p-6 lg:p-8">
-          <div className="max-w-7xl mx-auto">
-      <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold mb-2 sm:mb-3 leading-tight text-[var(--secondary-900)] dark:text-[var(--text)]">
-        Classora Leaderboard
-      </h1>
+      
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-xl sm:text-2xl lg:text-2xl xl:text-4xl font-bold mb-2 sm:mb-3 leading-tight text-[var(--secondary-900)] dark:text-[var(--text)]">
+       Leaderboard
+        </h1>
+      </div>
 
-    </div>
       {/* Filters */}
       <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center mb-6 sm:mb-8 gap-4 sm:gap-6">
-        {/* <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 lg:gap-6 w-full lg:w-auto">
-          <div className="flex items-center gap-2 sm:gap-3">
-            <label className="text-[var(--secondary-700)] dark:text-[var(--text-muted)] font-medium whitespace-nowrap text-sm sm:text-base lg:text-lg">
-              Timeframe:
-            </label>
-            <select
-              value={timeframe}
-              onChange={(e) => setTimeframe(e.target.value)}
-              className="border border-[var(--secondary-300)] dark:border-[var(--border-color)] rounded-lg px-3 sm:px-4 py-2 sm:py-2.5 bg-white dark:bg-[var(--input-background)] text-[var(--secondary-800)] dark:text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-500)] dark:focus:ring-[var(--primary)] text-sm sm:text-base w-full sm:w-40 lg:w-48"
-            >
-              <option>Monthly</option>
-              <option>Weekly</option>
-              <option>All Time</option>
-            </select>
-          </div>
-        </div> */}
-
         <div className="relative w-full lg:w-72">
           <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--secondary-400)] dark:text-[var(--secondary-500)] w-4 h-4 sm:w-5 sm:h-5" />
           <input
@@ -194,15 +175,26 @@ const StorraLeaderboard = () => {
         </div>
       )}
 
-      {/* Leaderboard Table */}
+      {/* Leaderboard Table - NO OVERFLOW, fits mobile screen */}
       {!isLoading && !error && filteredData.length > 0 && (
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-[var(--secondary-50)] dark:bg-[var(--secondary-800)]">
+        <div className="w-full">
+          <table className="w-full table-fixed">
+            <colgroup>
+              <col className="w-16" />
+              <col />
+              <col className="w-20" />
+            </colgroup>
+            <thead className="bord border-b">
               <tr>
-                <th className="text-left py-4 px-4 sm:px-6 font-semibold text-[var(--secondary-700)] dark:text-[var(--text-muted)] text-sm sm:text-base w-20">Rank</th>
-                <th className="text-left py-4 px-4 sm:px-6 font-semibold text-[var(--secondary-700)] dark:text-[var(--text-muted)] text-sm sm:text-base">Participant</th>
-                <th className="text-left py-4 px-4 sm:px-6 font-semibold text-[var(--secondary-700)] dark:text-[var(--text-muted)] text-sm sm:text-base">Score</th>
+                <th className="text-left py-3 px-2 font-semibold text-[var(--secondary-700)] dark:text-[var(--text-muted)] text-xs">
+                  Rank
+                </th>
+                <th className="text-left py-3 px-2 font-semibold text-[var(--secondary-700)] dark:text-[var(--text-muted)] text-xs">
+                  Participant
+                </th>
+                <th className="text-left py-3 px-2 font-semibold text-[var(--secondary-700)] dark:text-[var(--text-muted)] text-xs">
+                  Score
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--secondary-100)] dark:divide-[var(--divider-color)]">
@@ -212,9 +204,9 @@ const StorraLeaderboard = () => {
                   className="hover:bg-[var(--secondary-50)] dark:hover:bg-[var(--hover-overlay)] transition-colors"
                 >
                   {/* Rank Column */}
-                  <td className="py-4 px-4 sm:px-6">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center font-bold text-sm sm:text-base ${
+                  <td className="py-3 px-2">
+                    <div className="flex items-center gap-1">
+                      <div className={`w-6 h-6 rounded-lg flex items-center justify-center font-bold text-xs flex-shrink-0 ${
                         user.rank === 1 ? 'bg-gradient-to-br from-yellow-400 to-yellow-500 text-white' :
                         user.rank === 2 ? 'bg-gradient-to-br from-gray-300 to-gray-400 text-white' :
                         user.rank === 3 ? 'bg-gradient-to-br from-amber-600 to-amber-700 text-white' :
@@ -223,36 +215,36 @@ const StorraLeaderboard = () => {
                         {user.rank}
                       </div>
                       {user.rank <= 3 && (
-                        <span className="hidden sm:block">
+                        <span className="hidden sm:block text-xs">
                           {getMedalIcon(user.rank)}
                         </span>
                       )}
                     </div>
                   </td>
 
-                  {/* Participant Column */}
-                  <td className="py-4 px-4 sm:px-6">
-                    <div className="flex items-center gap-3 sm:gap-4">
+                  {/* Participant Column - Optimized for mobile */}
+                  <td className="py-3 px-2">
+                    <div className="flex items-center gap-2">
                       {user.avatar && user.avatar !== "👤" ? (
                         <img
                           src={user.avatar}
                           alt={user.name}
-                          className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-white dark:border-[var(--card-background)] shadow"
+                          className="w-6 h-6 rounded-full border border-white dark:border-[var(--card-background)] shadow flex-shrink-0"
                         />
                       ) : (
-                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[var(--primary-400)] to-[var(--primary-600)] rounded-full flex items-center justify-center text-white font-bold text-base sm:text-lg border-2 border-white dark:border-[var(--card-background)] shadow">
+                        <div className="w-6 h-6 bg-gradient-to-br from-[var(--primary-400)] to-[var(--primary-600)] rounded-full flex items-center justify-center text-white font-bold text-xs border border-white dark:border-[var(--card-background)] shadow flex-shrink-0">
                           {user.name.charAt(0).toUpperCase()}
                         </div>
                       )}
-                      <span className="font-medium text-[var(--secondary-900)] dark:text-[var(--text)] text-sm sm:text-base lg:text-lg">
+                      <span className="font-medium text-[var(--secondary-900)] dark:text-[var(--text)] text-xs truncate max-w-[100px]">
                         {user.name.split(' ')[0]}
                       </span>  
                     </div>
                   </td>
 
                   {/* Score Column */}
-                  <td className="py-4 px-4 sm:px-6">
-                    <div className="font-semibold text-[var(--secondary-900)] dark:text-[var(--text)] text-sm sm:text-base lg:text-lg">
+                  <td className="py-3 px-2">
+                    <div className="font-semibold text-[var(--secondary-900)] dark:text-[var(--text)] text-xs">
                       {formatNumber(user.score)}
                     </div>
                   </td>
@@ -268,17 +260,17 @@ const StorraLeaderboard = () => {
         <button
           onClick={loadMore}
           disabled={isLoading || !hasMore}
-          className="border border-[var(--secondary-300)] dark:border-[var(--border-color)] text-[var(--secondary-700)] dark:text-[var(--text-muted)] px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-[var(--secondary-50)] dark:hover:bg-[var(--secondary-700)] transition font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm sm:text-base min-w-[120px] sm:min-w-[140px] justify-center"
+          className="border border-[var(--secondary-300)] dark:border-[var(--border-color)] text-[var(--secondary-700)] dark:text-[var(--text-muted)] px-3 py-2 rounded-lg hover:bg-[var(--secondary-50)] dark:hover:bg-[var(--secondary-700)] transition font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-xs sm:text-sm min-w-[90px] justify-center"
         >
           {isLoading && page > 1 ? (
             <>
-              <FiLoader className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+              <FiLoader className="w-3 h-3 animate-spin" />
               <span>Loading...</span>
             </>
           ) : hasMore ? (
             'Load More'
           ) : (
-            'No more results'
+            'No more'
           )}
         </button>
       </div>

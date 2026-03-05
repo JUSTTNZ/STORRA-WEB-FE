@@ -148,6 +148,8 @@
 
 /* CSS Custom Properties (CSS Variables) */
 :root {
+  color-scheme: light;
+
   /* Base */
   --background: #FAFAFB;
   --text: #131414;
@@ -250,6 +252,8 @@
 }
 
 .dark {
+  color-scheme: dark;
+
   /* Base Colors */
   --background: #0D0F12;
   --text: #F5F5F7;

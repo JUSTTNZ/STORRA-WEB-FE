@@ -1,10 +1,23 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const getSystemTheme = () =>
-  window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+const getSystemTheme = () => {
+  try {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  } catch (e) {
+    return 'light';
+  }
+};
+
+const getSavedTheme = () => {
+  try {
+    return localStorage.getItem('theme');
+  } catch (e) {
+    return null;
+  }
+};
 
 const initialState = {
-  theme: localStorage.getItem('theme') || getSystemTheme(),
+  theme: getSavedTheme() || getSystemTheme(),
 };
 
 const themeSlice = createSlice({
@@ -13,11 +26,11 @@ const themeSlice = createSlice({
   reducers: {
     toggleTheme: (state) => {
       state.theme = state.theme === 'light' ? 'dark' : 'light';
-      localStorage.setItem('theme', state.theme);
+      try { localStorage.setItem('theme', state.theme); } catch (e) {}
     },
     setTheme: (state, action) => {
       state.theme = action.payload;
-      localStorage.setItem('theme', action.payload);
+      try { localStorage.setItem('theme', action.payload); } catch (e) {}
     },
   },
 });
